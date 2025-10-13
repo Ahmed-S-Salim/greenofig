@@ -1,4 +1,4 @@
-# Flutter
+# Greenofig - AI-Powered Health & Fitness App
 
 A modern Flutter-based mobile application utilizing the latest mobile development technologies and tools for building responsive cross-platform applications.
 
@@ -132,6 +132,9 @@ flutter build apk --release
 
 # For iOS
 flutter build ios --release
+
+# For Web
+flutter build web --release
 ```
 
 ## 🙏 Acknowledgments
