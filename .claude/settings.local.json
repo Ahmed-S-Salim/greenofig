@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__ide__getDiagnostics",
+      "Bash(test -f netlify.toml)",
+      "Bash(flutter doctor:*)",
+      "Bash(flutter build:*)",
+      "Bash(flutter:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
