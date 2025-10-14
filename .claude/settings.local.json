@@ -15,7 +15,8 @@
       "Bash(git pull:*)",
       "Bash(curl -s \"https://greenofig.netlify.app/#/dashboard-home\")",
       "Bash(dir)",
-      "Bash(copy:*)"
+      "Bash(copy:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []
