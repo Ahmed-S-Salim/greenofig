@@ -4,6 +4,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../core/app_export.dart';
 import '../../core/image_constants.dart';
+import '../../services/simple_auth_service.dart';
 import './widgets/biometric_prompt.dart';
 import './widgets/custom_text_field.dart';
 import './widgets/social_login_button.dart';
@@ -89,15 +90,13 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     });
 
     try {
-      // Simulate network delay
-      await Future.delayed(const Duration(seconds: 2));
-
       final email = _emailController.text.trim();
       final password = _passwordController.text;
 
-      // Check mock credentials
-      if (_mockCredentials.containsKey(email) &&
-          _mockCredentials[email] == password) {
+      // Use SimpleAuthService to sign in
+      final success = await SimpleAuthService.instance.signIn(email, password);
+
+      if (success) {
         HapticFeedback.lightImpact();
 
         // Show success message

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../core/app_export.dart';
-import '../../services/auth_service.dart';
+import '../../services/simple_auth_service.dart';
 import '../../services/role_service.dart';
 import '../../widgets/feature_gate_widget.dart';
 import './widgets/active_challenges_widget.dart';
@@ -143,10 +143,10 @@ class _DashboardHomeState extends State<DashboardHome>
     _checkUserRole();
 
     // Listen to auth state changes
-    AuthService.authStateChanges.listen((event) {
+    SimpleAuthService.instance.authStateChanges.listen((isAuth) {
       if (mounted) {
         setState(() {
-          _isAuthenticated = AuthService.isAuthenticated;
+          _isAuthenticated = isAuth;
         });
         _checkUserRole();
       }
@@ -155,15 +155,16 @@ class _DashboardHomeState extends State<DashboardHome>
 
   void _checkAuthStatus() {
     setState(() {
-      _isAuthenticated = AuthService.isAuthenticated;
+      _isAuthenticated = SimpleAuthService.instance.isAuthenticated;
     });
   }
 
   Future<void> _checkUserRole() async {
     if (!_isAuthenticated) return;
 
-    final isAdmin = await RoleService.instance.isAdmin();
-    final roleName = await RoleService.instance.getRoleDisplayName();
+    // Get role from SimpleAuthService
+    final isAdmin = SimpleAuthService.instance.isAdmin;
+    final roleName = SimpleAuthService.instance.userRole;
 
     if (mounted) {
       setState(() {
@@ -208,7 +209,9 @@ class _DashboardHomeState extends State<DashboardHome>
                       ),
                       SizedBox(height: 2.h),
                       GreetingHeaderWidget(
-                        userName: _isAuthenticated ? 'Sarah' : 'Guest',
+                        userName: _isAuthenticated
+                            ? SimpleAuthService.instance.userName
+                            : 'Guest',
                         weatherSuggestion: _isAuthenticated
                             ? 'Perfect weather for a morning walk! 🌤️'
                             : 'Sign in to get personalized recommendations! 🌟',
