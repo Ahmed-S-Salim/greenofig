@@ -3,6 +3,8 @@ import 'package:sizer/sizer.dart';
 
 import '../../core/app_export.dart';
 import '../../services/auth_service.dart';
+import '../../services/role_service.dart';
+import '../../widgets/feature_gate_widget.dart';
 import './widgets/active_challenges_widget.dart';
 import './widgets/calorie_progress_widget.dart';
 import './widgets/greeting_header_widget.dart';
@@ -23,6 +25,8 @@ class _DashboardHomeState extends State<DashboardHome>
     with TickerProviderStateMixin {
   int _currentIndex = 0;
   bool _isAuthenticated = false;
+  bool _isAdmin = false;
+  String _userRole = 'Basic User';
 
   // Mock data
   final List<Map<String, dynamic>> _activeChallenges = [
@@ -136,6 +140,7 @@ class _DashboardHomeState extends State<DashboardHome>
   void initState() {
     super.initState();
     _checkAuthStatus();
+    _checkUserRole();
 
     // Listen to auth state changes
     AuthService.authStateChanges.listen((event) {
@@ -143,6 +148,7 @@ class _DashboardHomeState extends State<DashboardHome>
         setState(() {
           _isAuthenticated = AuthService.isAuthenticated;
         });
+        _checkUserRole();
       }
     });
   }
@@ -151,6 +157,20 @@ class _DashboardHomeState extends State<DashboardHome>
     setState(() {
       _isAuthenticated = AuthService.isAuthenticated;
     });
+  }
+
+  Future<void> _checkUserRole() async {
+    if (!_isAuthenticated) return;
+
+    final isAdmin = await RoleService.instance.isAdmin();
+    final roleName = await RoleService.instance.getRoleDisplayName();
+
+    if (mounted) {
+      setState(() {
+        _isAdmin = isAdmin;
+        _userRole = roleName;
+      });
+    }
   }
 
   @override
@@ -194,6 +214,28 @@ class _DashboardHomeState extends State<DashboardHome>
                             : 'Sign in to get personalized recommendations! 🌟',
                       ),
                       SizedBox(height: 3.h),
+
+                      // Show role badge for authenticated users
+                      if (_isAuthenticated) ...[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const RoleBanner(),
+                            if (_isAdmin)
+                              ElevatedButton.icon(
+                                onPressed: () => Navigator.pushNamed(
+                                    context, AppRoutes.adminSettingsScreen),
+                                icon: Icon(Icons.admin_panel_settings, size: 16),
+                                label: Text('Admin Panel'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+                          ],
+                        ),
+                        SizedBox(height: 2.h),
+                      ],
 
                       // Show limited content for unauthenticated users
                       if (_isAuthenticated) ...[
