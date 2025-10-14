@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Greenofig">
+    <title>Install Greenofig - iOS & Android</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0D0D0D 0%, #1a1a1a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 8px 32px rgba(0, 255, 65, 0.1);
+            border: 1px solid rgba(0, 255, 65, 0.1);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #00FF41, #00cc33);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #00FF41, #00cc33);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .platform-section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 255, 65, 0.2);
+        }
+
+        .platform-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .platform-icon {
+            font-size: 24px;
+        }
+
+        .steps {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .steps li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #ccc;
+        }
+
+        .steps li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 20px;
+            height: 20px;
+            background: #00FF41;
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #00FF41, #00cc33);
+            color: #000;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 65, 0.4);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button.secondary {
+            background: rgba(0, 255, 65, 0.1);
+            color: #00FF41;
+            border: 1px solid #00FF41;
+        }
+
+        .info-box {
+            background: rgba(0, 255, 65, 0.1);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: #00FF41;
+        }
+
+        .qr-section {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .qr-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #00FF41;
+        }
+
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 15px;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .feature {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">G</div>
+        <h1>Install Greenofig</h1>
+        <p class="subtitle">Your AI-Powered Health & Fitness Companion</p>
+
+        <!-- iOS Installation -->
+        <div class="platform-section">
+            <div class="platform-title">
+                <span class="platform-icon">🍎</span>
+                <span>iOS Installation (PWA)</span>
+            </div>
+            <ol class="steps">
+                <li>Open this page in <strong>Safari</strong> on your iPhone</li>
+                <li>Tap the <strong>Share button</strong> (box with arrow ↑)</li>
+                <li>Scroll down and tap <strong>"Add to Home Screen"</strong></li>
+                <li>Tap <strong>"Add"</strong> in the top right</li>
+                <li>The app will appear on your home screen!</li>
+            </ol>
+            <a href="/" class="button">Open Greenofig Web App</a>
+        </div>
+
+        <!-- Android Installation -->
+        <div class="platform-section">
+            <div class="platform-title">
+                <span class="platform-icon">🤖</span>
+                <span>Android Installation (APK)</span>
+            </div>
+            <ol class="steps">
+                <li>Download the APK file (link below)</li>
+                <li>Enable <strong>"Install from Unknown Sources"</strong> in Settings</li>
+                <li>Open the downloaded APK file</li>
+                <li>Tap <strong>"Install"</strong> and wait</li>
+                <li>Launch Greenofig from your app drawer!</li>
+            </ol>
+            <a href="https://github.com/Ahmed-S-Salim/greenofig/releases" class="button" target="_blank">
+                Download Android APK
+            </a>
+            <button class="button secondary" onclick="showQR()">Show QR Code for Easy Install</button>
+        </div>
+
+        <!-- App Features -->
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🤖</div>
+                <strong>AI Features</strong><br>
+                Food scanning & health coaching
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🏋️</div>
+                <strong>Workouts</strong><br>
+                Custom fitness programs
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🥗</div>
+                <strong>Nutrition</strong><br>
+                Meal planning & tracking
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <strong>Analytics</strong><br>
+                Progress tracking & insights
+            </div>
+        </div>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <strong>💡 Pro Tip:</strong> iOS users get full PWA experience with offline support,
+            push notifications, and app-like interface. Android users can install the native APK
+            for best performance!
+        </div>
+
+        <!-- QR Code Section (hidden by default) -->
+        <div class="qr-section" id="qr-section" style="display: none;">
+            <div class="qr-title">📱 Scan to Install</div>
+            <div class="qr-placeholder">
+                QR Code will appear here<br>
+                <small>(Generate at qr.io with your Netlify URL)</small>
+            </div>
+            <p style="font-size: 13px; color: #888;">
+                Scan this QR code with your phone camera to quickly access the installation page
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function showQR() {
+            const qrSection = document.getElementById('qr-section');
+            qrSection.style.display = qrSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Auto-detect platform and highlight relevant section
+        window.addEventListener('load', function() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isAndroid = /Android/.test(navigator.userAgent);
+
+            if (isIOS) {
+                // Show iOS instructions prominently
+                console.log('iOS device detected');
+            } else if (isAndroid) {
+                // Show Android instructions prominently
+                console.log('Android device detected');
+            }
+        });
+    </script>
+</body>
+</html>
