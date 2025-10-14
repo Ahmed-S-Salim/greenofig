@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../core/app_export.dart';
+import '../../core/image_constants.dart';
 import './widgets/biometric_prompt.dart';
 import './widgets/custom_text_field.dart';
 import './widgets/social_login_button.dart';
@@ -291,7 +292,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
                   // Logo Section
                   CustomImageWidget(
-                    imageUrl: 'assets/images/img_app_logo.svg',
+                    imageUrl: ImageConstant.greenofigLogo,
                     height: 20.h,
                     width: 50.w,
                     fit: BoxFit.contain,

@@ -4,12 +4,14 @@ class ImageConstant {
 
   // App images
   static const String sadFace = '${_basePath}sad_face.svg';
-  static const String appLogo = '${_basePath}img_app_logo.svg';
+  static const String appLogo = '${_basePath}greenofig-logo.png'; // Updated to PNG logo
+  static const String appLogoSvg = '${_basePath}img_app_logo.svg'; // Old SVG logo
   static const String logoSize = '${_basePath}logosize-1760369987243.png';
   static const String removeBackgroundProject1 =
       '${_basePath}Remove_background_project-1760373401381.png';
   static const String removeBackgroundProject2 =
       '${_basePath}Remove_background_project-1760377849271.png';
+  static const String greenofigLogo = '${_basePath}greenofig-logo.png'; // Main logo
   static const String noImage = '${_basePath}no-image.jpg';
 
   // Network image placeholders
