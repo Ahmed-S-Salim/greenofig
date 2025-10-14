@@ -21,8 +21,12 @@ void main() async {
 
   bool _hasShownError = false;
 
-  // 🚨 CRITICAL: Enhanced error handling for mobile browsers
+  // 🚨 CRITICAL: Enhanced error handling with better debugging
   ErrorWidget.builder = (FlutterErrorDetails details) {
+    // Log error details for debugging
+    debugPrint('⚠️ Flutter Error: ${details.exception}');
+    debugPrint('📍 Stack: ${details.stack}');
+
     if (!_hasShownError) {
       _hasShownError = true;
 
@@ -31,47 +35,52 @@ void main() async {
         _hasShownError = false;
       });
 
-      // Enhanced error widget for mobile
-      return Material(
-        color: Colors.black87,
-        child: SafeArea(
-          child: Center(
-            child: Container(
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.grey[900],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.error_outline, color: Colors.red, size: 48),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Something went wrong',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+      // Only show error widget in release mode
+      // In debug mode, show the actual error
+      if (kReleaseMode) {
+        return Material(
+          color: Colors.black87,
+          child: SafeArea(
+            child: Center(
+              child: Container(
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.grey[900],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.error_outline, color: Colors.red, size: 48),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Something went wrong',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Please refresh the page',
-                    style: TextStyle(
-                      color: Colors.grey[300],
-                      fontSize: 14,
+                    const SizedBox(height: 8),
+                    Text(
+                      'Please refresh the page',
+                      style: TextStyle(
+                        color: Colors.grey[300],
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      );
+        );
+      }
     }
-    return const SizedBox.shrink();
+
+    // In debug mode or after first error, show default error widget
+    return ErrorWidget(details.exception);
   };
 
   // Enhanced orientation handling for mobile browsers

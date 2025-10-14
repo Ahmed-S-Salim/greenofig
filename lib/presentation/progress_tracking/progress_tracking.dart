@@ -226,6 +226,44 @@ class _ProgressTrackingState extends State<ProgressTracking>
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0, // Home
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          if (index == 0) return; // Already on home-related screen
+          switch (index) {
+            case 0:
+              break; // Already here
+            case 1:
+              Navigator.pushReplacementNamed(context, AppRoutes.mealPlanning);
+              break;
+            case 2:
+              Navigator.pushReplacementNamed(context, AppRoutes.workoutPrograms);
+              break;
+            case 3:
+              Navigator.pushReplacementNamed(context, AppRoutes.profileScreen);
+              break;
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.restaurant),
+            label: 'Meals',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fitness_center),
+            label: 'Workout',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showQuickLogDialog,
         child: CustomIconWidget(
