@@ -27,60 +27,81 @@ void main() async {
     debugPrint('⚠️ Flutter Error: ${details.exception}');
     debugPrint('📍 Stack: ${details.stack}');
 
-    if (!_hasShownError) {
-      _hasShownError = true;
-
-      // Reset flag after 3 seconds
-      Future.delayed(const Duration(seconds: 3), () {
-        _hasShownError = false;
-      });
-
-      // Only show error widget in release mode
-      // In debug mode, show the actual error
-      if (kReleaseMode) {
-        return Material(
-          color: Colors.black87,
-          child: SafeArea(
-            child: Center(
-              child: Container(
-                margin: const EdgeInsets.all(16),
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.grey[900],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+    // ALWAYS show detailed errors to help debugging
+    // Even in web release mode, we need to see what's wrong
+    return Material(
+      color: Colors.black87,
+      child: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.grey[900],
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.red, width: 2),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    Icon(Icons.error_outline, color: Colors.red, size: 48),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Something went wrong',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Please refresh the page',
-                      style: TextStyle(
-                        color: Colors.grey[300],
-                        fontSize: 14,
+                    Icon(Icons.bug_report, color: Colors.red, size: 32),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'Error Detected',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    details.exception.toString(),
+                    style: TextStyle(
+                      color: Colors.red[300],
+                      fontSize: 14,
+                      fontFamily: 'monospace',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'This error is being displayed to help with debugging. Please:',
+                  style: TextStyle(
+                    color: Colors.grey[300],
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '1. Take a screenshot of this error\n'
+                  '2. Check the browser console (F12)\n'
+                  '3. Try refreshing the page',
+                  style: TextStyle(
+                    color: Colors.grey[400],
+                    fontSize: 13,
+                  ),
+                ),
+              ],
             ),
           ),
-        );
-      }
-    }
-
-    // In debug mode or after first error, show default error widget
-    return ErrorWidget(details.exception);
+        ),
+      ),
+    );
   };
 
   // Enhanced orientation handling for mobile browsers
