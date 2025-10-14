@@ -25,13 +25,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   bool _isFormValid = false;
   bool _showBiometricPrompt = false;
 
-  // Mock credentials for demonstration
-  final Map<String, String> _mockCredentials = {
-    'admin@greenofig.com': 'admin123',
-    'user@greenofig.com': 'user123',
-    'demo@greenofig.com': 'demo123',
-  };
-
   @override
   void initState() {
     super.initState();
