@@ -109371,7 +109371,7 @@ s=this.c
 s.toString
 r=t.X
 A.eq(s,"/dashboard-home",r,r)},
-G(b5){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6=this,a7=null,a8=$.q(),a9=6*$.d.h()/100,b0=A.h(a7,6*$.f.h()/100,a7),b1=A.hV(B.e0,20*$.f.h()/100,"assets/images/img_app_logo.svg",a7,50*$.d.h()/100),b2=A.h(a7,2*$.f.h()/100,a7),b3=$.q(),b4=b3.ok.e
+G(b5){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6=this,a7=null,a8=$.q(),a9=6*$.d.h()/100,b0=A.h(a7,6*$.f.h()/100,a7),b1=A.hV(B.e0,20*$.f.h()/100,"assets/images/greenofig-logo.png",a7,50*$.d.h()/100),b2=A.h(a7,2*$.f.h()/100,a7),b3=$.q(),b4=b3.ok.e
 b3=A.e("Greenofig",a7,a7,a7,a7,a7,b4==null?a7:b4.ad(b3.ax.b,B.B),a7,a7,a7)
 b4=A.h(a7,$.f.h()/100,a7)
 s=$.q()
