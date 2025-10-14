@@ -95,7 +95,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return Sizer(
-            builder: (context, orientation, screenType) {
+            builder: (context, orientation, deviceType) {
               return MaterialApp(
                 title: 'Greenofig - Health & Wellness',
                 theme: AppTheme.lightTheme,
