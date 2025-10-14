@@ -104,11 +104,8 @@ class MyApp extends StatelessWidget {
 
                 // 🚨 CRITICAL: Enhanced MediaQuery for mobile browsers
                 builder: (context, child) {
-                  // Get device pixel ratio and screen size for better mobile handling
+                  // Get device media query
                   final mediaQuery = MediaQuery.of(context);
-                  final screenWidth = mediaQuery.size.width;
-                  final screenHeight = mediaQuery.size.height;
-                  final devicePixelRatio = mediaQuery.devicePixelRatio;
 
                   // NO text scaling - use system defaults
                   // This prevents the massive zoom issue

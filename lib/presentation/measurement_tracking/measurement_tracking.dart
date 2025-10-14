@@ -17,7 +17,6 @@ class _MeasurementTrackingState extends State<MeasurementTracking>
   late Animation<double> _fadeAnimation;
 
   String _selectedTimeframe = '1M';
-  String _selectedCategory = 'weight';
   bool _isMetricUnits = true;
 
   final List<String> _timeframes = ['1W', '1M', '3M', '6M', '1Y'];

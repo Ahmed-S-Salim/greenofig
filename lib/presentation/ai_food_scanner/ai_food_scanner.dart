@@ -27,7 +27,6 @@ class _AiFoodScannerState extends State<AiFoodScanner>
   // Camera related
   List<CameraDescription> _cameras = [];
   CameraController? _cameraController;
-  bool _isCameraInitialized = false;
   bool _isFlashOn = false;
   bool _showGrid = false;
 
@@ -161,9 +160,7 @@ class _AiFoodScannerState extends State<AiFoodScanner>
       await _applySettings();
 
       if (mounted) {
-        setState(() {
-          _isCameraInitialized = true;
-        });
+        setState(() {});
       }
     } catch (e) {
       debugPrint('Camera initialization error: $e');
@@ -235,7 +232,7 @@ class _AiFoodScannerState extends State<AiFoodScanner>
         SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
       }
 
-      final XFile photo = await _cameraController!.takePicture();
+      await _cameraController!.takePicture();
 
       // Simulate AI processing with realistic progression
       await _simulateAIProcessing();

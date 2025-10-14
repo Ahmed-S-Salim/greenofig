@@ -316,8 +316,6 @@ class _PerformanceMonitorWidgetState extends State<PerformanceMonitorWidget>
   void _checkRenderingPerformance() {
     if (kDebugMode && kIsWeb) {
       // Check if we're dropping frames
-      final now = DateTime.now().millisecondsSinceEpoch;
-
       // Schedule next check
       Future.delayed(const Duration(seconds: 5), () {
         if (mounted) {

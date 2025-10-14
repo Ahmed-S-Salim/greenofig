@@ -22,7 +22,6 @@ class _CaptureButtonWidgetState extends State<CaptureButtonWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
-  bool _isPressed = false;
 
   @override
   void initState() {
@@ -47,18 +46,15 @@ class _CaptureButtonWidgetState extends State<CaptureButtonWidget>
   }
 
   void _handleTapDown(TapDownDetails details) {
-    setState(() => _isPressed = true);
     _animationController.forward();
     HapticFeedback.lightImpact();
   }
 
   void _handleTapUp(TapUpDetails details) {
-    setState(() => _isPressed = false);
     _animationController.reverse();
   }
 
   void _handleTapCancel() {
-    setState(() => _isPressed = false);
     _animationController.reverse();
   }
 

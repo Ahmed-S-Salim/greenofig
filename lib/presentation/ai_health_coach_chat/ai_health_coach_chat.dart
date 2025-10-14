@@ -29,7 +29,6 @@ class _AiHealthCoachChatState extends State<AiHealthCoachChat> {
 
   bool _isTyping = false;
   OverlayEntry? _overlayEntry;
-  Map<String, dynamic>? _selectedMessage;
 
   @override
   void initState() {
@@ -240,7 +239,6 @@ class _AiHealthCoachChatState extends State<AiHealthCoachChat> {
   void _showMessageActions(Map<String, dynamic> message, Offset position) {
     _removeOverlay();
 
-    _selectedMessage = message;
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         left: position.dx - 40.w,

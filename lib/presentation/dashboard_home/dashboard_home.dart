@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../core/app_export.dart';
-import '../../widgets/custom_icon_widget.dart';
 import '../../services/auth_service.dart';
 import './widgets/active_challenges_widget.dart';
 import './widgets/calorie_progress_widget.dart';
@@ -23,7 +22,6 @@ class DashboardHome extends StatefulWidget {
 class _DashboardHomeState extends State<DashboardHome>
     with TickerProviderStateMixin {
   int _currentIndex = 0;
-  bool _isRefreshing = false;
   bool _isAuthenticated = false;
 
   // Mock data
@@ -526,16 +524,8 @@ class _DashboardHomeState extends State<DashboardHome>
   }
 
   Future<void> _handleRefresh() async {
-    setState(() {
-      _isRefreshing = true;
-    });
-
     // Simulate API call with haptic feedback
     await Future.delayed(const Duration(seconds: 2));
-
-    setState(() {
-      _isRefreshing = false;
-    });
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
