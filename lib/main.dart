@@ -110,33 +110,11 @@ class MyApp extends StatelessWidget {
                   final screenHeight = mediaQuery.size.height;
                   final devicePixelRatio = mediaQuery.devicePixelRatio;
 
-                  // Calculate optimal text scaling for all devices
-                  // Keep it close to 1.0 to prevent sizing issues
-                  double textScaleFactor = 1.0;
-
-                  if (kIsWeb) {
-                    // Minimal scaling for web to maintain UI integrity
-                    if (screenWidth < 320) {
-                      textScaleFactor = 0.95; // Very small phones only
-                    } else {
-                      textScaleFactor = 1.0; // Everyone else gets normal size
-                    }
-                  } else {
-                    // Native app - respect system but don't go crazy
-                    textScaleFactor = mediaQuery.textScaleFactor.clamp(0.9, 1.2);
-                  }
-
+                  // NO text scaling - use system defaults
+                  // This prevents the massive zoom issue
                   return MediaQuery(
                     data: mediaQuery.copyWith(
-                      textScaler: TextScaler.linear(textScaleFactor),
-                      // Ensure proper viewport handling on mobile browsers
-                      size: Size(
-                        screenWidth,
-                        screenHeight,
-                      ),
-                      // Fix device pixel ratio issues on some mobile browsers
-                      devicePixelRatio:
-                          devicePixelRatio > 3.0 ? 3.0 : devicePixelRatio,
+                      textScaler: TextScaler.linear(1.0),
                     ),
                     child: child!,
                   );
