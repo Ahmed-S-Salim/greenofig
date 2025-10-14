@@ -18,6 +18,7 @@ class MealPlanning extends StatefulWidget {
 
 class _MealPlanningState extends State<MealPlanning>
     with TickerProviderStateMixin {
+  int _currentIndex = 1; // Meals tab is index 1
   DateTime selectedDate = DateTime.now();
   bool isLoading = false;
   bool isRegenerating = false;
@@ -383,6 +384,25 @@ class _MealPlanningState extends State<MealPlanning>
     );
   }
 
+  void _onBottomNavTap(int index) {
+    if (_currentIndex == index && index == 1) return;
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacementNamed(context, AppRoutes.dashboardHome);
+        break;
+      case 1:
+        // Already on meal planning
+        break;
+      case 2:
+        Navigator.pushReplacementNamed(context, AppRoutes.workoutPrograms);
+        break;
+      case 3:
+        Navigator.pushReplacementNamed(context, AppRoutes.profileScreen);
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final mealsForSelectedDate = _getMealsForDate(selectedDate);
@@ -477,6 +497,57 @@ class _MealPlanningState extends State<MealPlanning>
                 ),
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: _onBottomNavTap,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
+        elevation: 8,
+        items: [
+          BottomNavigationBarItem(
+            icon: CustomIconWidget(
+              iconName: 'home',
+              color: _currentIndex == 0
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.onSurfaceVariant,
+              size: 6.w,
+            ),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: CustomIconWidget(
+              iconName: 'restaurant',
+              color: _currentIndex == 1
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.onSurfaceVariant,
+              size: 6.w,
+            ),
+            label: 'Meals',
+          ),
+          BottomNavigationBarItem(
+            icon: CustomIconWidget(
+              iconName: 'fitness_center',
+              color: _currentIndex == 2
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.onSurfaceVariant,
+              size: 6.w,
+            ),
+            label: 'Workout',
+          ),
+          BottomNavigationBarItem(
+            icon: CustomIconWidget(
+              iconName: 'person',
+              color: _currentIndex == 3
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.onSurfaceVariant,
+              size: 6.w,
+            ),
+            label: 'Profile',
+          ),
+        ],
       ),
     );
   }

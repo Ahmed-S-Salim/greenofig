@@ -72,17 +72,6 @@ class _MeasurementTrackingState extends State<MeasurementTracking>
     },
   ];
 
-  final List<Map<String, dynamic>> _mockChartData = [
-    {'date': '2025-01-06', 'value': 70.2},
-    {'date': '2025-01-07', 'value': 69.8},
-    {'date': '2025-01-08', 'value': 69.5},
-    {'date': '2025-01-09', 'value': 69.1},
-    {'date': '2025-01-10', 'value': 68.9},
-    {'date': '2025-01-11', 'value': 68.7},
-    {'date': '2025-01-12', 'value': 68.5},
-    {'date': '2025-01-13', 'value': 68.3},
-  ];
-
   @override
   void initState() {
     super.initState();

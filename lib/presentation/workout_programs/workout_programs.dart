@@ -366,16 +366,16 @@ class _WorkoutProgramsState extends State<WorkoutPrograms> {
 
           switch (index) {
             case 0:
-              Navigator.pushReplacementNamed(context, '/dashboard-home');
+              Navigator.pushReplacementNamed(context, AppRoutes.dashboardHome);
               break;
             case 1:
-              Navigator.pushReplacementNamed(context, '/meal-planning');
+              Navigator.pushReplacementNamed(context, AppRoutes.mealPlanning);
               break;
             case 2:
               // Current screen - do nothing
               break;
             case 3:
-              Navigator.pushReplacementNamed(context, '/profile-screen');
+              Navigator.pushReplacementNamed(context, AppRoutes.profileScreen);
               break;
           }
         },

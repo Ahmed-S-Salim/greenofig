@@ -11,6 +11,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  int _currentIndex = 3; // Profile tab is index 3
+
   final Map<String, dynamic> _userProfile = {
     'name': 'Emma Richardson',
     'username': '@emma_richardson',
@@ -147,7 +149,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: _onBottomNavTap,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: AppTheme.surfaceDark,
+        selectedItemColor: AppTheme.primaryDark,
+        unselectedItemColor: AppTheme.textSecondaryDark,
+        elevation: 8,
+        items: [
+          BottomNavigationBarItem(
+            icon: CustomIconWidget(
+              iconName: 'home',
+              color: _currentIndex == 0 ? AppTheme.primaryDark : AppTheme.textSecondaryDark,
+              size: 6.w,
+            ),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: CustomIconWidget(
+              iconName: 'restaurant',
+              color: _currentIndex == 1 ? AppTheme.primaryDark : AppTheme.textSecondaryDark,
+              size: 6.w,
+            ),
+            label: 'Meals',
+          ),
+          BottomNavigationBarItem(
+            icon: CustomIconWidget(
+              iconName: 'fitness_center',
+              color: _currentIndex == 2 ? AppTheme.primaryDark : AppTheme.textSecondaryDark,
+              size: 6.w,
+            ),
+            label: 'Workout',
+          ),
+          BottomNavigationBarItem(
+            icon: CustomIconWidget(
+              iconName: 'person',
+              color: _currentIndex == 3 ? AppTheme.primaryDark : AppTheme.textSecondaryDark,
+              size: 6.w,
+            ),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
+  }
+
+  void _onBottomNavTap(int index) {
+    if (_currentIndex == index && index == 3) return;
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacementNamed(context, AppRoutes.dashboardHome);
+        break;
+      case 1:
+        Navigator.pushReplacementNamed(context, AppRoutes.mealPlanning);
+        break;
+      case 2:
+        Navigator.pushReplacementNamed(context, AppRoutes.workoutPrograms);
+        break;
+      case 3:
+        // Already on profile
+        break;
+    }
   }
 
   Widget _buildProfileHeader() {

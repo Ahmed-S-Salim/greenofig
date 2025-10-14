@@ -21,7 +21,6 @@ class _DomainPublishingPreparationState
   late TabController _tabController;
 
   int _currentTabIndex = 0;
-  bool _isLoading = false;
 
   // Overall deployment readiness score (calculated from all sections)
   double _overallScore = 0.0;
@@ -884,15 +883,10 @@ class _DomainPublishingPreparationState
   }
 
   void _refreshConfiguration() {
-    setState(() {
-      _isLoading = true;
-    });
-
     // Simulate configuration refresh
     Future.delayed(const Duration(seconds: 1), () {
       if (mounted) {
         setState(() {
-          _isLoading = false;
           // Update scores based on refresh
           _sectionScores['domain'] = 0.95;
           _sectionScores['security'] = 0.88;
