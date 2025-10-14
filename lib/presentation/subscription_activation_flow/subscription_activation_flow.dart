@@ -65,7 +65,8 @@ class _SubscriptionActivationFlowState extends State<SubscriptionActivationFlow>
         'Priority Support',
       ],
       'limits': {
-        'ai_scans': -1, // Unlimited 'meal_plans': -1,
+        'ai_scans': -1, // Unlimited
+        'meal_plans': -1, // Unlimited
         'workouts': 'Advanced',
         'storage': '5GB',
       }
