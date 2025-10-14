@@ -553,25 +553,28 @@ class _DashboardHomeState extends State<DashboardHome>
   }
 
   void _onBottomNavTap(int index) {
+    // Don't update state if same index
+    if (_currentIndex == index && index == 0) return;
+
     setState(() {
       _currentIndex = index;
     });
 
     switch (index) {
       case 0:
-        // Already on home - stay here
+        // Already on home - do nothing
         break;
       case 1:
         // Navigate to Meal Planning
-        Navigator.pushNamed(context, AppRoutes.mealPlanning);
+        Navigator.pushReplacementNamed(context, AppRoutes.mealPlanning);
         break;
       case 2:
         // Navigate to Workout Programs
-        Navigator.pushNamed(context, AppRoutes.workoutPrograms);
+        Navigator.pushReplacementNamed(context, AppRoutes.workoutPrograms);
         break;
       case 3:
         // Navigate to Profile
-        Navigator.pushNamed(context, AppRoutes.profileScreen);
+        Navigator.pushReplacementNamed(context, AppRoutes.profileScreen);
         break;
     }
   }

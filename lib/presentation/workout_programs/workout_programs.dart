@@ -361,21 +361,21 @@ class _WorkoutProgramsState extends State<WorkoutPrograms> {
             AppTheme.lightTheme.bottomNavigationBarTheme.unselectedItemColor,
         currentIndex: 2, // Workout Programs tab
         onTap: (index) {
+          // Don't navigate if we're already on this screen
+          if (index == 2) return;
+
           switch (index) {
             case 0:
-              Navigator.pushNamed(context, '/dashboard-home');
+              Navigator.pushReplacementNamed(context, '/dashboard-home');
               break;
             case 1:
-              Navigator.pushNamed(context, '/meal-planning');
+              Navigator.pushReplacementNamed(context, '/meal-planning');
               break;
             case 2:
               // Current screen - do nothing
               break;
             case 3:
-              Navigator.pushNamed(context, '/progress-tracking');
-              break;
-            case 4:
-              Navigator.pushNamed(context, '/ai-health-coach-chat');
+              Navigator.pushReplacementNamed(context, '/profile-screen');
               break;
           }
         },
@@ -427,33 +427,18 @@ class _WorkoutProgramsState extends State<WorkoutPrograms> {
           ),
           BottomNavigationBarItem(
             icon: CustomIconWidget(
-              iconName: 'trending_up',
+              iconName: 'person',
               color: AppTheme
                   .lightTheme.bottomNavigationBarTheme.unselectedItemColor!,
               size: 24,
             ),
             activeIcon: CustomIconWidget(
-              iconName: 'trending_up',
+              iconName: 'person',
               color: AppTheme
                   .lightTheme.bottomNavigationBarTheme.selectedItemColor!,
               size: 24,
             ),
-            label: 'Progress',
-          ),
-          BottomNavigationBarItem(
-            icon: CustomIconWidget(
-              iconName: 'chat',
-              color: AppTheme
-                  .lightTheme.bottomNavigationBarTheme.unselectedItemColor!,
-              size: 24,
-            ),
-            activeIcon: CustomIconWidget(
-              iconName: 'chat',
-              color: AppTheme
-                  .lightTheme.bottomNavigationBarTheme.selectedItemColor!,
-              size: 24,
-            ),
-            label: 'AI Coach',
+            label: 'Profile',
           ),
         ],
       ),

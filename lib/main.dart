@@ -112,24 +112,22 @@ class MyApp extends StatelessWidget {
 
                   // Calculate optimal text scaling for all devices
                   double textScaleFactor = 1.0;
-                  // Constrain text scale factor to prevent oversized text
-                  textScaleFactor = mediaQuery.textScaleFactor.clamp(0.8, 1.2);
 
+                  // For web, apply responsive scaling
                   if (kIsWeb) {
-                    // For web/mobile browsers, use responsive scaling based on screen width
-                    if (screenWidth < 375) {
-                      textScaleFactor = 0.8; // Very small phones
-                    } else if (screenWidth < 414) {
-                      textScaleFactor = 0.85; // Smaller phones
+                    // Less aggressive scaling to prevent UI issues
+                    if (screenWidth < 360) {
+                      textScaleFactor = 0.9; // Very small phones
                     } else if (screenWidth < 600) {
-                      textScaleFactor = 0.9; // Medium phones
-                    } else if (screenWidth < 768) {
-                      textScaleFactor = 0.95; // Large phones
-                    } else if (screenWidth < 1024) {
-                      textScaleFactor = 0.95; // Tablets
+                      textScaleFactor = 0.95; // Small to medium phones
+                    } else if (screenWidth < 900) {
+                      textScaleFactor = 1.0; // Large phones and tablets
                     } else {
                       textScaleFactor = 1.0; // Desktop
                     }
+                  } else {
+                    // Native app - respect system text scale but clamp it
+                    textScaleFactor = mediaQuery.textScaleFactor.clamp(0.85, 1.3);
                   }
 
                   return MediaQuery(
