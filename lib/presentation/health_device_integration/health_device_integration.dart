@@ -114,9 +114,7 @@ class _HealthDeviceIntegrationState extends State<HealthDeviceIntegration> {
               Icons.help_outline,
               color: theme.colorScheme.primary,
             ),
-            onPressed: () {
-              // TODO: Show help dialog
-            },
+            onPressed: _showHelpDialog,
           ),
         ],
       ),
@@ -252,12 +250,8 @@ class _HealthDeviceIntegrationState extends State<HealthDeviceIntegration> {
                           return ConnectedDeviceCard(
                             device: device,
                             onDisconnect: () => _disconnectDevice(device.id),
-                            onViewHistory: () {
-                              // TODO: Navigate to device history
-                            },
-                            onSettings: () {
-                              // TODO: Navigate to device settings
-                            },
+                            onViewHistory: () => _navigateToDeviceHistory(device),
+                            onSettings: () => _navigateToDeviceSettings(device),
                           );
                         },
                       ),
@@ -367,5 +361,203 @@ class _HealthDeviceIntegrationState extends State<HealthDeviceIntegration> {
     return _connectedDevices
         .where((device) => device.deviceType == deviceType)
         .length;
+  }
+
+  void _showHelpDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.help_outline, color: Theme.of(context).colorScheme.primary),
+            SizedBox(width: 2.w),
+            Text('Device Integration Help'),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'How to Connect Devices',
+                style: GoogleFonts.inter(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 1.h),
+              Text(
+                '1. Tap on a device category card\n'
+                '2. Enable Bluetooth on your phone\n'
+                '3. Turn on your health device\n'
+                '4. Follow the pairing instructions\n'
+                '5. Grant necessary permissions',
+                style: GoogleFonts.inter(fontSize: 13.sp, height: 1.5),
+              ),
+              SizedBox(height: 2.h),
+              Text(
+                'Supported Devices',
+                style: GoogleFonts.inter(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 1.h),
+              Text(
+                '• O2 Sensors: Most Bluetooth pulse oximeters\n'
+                '• BP Monitors: Compatible digital cuffs\n'
+                '• Heart Rate: Chest straps, smartwatches\n'
+                '• Smart Scales: Wi-Fi/Bluetooth scales',
+                style: GoogleFonts.inter(fontSize: 13.sp, height: 1.5),
+              ),
+              SizedBox(height: 2.h),
+              Text(
+                'Troubleshooting',
+                style: GoogleFonts.inter(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 1.h),
+              Text(
+                '• Keep devices close during pairing\n'
+                '• Restart Bluetooth if connection fails\n'
+                '• Check device battery level\n'
+                '• Ensure location permissions are granted',
+                style: GoogleFonts.inter(fontSize: 13.sp, height: 1.5),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Close'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Visit Settings > Devices for more information'),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+              );
+            },
+            child: Text('Got It'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _navigateToDeviceHistory(health_models.HealthDevice device) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Device History'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Viewing history for:',
+              style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+            ),
+            SizedBox(height: 1.h),
+            Text('Device: ${device.deviceName}'),
+            Text('Type: ${device.deviceType.toString().split('.').last}'),
+            Text('Last Sync: ${device.lastSyncAt?.toString().split('.')[0] ?? 'Never'}'),
+            SizedBox(height: 2.h),
+            Text(
+              'Recent readings and sync history will appear here.',
+              style: GoogleFonts.inter(
+                fontSize: 12.sp,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _navigateToDeviceSettings(health_models.HealthDevice device) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Device Settings'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              device.deviceName,
+              style: GoogleFonts.inter(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 2.h),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.sync),
+              title: Text('Auto Sync'),
+              subtitle: Text('Automatically sync data'),
+              trailing: Switch(
+                value: true,
+                onChanged: (value) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Auto sync ${value ? 'enabled' : 'disabled'}'),
+                    ),
+                  );
+                },
+              ),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.notifications),
+              title: Text('Notifications'),
+              subtitle: Text('Device alerts and reminders'),
+              trailing: Switch(
+                value: false,
+                onChanged: (value) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Notifications ${value ? 'enabled' : 'disabled'}'),
+                    ),
+                  );
+                },
+              ),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.delete, color: Colors.red),
+              title: Text('Remove Device', style: TextStyle(color: Colors.red)),
+              onTap: () {
+                Navigator.pop(context);
+                _disconnectDevice(device.id);
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Done'),
+          ),
+        ],
+      ),
+    );
   }
 }

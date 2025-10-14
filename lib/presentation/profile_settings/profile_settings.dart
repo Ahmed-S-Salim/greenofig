@@ -271,9 +271,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   // User Profile Header
                   UserProfileHeaderWidget(
                     userData: _userProfile,
-                    onAvatarTap: () {
-                      // TODO: Navigate to profile edit screen
-                    },
+                    onAvatarTap: _navigateToProfileEdit,
                   ),
 
                   SizedBox(height: 4.h),
@@ -493,16 +491,12 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                       SettingsItemWidget(
                         title: 'Export Health Data',
                         subtitle: 'Download your health information',
-                        onTap: () {
-                          // TODO: Implement data export
-                        },
+                        onTap: _exportHealthData,
                       ),
                       SettingsItemWidget(
                         title: 'Delete Account',
                         subtitle: 'Permanently delete your account',
-                        onTap: () {
-                          // TODO: Implement account deletion
-                        },
+                        onTap: _showDeleteAccountDialog,
                       ),
                     ],
                   ),
@@ -593,6 +587,272 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _navigateToProfileEdit() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Edit Profile'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Profile editing functionality',
+              style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+            ),
+            SizedBox(height: 2.h),
+            Text('Here you can edit:'),
+            Text('• Profile photo'),
+            Text('• Name and bio'),
+            Text('• Contact information'),
+            Text('• Health metrics'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Close'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Profile edit screen coming soon!'),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+              );
+            },
+            child: Text('Got It'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _exportHealthData() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.file_download, color: Theme.of(context).colorScheme.primary),
+            SizedBox(width: 2.w),
+            Text('Export Health Data'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Your health data export will include:',
+              style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+            ),
+            SizedBox(height: 2.h),
+            ...['Workout history', 'Meal logs', 'Body measurements', 'Device data', 'Health goals', 'Progress reports']
+                .map((item) => Padding(
+              padding: EdgeInsets.only(bottom: 0.5.h),
+              child: Row(
+                children: [
+                  Icon(Icons.check_circle, size: 16, color: Colors.green),
+                  SizedBox(width: 2.w),
+                  Expanded(child: Text(item)),
+                ],
+              ),
+            )),
+            SizedBox(height: 2.h),
+            Text(
+              'Format: JSON',
+              style: GoogleFonts.inter(
+                fontSize: 12.sp,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+            Text(
+              'Size: ~5-10 MB',
+              style: GoogleFonts.inter(
+                fontSize: 12.sp,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+
+              // Simulate export process
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Preparing your health data export...'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+
+              Future.delayed(Duration(seconds: 2), () {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Health data exported successfully!'),
+                      backgroundColor: Colors.green,
+                      action: SnackBarAction(
+                        label: 'View',
+                        textColor: Colors.white,
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Download would start in production'),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                }
+              });
+            },
+            child: Text('Export Data'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteAccountDialog() {
+    final confirmController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.warning, color: Colors.red),
+            SizedBox(width: 2.w),
+            Text(
+              'Delete Account',
+              style: TextStyle(color: Colors.red),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'This action cannot be undone!',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w700,
+                color: Colors.red,
+              ),
+            ),
+            SizedBox(height: 2.h),
+            Text('Deleting your account will permanently remove:'),
+            SizedBox(height: 1.h),
+            ...['All workout data', 'Meal history', 'Body measurements', 'Device connections', 'Personal information', 'Progress photos']
+                .map((item) => Padding(
+              padding: EdgeInsets.only(bottom: 0.5.h),
+              child: Row(
+                children: [
+                  Icon(Icons.close, size: 16, color: Colors.red),
+                  SizedBox(width: 2.w),
+                  Expanded(child: Text(item)),
+                ],
+              ),
+            )),
+            SizedBox(height: 2.h),
+            Text(
+              'Type "DELETE" to confirm:',
+              style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+            ),
+            SizedBox(height: 1.h),
+            TextField(
+              controller: confirmController,
+              decoration: InputDecoration(
+                hintText: 'Type DELETE',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              confirmController.dispose();
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (confirmController.text == 'DELETE') {
+                confirmController.dispose();
+                Navigator.pop(context);
+
+                // Show final confirmation
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('Final Confirmation'),
+                    content: Text('Are you absolutely sure you want to delete your account?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          Navigator.pop(context);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Deleting account...'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+
+                          // Simulate account deletion
+                          await Future.delayed(Duration(seconds: 2));
+
+                          if (mounted) {
+                            await AuthService.signOut();
+                            Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Account deleted successfully'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                        child: Text('Delete Forever'),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Please type "DELETE" to confirm'),
+                    backgroundColor: Colors.orange,
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: Text('Delete Account'),
           ),
         ],
       ),

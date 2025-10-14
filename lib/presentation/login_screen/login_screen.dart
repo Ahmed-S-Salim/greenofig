@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../core/app_export.dart';
@@ -501,14 +502,21 @@ class _LoginScreenState extends State<LoginScreen> {
             size: 16,
             color: theme.colorScheme.primary,
           ),
-          onPressed: () {
-            // TODO: Copy to clipboard functionality
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Credentials copied!'),
-                duration: Duration(seconds: 2),
-              ),
-            );
+          onPressed: () async {
+            // Extract credentials from the text
+            final credentials = text.split(': ').last;
+            await Clipboard.setData(ClipboardData(text: credentials));
+
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Credentials copied to clipboard!'),
+                  backgroundColor: theme.colorScheme.primary,
+                  duration: Duration(seconds: 2),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            }
           },
         ),
       ],
