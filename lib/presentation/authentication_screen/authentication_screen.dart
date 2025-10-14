@@ -290,25 +290,11 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                   SizedBox(height: 6.h),
 
                   // Logo Section
-                  Container(
-                    width: 25.w,
-                    height: 25.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppTheme.lightTheme.colorScheme.primary
-                          .withValues(alpha: 0.1),
-                      border: Border.all(
-                        color: AppTheme.lightTheme.colorScheme.primary,
-                        width: 2,
-                      ),
-                    ),
-                    child: Center(
-                      child: CustomIconWidget(
-                        iconName: 'eco',
-                        size: 12.w,
-                        color: AppTheme.lightTheme.colorScheme.primary,
-                      ),
-                    ),
+                  CustomImageWidget(
+                    imageUrl: 'assets/images/img_app_logo.svg',
+                    height: 20.h,
+                    width: 50.w,
+                    fit: BoxFit.contain,
                   ),
                   SizedBox(height: 2.h),
                   Text(
@@ -401,9 +387,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                         SizedBox(height: 3.h),
 
                         // Sign In Button
-                        Container(
+                        SizedBox(
                           width: double.infinity,
-                          height: 12.h,
+                          height: 6.5.h,
                           child: ElevatedButton(
                             onPressed:
                                 _isFormValid && !_isLoading ? _signIn : null,
@@ -481,7 +467,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
                         // Social Login Buttons
                         SocialLoginButton(
-                          iconName: 'g_translate',
+                          iconName: 'login',
                           label: 'Continue with Google',
                           onPressed: () => _socialLogin('Google'),
                         ),
