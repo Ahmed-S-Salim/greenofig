@@ -99,7 +99,7 @@ class AppTheme {
       ),
       iconTheme: IconThemeData(
         color: textPrimaryDark,
-        size: kIsWeb ? 24 : 28, // Larger icons on mobile
+        size: kIsWeb ? 28 : 32, // Significantly larger icons
       ),
       // Enhanced toolbar height for mobile touch targets
       toolbarHeight: kIsWeb ? 56 : 64,
@@ -142,10 +142,10 @@ class AppTheme {
       ),
       // Enhanced icon size for mobile
       selectedIconTheme: IconThemeData(
-        size: kIsWeb ? 24 : 28,
+        size: kIsWeb ? 28 : 32,
       ),
       unselectedIconTheme: IconThemeData(
-        size: kIsWeb ? 24 : 28,
+        size: kIsWeb ? 28 : 32,
       ),
     ),
 
@@ -433,7 +433,7 @@ class AppTheme {
 
     // Calculate base font size multiplier for mobile browsers
     final double fontMultiplier =
-        kIsWeb ? 1.1 : 1.0; // Slightly larger on web/mobile
+        kIsWeb ? 1.3 : 1.2; // Significantly larger for better readability
 
     return TextTheme(
       // Enhanced display styles with better mobile readability
