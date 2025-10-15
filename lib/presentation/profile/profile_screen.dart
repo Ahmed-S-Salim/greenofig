@@ -196,17 +196,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _onBottomNavTap(int index) {
-    if (_currentIndex == index && index == 3) return;
+    if (_currentIndex == index) return;
+
+    setState(() {
+      _currentIndex = index;
+    });
 
     switch (index) {
       case 0:
-        Navigator.pushReplacementNamed(context, AppRoutes.dashboardHome);
+        Navigator.pushNamed(context, AppRoutes.dashboardHome);
         break;
       case 1:
-        Navigator.pushReplacementNamed(context, AppRoutes.mealPlanning);
+        Navigator.pushNamed(context, AppRoutes.mealPlanning);
         break;
       case 2:
-        Navigator.pushReplacementNamed(context, AppRoutes.workoutPrograms);
+        Navigator.pushNamed(context, AppRoutes.workoutPrograms);
         break;
       case 3:
         // Already on profile

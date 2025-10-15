@@ -385,20 +385,24 @@ class _MealPlanningState extends State<MealPlanning>
   }
 
   void _onBottomNavTap(int index) {
-    if (_currentIndex == index && index == 1) return;
+    if (_currentIndex == index) return;
+
+    setState(() {
+      _currentIndex = index;
+    });
 
     switch (index) {
       case 0:
-        Navigator.pushReplacementNamed(context, AppRoutes.dashboardHome);
+        Navigator.pushNamed(context, AppRoutes.dashboardHome);
         break;
       case 1:
         // Already on meal planning
         break;
       case 2:
-        Navigator.pushReplacementNamed(context, AppRoutes.workoutPrograms);
+        Navigator.pushNamed(context, AppRoutes.workoutPrograms);
         break;
       case 3:
-        Navigator.pushReplacementNamed(context, AppRoutes.profileScreen);
+        Navigator.pushNamed(context, AppRoutes.profileScreen);
         break;
     }
   }
