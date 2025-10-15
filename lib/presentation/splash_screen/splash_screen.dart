@@ -73,19 +73,16 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _startInitialization() async {
-    // Set system UI overlay style based on current theme
-    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
+    // Wait a frame for the widget to be built
+    await Future.delayed(Duration.zero);
 
+    // Set system UI overlay style - default to dark theme
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor:
-            isDarkTheme ? AppTheme.backgroundDark : AppTheme.primaryDark,
-        statusBarIconBrightness:
-            isDarkTheme ? Brightness.light : Brightness.light,
-        systemNavigationBarColor:
-            isDarkTheme ? AppTheme.backgroundDark : AppTheme.primaryDark,
-        systemNavigationBarIconBrightness:
-            isDarkTheme ? Brightness.light : Brightness.light,
+      const SystemUiOverlayStyle(
+        statusBarColor: AppTheme.backgroundDark,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: AppTheme.backgroundDark,
+        systemNavigationBarIconBrightness: Brightness.light,
       ),
     );
 
