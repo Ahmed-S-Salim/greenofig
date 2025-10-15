@@ -92,29 +92,10 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
       if (success) {
         HapticFeedback.lightImpact();
 
-        // Show success message
+        // Navigate directly to dashboard
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Welcome back to Greenofig! Your health journey continues.',
-                style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                  color: AppTheme.lightTheme.colorScheme.onPrimary,
-                ),
-              ),
-              backgroundColor: AppTheme.lightTheme.colorScheme.primary,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          );
+          Navigator.pushReplacementNamed(context, '/dashboard-home');
         }
-
-        // Show biometric prompt for future logins
-        setState(() {
-          _showBiometricPrompt = true;
-        });
       } else {
         // Show error for invalid credentials
         if (mounted) {

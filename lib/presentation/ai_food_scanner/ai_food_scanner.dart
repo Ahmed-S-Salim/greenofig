@@ -29,6 +29,7 @@ class _AiFoodScannerState extends State<AiFoodScanner>
   CameraController? _cameraController;
   bool _isFlashOn = false;
   bool _showGrid = false;
+  int _currentCameraIndex = 0;
 
   // UI State
   bool _isProcessing = false;
@@ -140,15 +141,12 @@ class _AiFoodScannerState extends State<AiFoodScanner>
       _cameras = await availableCameras();
       if (_cameras.isEmpty) return;
 
-      final camera = kIsWeb
-          ? _cameras.firstWhere(
-              (c) => c.lensDirection == CameraLensDirection.front,
-              orElse: () => _cameras.first,
-            )
-          : _cameras.firstWhere(
-              (c) => c.lensDirection == CameraLensDirection.back,
-              orElse: () => _cameras.first,
-            );
+      // Use the current camera index if valid, otherwise back camera (or front on web)
+      if (_currentCameraIndex >= _cameras.length) {
+        _currentCameraIndex = 0;
+      }
+
+      final camera = _cameras[_currentCameraIndex];
 
       _cameraController = CameraController(
         camera,
@@ -165,6 +163,17 @@ class _AiFoodScannerState extends State<AiFoodScanner>
     } catch (e) {
       debugPrint('Camera initialization error: $e');
     }
+  }
+
+  Future<void> _switchCamera() async {
+    if (_cameras.length < 2) return;
+
+    setState(() {
+      _currentCameraIndex = (_currentCameraIndex + 1) % _cameras.length;
+    });
+
+    await _cameraController?.dispose();
+    await _initializeCamera();
   }
 
   Future<void> _applySettings() async {
@@ -557,39 +566,55 @@ class _AiFoodScannerState extends State<AiFoodScanner>
           Positioned(
             top: 6.h,
             left: 4.w,
+            right: 4.w,
             child: SafeArea(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: CustomIconWidget(
-                      iconName: 'close',
-                      color: Colors.white,
-                      size: 24,
-                    ),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: CustomIconWidget(
+                          iconName: 'close',
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                      SizedBox(width: 2.w),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _showGrid = !_showGrid;
+                          });
+                        },
+                        icon: CustomIconWidget(
+                          iconName: _showGrid ? 'grid_on' : 'grid_off',
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                      SizedBox(width: 2.w),
+                      IconButton(
+                        onPressed: _selectFromGallery,
+                        icon: CustomIconWidget(
+                          iconName: 'photo_library',
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 4.w),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _showGrid = !_showGrid;
-                      });
-                    },
-                    icon: CustomIconWidget(
-                      iconName: _showGrid ? 'grid_on' : 'grid_off',
-                      color: Colors.white,
-                      size: 24,
+                  // Camera switch button
+                  if (_cameras.length > 1)
+                    IconButton(
+                      onPressed: _switchCamera,
+                      icon: CustomIconWidget(
+                        iconName: 'cameraswitch',
+                        color: Colors.white,
+                        size: 24,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 4.w),
-                  IconButton(
-                    onPressed: _selectFromGallery,
-                    icon: CustomIconWidget(
-                      iconName: 'photo_library',
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                  ),
                 ],
               ),
             ),
