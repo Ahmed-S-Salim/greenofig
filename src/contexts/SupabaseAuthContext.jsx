@@ -148,7 +148,7 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
                 const { error } = await supabase.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        redirectTo: `${window.location.origin}`,
+                        redirectTo: `${window.location.origin}${import.meta.env.BASE_URL || '/'}`,
                     },
                 });
                 if (error) {
@@ -238,7 +238,7 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
                     description: "You have been successfully signed out.",
                 });
                 // Force redirect to home and reload
-                window.location.href = '/home';
+                window.location.href = `${import.meta.env.BASE_URL || '/'}home`;
         }, [toast]);
 
         const value = useMemo(
