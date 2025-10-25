@@ -469,7 +469,11 @@ const EnhancedBlogManager = ({ user }) => {
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
           </Button>
-          <Button onClick={() => window.location.href = '/app/nutritionist?tab=blog'}>
+          <Button onClick={() => {
+            const isGitHubPages = window.location.hostname.includes('github.io');
+            const basePath = isGitHubPages ? '/greenofig' : '';
+            window.location.href = `${basePath}/app/nutritionist?tab=blog`;
+          }}>
             <Plus className="w-4 h-4 mr-2" />
             Create Post
           </Button>

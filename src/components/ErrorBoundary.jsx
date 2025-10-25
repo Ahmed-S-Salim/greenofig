@@ -59,7 +59,11 @@ class ErrorBoundary extends React.Component {
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => window.location.href = '/app/admin'}
+                  onClick={() => {
+                    const isGitHubPages = window.location.hostname.includes('github.io');
+                    const basePath = isGitHubPages ? '/greenofig' : '';
+                    window.location.href = `${basePath}/app/admin`;
+                  }}
                 >
                   Go to Dashboard
                 </Button>
