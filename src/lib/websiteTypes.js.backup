@@ -1,0 +1,211 @@
+/**
+ * @fileoverview TypeScript/JSDoc type definitions for Website Content Management System
+ * Generated from WEBSITE_ENHANCEMENTS.sql schema
+ */
+
+/**
+ * Homepage Content Section
+ * @typedef {Object} HomepageContent
+ * @property {string} id - UUID primary key
+ * @property {('hero'|'features'|'cta'|'stats'|'process')} section_type - Type of homepage section
+ * @property {number} section_order - Display order (default: 0)
+ * @property {boolean} is_active - Whether section is active (default: true)
+ * @property {string} [title] - Section title
+ * @property {string} [subtitle] - Section subtitle
+ * @property {string} [description] - Section description
+ * @property {Object} [content] - Flexible JSON for complex content
+ * @property {string} [image_url] - Section image URL
+ * @property {string} [video_url] - Section video URL
+ * @property {string} [background_image_url] - Background image URL
+ * @property {string} [cta_text] - Call-to-action text
+ * @property {string} [cta_link] - Call-to-action link
+ * @property {('primary'|'secondary'|'outline')} [cta_type] - CTA button style
+ * @property {string} [background_color] - Background color
+ * @property {string} [text_color] - Text color
+ * @property {Object} [custom_css] - Custom CSS styles as JSON
+ * @property {string} created_at - Creation timestamp
+ * @property {string} updated_at - Last update timestamp
+ * @property {string} [created_by] - Creator user ID
+ * @property {string} [updated_by] - Last updater user ID
+ */
+
+/**
+ * Customer Testimonial
+ * @typedef {Object} Testimonial
+ * @property {string} id - UUID primary key
+ * @property {string} customer_name - Customer's name
+ * @property {string} [customer_title] - Customer's title/role (e.g., "CEO", "Fitness Enthusiast")
+ * @property {string} [customer_company] - Customer's company
+ * @property {string} [customer_avatar_url] - Customer's avatar image URL
+ * @property {string} [customer_location] - Customer's location
+ * @property {string} quote - Testimonial quote
+ * @property {string} [full_review] - Full detailed review
+ * @property {(1|2|3|4|5)} [rating] - Rating from 1-5 stars
+ * @property {boolean} verified - Whether testimonial is verified (default: false)
+ * @property {('website'|'google'|'trustpilot'|'app_store')} [source] - Source of testimonial
+ * @property {string} [source_url] - URL to original review
+ * @property {('nutrition'|'fitness'|'wellness'|'general')} [category] - Testimonial category
+ * @property {string[]} [tags] - Array of tags
+ * @property {boolean} is_featured - Whether featured on homepage (default: false)
+ * @property {boolean} is_active - Whether active (default: true)
+ * @property {number} display_order - Display order (default: 0)
+ * @property {string} [review_date] - Date of original review
+ * @property {string} created_at - Creation timestamp
+ * @property {string} updated_at - Last update timestamp
+ * @property {string} [created_by] - Creator user ID
+ */
+
+/**
+ * Contact Information
+ * @typedef {Object} ContactInfo
+ * @property {string} id - UUID primary key
+ * @property {string} [email] - Contact email
+ * @property {string} [phone] - Contact phone number
+ * @property {string} [address] - Street address
+ * @property {string} [city] - City
+ * @property {string} [state] - State/Province
+ * @property {string} [country] - Country
+ * @property {string} [postal_code] - Postal/ZIP code
+ * @property {Object} [business_hours] - Business hours as JSON (e.g., {"monday": "9am-5pm"})
+ * @property {string} [timezone] - Timezone (e.g., "America/New_York")
+ * @property {string} [facebook_url] - Facebook profile URL
+ * @property {string} [twitter_url] - Twitter/X profile URL
+ * @property {string} [instagram_url] - Instagram profile URL
+ * @property {string} [linkedin_url] - LinkedIn profile URL
+ * @property {string} [youtube_url] - YouTube channel URL
+ * @property {string} [tiktok_url] - TikTok profile URL
+ * @property {string} [blog_url] - Blog URL
+ * @property {string} [support_url] - Support page URL
+ * @property {string} [privacy_policy_url] - Privacy policy URL
+ * @property {string} [terms_of_service_url] - Terms of service URL
+ * @property {boolean} is_active - Whether active (default: true, only one can be active)
+ * @property {string} created_at - Creation timestamp
+ * @property {string} updated_at - Last update timestamp
+ * @property {string} [updated_by] - Last updater user ID
+ */
+
+/**
+ * Navigation Menu Item
+ * @typedef {Object} NavigationMenuItem
+ * @property {string} label - Menu item label
+ * @property {string} [url] - Menu item URL
+ * @property {NavigationMenuItem[]} [children] - Nested menu items
+ * @property {string} [icon] - Icon name/class
+ * @property {boolean} [external] - Whether link opens in new tab
+ */
+
+/**
+ * Navigation Menu
+ * @typedef {Object} NavigationMenu
+ * @property {string} id - UUID primary key
+ * @property {('header'|'footer'|'mobile'|'sidebar')} menu_type - Type of menu
+ * @property {string} menu_name - Menu name/identifier
+ * @property {NavigationMenuItem[]} menu_items - Array of menu items with hierarchy
+ * @property {boolean} is_active - Whether active (default: true)
+ * @property {string} created_at - Creation timestamp
+ * @property {string} updated_at - Last update timestamp
+ * @property {string} [updated_by] - Last updater user ID
+ */
+
+/**
+ * SEO Settings for a Page
+ * @typedef {Object} SEOSettings
+ * @property {string} id - UUID primary key
+ * @property {string} page_path - Page path (e.g., "/", "/about")
+ * @property {string} page_name - Page name
+ * @property {string} [meta_title] - Meta title tag
+ * @property {string} [meta_description] - Meta description tag
+ * @property {string[]} [meta_keywords] - Meta keywords array
+ * @property {string} [og_title] - Open Graph title
+ * @property {string} [og_description] - Open Graph description
+ * @property {string} [og_image_url] - Open Graph image URL
+ * @property {string} [og_type] - Open Graph type (default: "website")
+ * @property {string} [twitter_card] - Twitter card type (default: "summary_large_image")
+ * @property {string} [twitter_title] - Twitter card title
+ * @property {string} [twitter_description] - Twitter card description
+ * @property {string} [twitter_image_url] - Twitter card image URL
+ * @property {Object} [schema_markup] - Schema.org structured data as JSON
+ * @property {string} [canonical_url] - Canonical URL
+ * @property {string} robots_meta - Robots meta tag (default: "index,follow")
+ * @property {number} sitemap_priority - Sitemap priority 0.0-1.0 (default: 0.5)
+ * @property {('always'|'hourly'|'daily'|'weekly'|'monthly'|'yearly'|'never')} sitemap_changefreq - Sitemap change frequency
+ * @property {boolean} is_active - Whether active (default: true)
+ * @property {string} created_at - Creation timestamp
+ * @property {string} updated_at - Last update timestamp
+ * @property {string} [updated_by] - Last updater user ID
+ */
+
+/**
+ * Media Library File
+ * @typedef {Object} MediaFile
+ * @property {string} id - UUID primary key
+ * @property {string} file_name - Original file name
+ * @property {string} file_url - URL to file in storage
+ * @property {('image'|'video'|'document'|'audio')} file_type - Type of media file
+ * @property {string} [mime_type] - MIME type
+ * @property {number} [file_size_bytes] - File size in bytes
+ * @property {number} [width] - Image width in pixels
+ * @property {number} [height] - Image height in pixels
+ * @property {string} [alt_text] - Alt text for images
+ * @property {string} folder - Folder/category (default: "root")
+ * @property {string[]} [tags] - Array of tags
+ * @property {number} usage_count - Number of times file is used (default: 0)
+ * @property {Object} [used_in] - JSON tracking where media is used
+ * @property {string} [seo_title] - SEO-friendly title
+ * @property {string} [seo_description] - SEO description
+ * @property {string} [uploaded_by] - Uploader user ID
+ * @property {string} uploaded_at - Upload timestamp
+ * @property {string} updated_at - Last update timestamp
+ */
+
+/**
+ * Website Activity Log Entry
+ * @typedef {Object} WebsiteActivityLog
+ * @property {string} id - UUID primary key
+ * @property {string} table_name - Name of table that was modified
+ * @property {string} record_id - ID of record that was modified
+ * @property {('created'|'updated'|'deleted'|'published'|'unpublished')} action - Action performed
+ * @property {string} [user_id] - User who performed action
+ * @property {string} [user_email] - Email of user who performed action
+ * @property {Object} [old_data] - Previous data (JSON)
+ * @property {Object} [new_data] - New data (JSON)
+ * @property {Object} [changes] - Summary of changes (JSON)
+ * @property {string} created_at - When action occurred
+ * @property {string} [ip_address] - IP address of user
+ * @property {string} [user_agent] - User agent string
+ */
+
+/**
+ * Website Statistics
+ * @typedef {Object} WebsiteStatistics
+ * @property {number} total_homepage_sections - Total homepage sections
+ * @property {number} active_homepage_sections - Active homepage sections
+ * @property {number} total_testimonials - Total testimonials
+ * @property {number} featured_testimonials - Featured testimonials
+ * @property {number} total_media_files - Total media files
+ * @property {number} total_media_size_mb - Total media size in MB
+ * @property {number} total_seo_pages - Total SEO configured pages
+ * @property {number} recent_activities - Activities in last 7 days
+ */
+
+/**
+ * Testimonial Rating Distribution
+ * @typedef {Object} TestimonialRatingStats
+ * @property {number} rating - Rating value (1-5)
+ * @property {number} count - Number of testimonials with this rating
+ * @property {number} percentage - Percentage of total testimonials
+ */
+
+// Export types for use in other files
+export const Types = {
+  HomepageContent: /** @type {HomepageContent} */ ({}),
+  Testimonial: /** @type {Testimonial} */ ({}),
+  ContactInfo: /** @type {ContactInfo} */ ({}),
+  NavigationMenu: /** @type {NavigationMenu} */ ({}),
+  NavigationMenuItem: /** @type {NavigationMenuItem} */ ({}),
+  SEOSettings: /** @type {SEOSettings} */ ({}),
+  MediaFile: /** @type {MediaFile} */ ({}),
+  WebsiteActivityLog: /** @type {WebsiteActivityLog} */ ({}),
+  WebsiteStatistics: /** @type {WebsiteStatistics} */ ({}),
+  TestimonialRatingStats: /** @type {TestimonialRatingStats} */ ({}),
+};

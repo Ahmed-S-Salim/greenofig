@@ -1,0 +1,529 @@
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { supabase } from '@/lib/customSupabaseClient';
+import { toast } from '@/components/ui/use-toast';
+import {
+  Contact,
+  Mail,
+  Phone,
+  MapPin,
+  Clock,
+  Save,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  Youtube,
+  Link as LinkIcon,
+  Shield,
+  FileText
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+const DAYS_OF_WEEK = [
+  'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'
+];
+
+const TIMEZONES = [
+  { value: 'America/New_York', label: 'Eastern Time (ET)' },
+  { value: 'America/Chicago', label: 'Central Time (CT)' },
+  { value: 'America/Denver', label: 'Mountain Time (MT)' },
+  { value: 'America/Los_Angeles', label: 'Pacific Time (PT)' },
+  { value: 'UTC', label: 'UTC' },
+];
+
+const ContactInfoManager = () => {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [contactInfo, setContactInfo] = useState(null);
+
+  // Form state
+  const [formData, setFormData] = useState({
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+    country: '',
+    postal_code: '',
+    business_hours: {},
+    timezone: 'America/Los_Angeles',
+    facebook_url: '',
+    twitter_url: '',
+    instagram_url: '',
+    linkedin_url: '',
+    youtube_url: '',
+    tiktok_url: '',
+    blog_url: '',
+    support_url: '',
+    privacy_policy_url: '',
+    terms_of_service_url: '',
+  });
+
+  useEffect(() => {
+    fetchContactInfo();
+  }, []);
+
+  const fetchContactInfo = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('contact_info')
+        .select('*')
+        .eq('is_active', true)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+
+      if (data) {
+        setContactInfo(data);
+        setFormData({
+          email: data.email || '',
+          phone: data.phone || '',
+          address: data.address || '',
+          city: data.city || '',
+          state: data.state || '',
+          country: data.country || '',
+          postal_code: data.postal_code || '',
+          business_hours: data.business_hours || {},
+          timezone: data.timezone || 'America/Los_Angeles',
+          facebook_url: data.facebook_url || '',
+          twitter_url: data.twitter_url || '',
+          instagram_url: data.instagram_url || '',
+          linkedin_url: data.linkedin_url || '',
+          youtube_url: data.youtube_url || '',
+          tiktok_url: data.tiktok_url || '',
+          blog_url: data.blog_url || '',
+          support_url: data.support_url || '',
+          privacy_policy_url: data.privacy_policy_url || '',
+          terms_of_service_url: data.terms_of_service_url || '',
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching contact info:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load contact information',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+
+      if (!formData.email) {
+        toast({
+          title: 'Validation Error',
+          description: 'Email is required',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const saveData = {
+        ...formData,
+        is_active: true,
+        updated_at: new Date().toISOString(),
+      };
+
+      if (contactInfo) {
+        // Update existing
+        const { error } = await supabase
+          .from('contact_info')
+          .update(saveData)
+          .eq('id', contactInfo.id);
+
+        if (error) throw error;
+      } else {
+        // Create new
+        const { error } = await supabase
+          .from('contact_info')
+          .insert([saveData]);
+
+        if (error) throw error;
+      }
+
+      toast({
+        title: 'Success',
+        description: 'Contact information saved successfully',
+      });
+
+      fetchContactInfo();
+    } catch (error) {
+      console.error('Error saving contact info:', error);
+      toast({
+        title: 'Error',
+        description: `Failed to save: ${error.message}`,
+        variant: 'destructive',
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleBusinessHoursChange = (day, value) => {
+    setFormData({
+      ...formData,
+      business_hours: {
+        ...formData.business_hours,
+        [day]: value,
+      },
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <Contact className="w-6 h-6" />
+            Contact Information
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Manage contact details and social media links
+          </p>
+        </div>
+        <Button onClick={handleSave} disabled={saving}>
+          <Save className="w-4 h-4 mr-2" />
+          {saving ? 'Saving...' : 'Save Changes'}
+        </Button>
+      </div>
+
+      {/* Contact Details */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Contact className="w-5 h-5" />
+            Contact Details
+          </CardTitle>
+          <CardDescription>
+            Primary contact information for your business
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="flex items-center gap-2">
+                <Mail className="w-4 h-4" />
+                Email *
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="support@greenofig.com"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="flex items-center gap-2">
+                <Phone className="w-4 h-4" />
+                Phone
+              </Label>
+              <Input
+                id="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                placeholder="+1 (555) 123-4567"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="address" className="flex items-center gap-2">
+              <MapPin className="w-4 h-4" />
+              Street Address
+            </Label>
+            <Input
+              id="address"
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              placeholder="123 Wellness Street"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="city">City</Label>
+              <Input
+                id="city"
+                value={formData.city}
+                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                placeholder="San Francisco"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="state">State/Province</Label>
+              <Input
+                id="state"
+                value={formData.state}
+                onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                placeholder="CA"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="postal_code">Postal Code</Label>
+              <Input
+                id="postal_code"
+                value={formData.postal_code}
+                onChange={(e) => setFormData({ ...formData, postal_code: e.target.value })}
+                placeholder="94102"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="country">Country</Label>
+              <Input
+                id="country"
+                value={formData.country}
+                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                placeholder="USA"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Business Hours */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Clock className="w-5 h-5" />
+            Business Hours
+          </CardTitle>
+          <CardDescription>
+            Set your operating hours for each day of the week
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="timezone">Timezone</Label>
+            <Select
+              value={formData.timezone}
+              onValueChange={(value) => setFormData({ ...formData, timezone: value })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {TIMEZONES.map((tz) => (
+                  <SelectItem key={tz.value} value={tz.value}>
+                    {tz.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-3">
+            {DAYS_OF_WEEK.map((day) => (
+              <div key={day} className="flex items-center gap-3">
+                <Label className="w-28 capitalize">{day}</Label>
+                <Input
+                  value={formData.business_hours[day] || ''}
+                  onChange={(e) => handleBusinessHoursChange(day, e.target.value)}
+                  placeholder="9:00 AM - 5:00 PM or Closed"
+                  className="flex-1"
+                />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Social Media */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Social Media</CardTitle>
+          <CardDescription>
+            Connect your social media profiles
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="facebook_url" className="flex items-center gap-2">
+                <Facebook className="w-4 h-4" />
+                Facebook
+              </Label>
+              <Input
+                id="facebook_url"
+                value={formData.facebook_url}
+                onChange={(e) => setFormData({ ...formData, facebook_url: e.target.value })}
+                placeholder="https://facebook.com/greenofig"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="twitter_url" className="flex items-center gap-2">
+                <Twitter className="w-4 h-4" />
+                Twitter
+              </Label>
+              <Input
+                id="twitter_url"
+                value={formData.twitter_url}
+                onChange={(e) => setFormData({ ...formData, twitter_url: e.target.value })}
+                placeholder="https://twitter.com/greenofig"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="instagram_url" className="flex items-center gap-2">
+                <Instagram className="w-4 h-4" />
+                Instagram
+              </Label>
+              <Input
+                id="instagram_url"
+                value={formData.instagram_url}
+                onChange={(e) => setFormData({ ...formData, instagram_url: e.target.value })}
+                placeholder="https://instagram.com/greenofig"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="linkedin_url" className="flex items-center gap-2">
+                <Linkedin className="w-4 h-4" />
+                LinkedIn
+              </Label>
+              <Input
+                id="linkedin_url"
+                value={formData.linkedin_url}
+                onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
+                placeholder="https://linkedin.com/company/greenofig"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="youtube_url" className="flex items-center gap-2">
+                <Youtube className="w-4 h-4" />
+                YouTube
+              </Label>
+              <Input
+                id="youtube_url"
+                value={formData.youtube_url}
+                onChange={(e) => setFormData({ ...formData, youtube_url: e.target.value })}
+                placeholder="https://youtube.com/@greenofig"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="tiktok_url" className="flex items-center gap-2">
+                <LinkIcon className="w-4 h-4" />
+                TikTok
+              </Label>
+              <Input
+                id="tiktok_url"
+                value={formData.tiktok_url}
+                onChange={(e) => setFormData({ ...formData, tiktok_url: e.target.value })}
+                placeholder="https://tiktok.com/@greenofig"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Other Links */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Other Links</CardTitle>
+          <CardDescription>
+            Important website links and resources
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="blog_url" className="flex items-center gap-2">
+                <FileText className="w-4 h-4" />
+                Blog URL
+              </Label>
+              <Input
+                id="blog_url"
+                value={formData.blog_url}
+                onChange={(e) => setFormData({ ...formData, blog_url: e.target.value })}
+                placeholder="/blog or https://blog.greenofig.com"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="support_url" className="flex items-center gap-2">
+                <Contact className="w-4 h-4" />
+                Support URL
+              </Label>
+              <Input
+                id="support_url"
+                value={formData.support_url}
+                onChange={(e) => setFormData({ ...formData, support_url: e.target.value })}
+                placeholder="/support or https://support.greenofig.com"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="privacy_policy_url" className="flex items-center gap-2">
+                <Shield className="w-4 h-4" />
+                Privacy Policy URL
+              </Label>
+              <Input
+                id="privacy_policy_url"
+                value={formData.privacy_policy_url}
+                onChange={(e) => setFormData({ ...formData, privacy_policy_url: e.target.value })}
+                placeholder="/privacy-policy"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="terms_of_service_url" className="flex items-center gap-2">
+                <FileText className="w-4 h-4" />
+                Terms of Service URL
+              </Label>
+              <Input
+                id="terms_of_service_url"
+                value={formData.terms_of_service_url}
+                onChange={(e) => setFormData({ ...formData, terms_of_service_url: e.target.value })}
+                placeholder="/terms-of-service"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Save Button */}
+      <div className="flex justify-end">
+        <Button onClick={handleSave} disabled={saving} size="lg">
+          <Save className="w-4 h-4 mr-2" />
+          {saving ? 'Saving...' : 'Save All Changes'}
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default ContactInfoManager;

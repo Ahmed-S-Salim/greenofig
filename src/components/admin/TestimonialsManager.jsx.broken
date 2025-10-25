@@ -1,0 +1,901 @@
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { supabase } from '@/lib/customSupabaseClient';
+import { toast } from '@/components/ui/use-toast';
+import {
+  MessageSquare,
+  Plus,
+  Edit,
+  Trash2,
+  Star,
+  Eye,
+  EyeOff,
+  Award,
+  Search,
+  Filter,
+  X,
+  Save,
+  User,
+  Building,
+  MapPin,
+  ExternalLink,
+  CheckCircle2
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+
+const CATEGORIES = [
+  { value: 'nutrition', label: 'Nutrition' },
+  { value: 'fitness', label: 'Fitness' },
+  { value: 'wellness', label: 'Wellness' },
+  { value: 'general', label: 'General' },
+];
+
+const SOURCES = [
+  { value: 'website', label: 'Website' },
+  { value: 'google', label: 'Google Reviews' },
+  { value: 'trustpilot', label: 'Trustpilot' },
+  { value: 'app_store', label: 'App Store' },
+  { value: 'other', label: 'Other' },
+];
+
+const TestimonialsManager = () => {
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [editingTestimonial, setEditingTestimonial] = useState(null);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+
+  // Filters
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [ratingFilter, setRatingFilter] = useState('all');
+
+  // Statistics
+  const [stats, setStats] = useState({
+    total: 0,
+    featured: 0,
+    averageRating: 0,
+  });
+
+  // Editor state
+  const [formData, setFormData] = useState({
+    customer_name: '',
+    customer_title: '',
+    customer_company: '',
+    customer_avatar_url: '',
+    customer_location: '',
+    quote: '',
+    full_review: '',
+    rating: 5,
+    verified: false,
+    source: 'website',
+    source_url: '',
+    category: 'general',
+    is_featured: false,
+    is_active: true,
+    display_order: 0,
+  });
+
+  useEffect(() => {
+    fetchTestimonials();
+  }, []);
+
+  useEffect(() => {
+    calculateStats();
+  }, [testimonials]);
+
+  const fetchTestimonials = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .order('display_order', { ascending: true });
+
+      if (error) throw error;
+      setTestimonials(data || []);
+    } catch (error) {
+      console.error('Error fetching testimonials:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load testimonials',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const calculateStats = () => {
+    const total = testimonials.length;
+    const featured = testimonials.filter(t => t.is_featured).length;
+    const totalRating = testimonials.reduce((sum, t) => sum + (t.rating || 0), 0);
+    const averageRating = total > 0 ? (totalRating / total).toFixed(1) : 0;
+
+    setStats({ total, featured, averageRating });
+  };
+
+  const handleOpenEditor = (testimonial = null) => {
+    if (testimonial) {
+      setEditingTestimonial(testimonial);
+      setFormData({
+        customer_name: testimonial.customer_name || '',
+        customer_title: testimonial.customer_title || '',
+        customer_company: testimonial.customer_company || '',
+        customer_avatar_url: testimonial.customer_avatar_url || '',
+        customer_location: testimonial.customer_location || '',
+        quote: testimonial.quote || '',
+        full_review: testimonial.full_review || '',
+        rating: testimonial.rating || 5,
+        verified: testimonial.verified || false,
+        source: testimonial.source || 'website',
+        source_url: testimonial.source_url || '',
+        category: testimonial.category || 'general',
+        is_featured: testimonial.is_featured || false,
+        is_active: testimonial.is_active !== false,
+        display_order: testimonial.display_order || 0,
+      });
+    } else {
+      setEditingTestimonial(null);
+      setFormData({
+        customer_name: '',
+        customer_title: '',
+        customer_company: '',
+        customer_avatar_url: '',
+        customer_location: '',
+        quote: '',
+        full_review: '',
+        rating: 5,
+        verified: false,
+        source: 'website',
+        source_url: '',
+        category: 'general',
+        is_featured: false,
+        is_active: true,
+        display_order: testimonials.length,
+      });
+    }
+    setIsEditorOpen(true);
+  };
+
+  const handleCloseEditor = () => {
+    setIsEditorOpen(false);
+    setEditingTestimonial(null);
+  };
+
+  const handleSaveTestimonial = async () => {
+    try {
+      if (!formData.customer_name || !formData.quote) {
+        toast({
+          title: 'Validation Error',
+          description: 'Customer name and quote are required',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const testimonialData = {
+        ...formData,
+        review_date: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      if (editingTestimonial) {
+        const { error } = await supabase
+          .from('testimonials')
+          .update(testimonialData)
+          .eq('id', editingTestimonial.id);
+
+        if (error) throw error;
+
+        toast({
+          title: 'Success',
+          description: 'Testimonial updated successfully',
+        });
+      } else {
+        const { error } = await supabase
+          .from('testimonials')
+          .insert([testimonialData]);
+
+        if (error) throw error;
+
+        toast({
+          title: 'Success',
+          description: 'Testimonial created successfully',
+        });
+      }
+
+      handleCloseEditor();
+      fetchTestimonials();
+    } catch (error) {
+      console.error('Error saving testimonial:', error);
+      toast({
+        title: 'Error',
+        description: `Failed to save testimonial: ${error.message}`,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleDeleteTestimonial = async (id) => {
+    try {
+      const { error } = await supabase
+        .from('testimonials')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: 'Testimonial deleted successfully',
+      });
+      fetchTestimonials();
+    } catch (error) {
+      console.error('Error deleting testimonial:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to delete testimonial',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleteConfirmId(null);
+    }
+  };
+
+  const handleToggleFeatured = async (testimonial) => {
+    try {
+      const { error } = await supabase
+        .from('testimonials')
+        .update({ is_featured: !testimonial.is_featured })
+        .eq('id', testimonial.id);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: `Testimonial ${!testimonial.is_featured ? 'featured' : 'unfeatured'}`,
+      });
+      fetchTestimonials();
+    } catch (error) {
+      console.error('Error toggling featured:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update testimonial',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleToggleActive = async (testimonial) => {
+    try {
+      const { error } = await supabase
+        .from('testimonials')
+        .update({ is_active: !testimonial.is_active })
+        .eq('id', testimonial.id);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: `Testimonial ${!testimonial.is_active ? 'activated' : 'deactivated'}`,
+      });
+      fetchTestimonials();
+    } catch (error) {
+      console.error('Error toggling active:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update testimonial',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const filteredTestimonials = testimonials.filter(testimonial => {
+    const matchesSearch = testimonial.customer_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          testimonial.quote?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = categoryFilter === 'all' || testimonial.category === categoryFilter;
+    const matchesRating = ratingFilter === 'all' || testimonial.rating === parseInt(ratingFilter);
+
+    return matchesSearch && matchesCategory && matchesRating;
+  });
+
+  const renderStars = (rating) => {
+    return (
+      <div className="flex gap-0.5">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={`w-4 h-4 ${
+              star <= rating
+                ? 'fill-yellow-400 text-yellow-400'
+                : 'text-muted-foreground'
+            }`}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <MessageSquare className="w-6 h-6" />
+            Testimonials Manager
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Manage customer reviews and testimonials
+          </p>
+        </div>
+        <Button onClick={() => handleOpenEditor()}>
+          <Plus className="w-4 h-4 mr-2" />
+          Add Testimonial
+        </Button>
+      </div>
+
+      {/* Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Total</p>
+                <p className="text-2xl font-bold">{stats.total}</p>
+              </div>
+              <MessageSquare className="w-8 h-8 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Featured</p>
+                <p className="text-2xl font-bold">{stats.featured}</p>
+              </div>
+              <Award className="w-8 h-8 text-primary" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Avg Rating</p>
+                <p className="text-2xl font-bold flex items-center gap-2">
+                  {stats.averageRating}
+                  <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                </p>
+              </div>
+              <Star className="w-8 h-8 text-yellow-400" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filters */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex flex-wrap gap-3">
+            <div className="flex-1 min-w-[200px]">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search testimonials..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                {CATEGORIES.map((cat) => (
+                  <SelectItem key={cat.value} value={cat.value}>
+                    {cat.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={ratingFilter} onValueChange={setRatingFilter}>
+              <SelectTrigger className="w-[120px]">
+                <SelectValue placeholder="Rating" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Ratings</SelectItem>
+                <SelectItem value="5">5 Stars</SelectItem>
+                <SelectItem value="4">4 Stars</SelectItem>
+                <SelectItem value="3">3 Stars</SelectItem>
+                <SelectItem value="2">2 Stars</SelectItem>
+                <SelectItem value="1">1 Star</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {(searchQuery || categoryFilter !== 'all' || ratingFilter !== 'all') && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setSearchQuery('');
+                  setCategoryFilter('all');
+                  setRatingFilter('all');
+                }}
+              >
+                <X className="w-4 h-4 mr-2" />
+                Clear
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Testimonials List */}
+      <div className="space-y-4">
+        {filteredTestimonials.length === 0 ? (
+          <Card>
+            <CardContent className="py-12 text-center">
+              <MessageSquare className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">
+                {searchQuery || categoryFilter !== 'all' || ratingFilter !== 'all'
+                  ? 'No testimonials match your filters'
+                  : 'No testimonials yet'}
+              </p>
+              {!searchQuery && categoryFilter === 'all' && ratingFilter === 'all' && (
+                <Button onClick={() => handleOpenEditor()} className="mt-4">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create First Testimonial
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+        ) : (
+          filteredTestimonials.map((testimonial, index) => (
+            <motion.div
+              key={testimonial.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+            >
+              <Card className={!testimonial.is_active ? 'opacity-60' : ''}>
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    {/* Avatar */}
+                    <div className="flex-shrink-0">
+                      {testimonial.customer_avatar_url ? (
+                        <img
+                          src={testimonial.customer_avatar_url}
+                          alt={testimonial.customer_name}
+                          className="w-12 h-12 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                          <User className="w-6 h-6 text-primary" />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      {/* Header */}
+                      <div className="flex items-start justify-between gap-4 mb-3">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-semibold">{testimonial.customer_name}</h3>
+                            {testimonial.verified && (
+                              <CheckCircle2 className="w-4 h-4 text-primary" />
+                            )}
+                          </div>
+                          {testimonial.customer_title && (
+                            <p className="text-sm text-muted-foreground">
+                              {testimonial.customer_title}
+                              {testimonial.customer_company && ` at ${testimonial.customer_company}`}
+                            </p>
+                          )}
+                          {testimonial.customer_location && (
+                            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                              <MapPin className="w-3 h-3" />
+                              {testimonial.customer_location}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleToggleFeatured(testimonial)}
+                            className={testimonial.is_featured ? 'text-primary' : ''}
+                          >
+                            <Award className={`w-4 h-4 ${testimonial.is_featured ? 'fill-current' : ''}`} />
+                          </Button>
+
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleToggleActive(testimonial)}
+                          >
+                            {testimonial.is_active ? (
+                              <Eye className="w-4 h-4" />
+                            ) : (
+                              <EyeOff className="w-4 h-4" />
+                            )}
+                          </Button>
+
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleOpenEditor(testimonial)}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setDeleteConfirmId(testimonial.id)}
+                          >
+                            <Trash2 className="w-4 h-4 text-destructive" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Rating */}
+                      <div className="mb-3">
+                        {renderStars(testimonial.rating)}
+                      </div>
+
+                      {/* Quote */}
+                      <blockquote className="text-foreground mb-3 italic">
+                        "{testimonial.quote}"
+                      </blockquote>
+
+                      {/* Metadata */}
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                        <span className="px-2 py-1 rounded-full bg-muted">
+                          {CATEGORIES.find(c => c.value === testimonial.category)?.label || testimonial.category}
+                        </span>
+                        <span className="px-2 py-1 rounded-full bg-muted">
+                          {SOURCES.find(s => s.value === testimonial.source)?.label || testimonial.source}
+                        </span>
+                        {testimonial.is_featured && (
+                          <span className="px-2 py-1 rounded-full bg-primary/10 text-primary">
+                            Featured
+                          </span>
+                        )}
+                        {testimonial.source_url && (
+                          <a
+                            href={testimonial.source_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 hover:text-primary"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                            View Source
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))
+        )}
+      </div>
+
+      {/* Editor Dialog */}
+      <Dialog open={isEditorOpen} onOpenChange={setIsEditorOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingTestimonial ? 'Edit Testimonial' : 'Create New Testimonial'}
+            </DialogTitle>
+            <DialogDescription>
+              Add or update customer testimonial information
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-4">
+            {/* Customer Info */}
+            <div className="space-y-4">
+              <Label className="flex items-center gap-2">
+                <User className="w-4 h-4" />
+                Customer Information
+              </Label>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="customer_name">Name *</Label>
+                  <Input
+                    id="customer_name"
+                    value={formData.customer_name}
+                    onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
+                    placeholder="John Doe"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="customer_title">Title/Role</Label>
+                  <Input
+                    id="customer_title"
+                    value={formData.customer_title}
+                    onChange={(e) => setFormData({ ...formData, customer_title: e.target.value })}
+                    placeholder="Fitness Enthusiast"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="customer_company">Company</Label>
+                  <Input
+                    id="customer_company"
+                    value={formData.customer_company}
+                    onChange={(e) => setFormData({ ...formData, customer_company: e.target.value })}
+                    placeholder="Company Name"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="customer_location">Location</Label>
+                  <Input
+                    id="customer_location"
+                    value={formData.customer_location}
+                    onChange={(e) => setFormData({ ...formData, customer_location: e.target.value })}
+                    placeholder="San Francisco, CA"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="customer_avatar_url">Avatar URL</Label>
+                <Input
+                  id="customer_avatar_url"
+                  value={formData.customer_avatar_url}
+                  onChange={(e) => setFormData({ ...formData, customer_avatar_url: e.target.value })}
+                  placeholder="https://..."
+                />
+              </div>
+            </div>
+
+            {/* Testimonial Content */}
+            <div className="space-y-4">
+              <Label>Testimonial Content</Label>
+
+              <div className="space-y-2">
+                <Label htmlFor="quote">Quote *</Label>
+                <Textarea
+                  id="quote"
+                  value={formData.quote}
+                  onChange={(e) => setFormData({ ...formData, quote: e.target.value })}
+                  placeholder="Enter the main testimonial quote..."
+                  rows={3}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {formData.quote.length} characters
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="full_review">Full Review (Optional)</Label>
+                <Textarea
+                  id="full_review"
+                  value={formData.full_review}
+                  onChange={(e) => setFormData({ ...formData, full_review: e.target.value })}
+                  placeholder="Enter the complete review if available..."
+                  rows={4}
+                />
+              </div>
+            </div>
+
+            {/* Rating */}
+            <div className="space-y-2">
+              <Label htmlFor="rating">Rating</Label>
+              <Select
+                value={formData.rating.toString()}
+                onValueChange={(value) => setFormData({ ...formData, rating: parseInt(value) })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[5, 4, 3, 2, 1].map((rating) => (
+                    <SelectItem key={rating} value={rating.toString()}>
+                      {rating} Stars
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Category & Source */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="category">Category</Label>
+                <Select
+                  value={formData.category}
+                  onValueChange={(value) => setFormData({ ...formData, category: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.map((cat) => (
+                      <SelectItem key={cat.value} value={cat.value}>
+                        {cat.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="source">Source</Label>
+                <Select
+                  value={formData.source}
+                  onValueChange={(value) => setFormData({ ...formData, source: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SOURCES.map((source) => (
+                      <SelectItem key={source.value} value={source.value}>
+                        {source.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="source_url">Source URL</Label>
+              <Input
+                id="source_url"
+                value={formData.source_url}
+                onChange={(e) => setFormData({ ...formData, source_url: e.target.value })}
+                placeholder="https://..."
+              />
+            </div>
+
+            {/* Display Settings */}
+            <div className="space-y-4">
+              <Label>Display Settings</Label>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="verified">Verified</Label>
+                  <p className="text-xs text-muted-foreground">Mark as verified customer</p>
+                </div>
+                <Switch
+                  id="verified"
+                  checked={formData.verified}
+                  onCheckedChange={(checked) => setFormData({ ...formData, verified: checked })}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="is_featured">Featured</Label>
+                  <p className="text-xs text-muted-foreground">Show in featured section</p>
+                </div>
+                <Switch
+                  id="is_featured"
+                  checked={formData.is_featured}
+                  onCheckedChange={(checked) => setFormData({ ...formData, is_featured: checked })}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="is_active">Active</Label>
+                  <p className="text-xs text-muted-foreground">Display on website</p>
+                </div>
+                <Switch
+                  id="is_active"
+                  checked={formData.is_active}
+                  onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="display_order">Display Order</Label>
+                <Input
+                  id="display_order"
+                  type="number"
+                  value={formData.display_order}
+                  onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) || 0 })}
+                />
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={handleCloseEditor}>
+              <X className="w-4 h-4 mr-2" />
+              Cancel
+            </Button>
+            <Button onClick={handleSaveTestimonial}>
+              <Save className="w-4 h-4 mr-2" />
+              Save Testimonial
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation */}
+      <AlertDialog open={!!deleteConfirmId} onOpenChange={() => setDeleteConfirmId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Testimonial</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this testimonial? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => handleDeleteTestimonial(deleteConfirmId)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+};
+
+export default TestimonialsManager;

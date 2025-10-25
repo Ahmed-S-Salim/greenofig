@@ -1,0 +1,807 @@
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { supabase } from '@/lib/customSupabaseClient';
+import { toast } from '@/components/ui/use-toast';
+import {
+  Search as SearchIcon,
+  Plus,
+  Edit,
+  Trash2,
+  Save,
+  X,
+  Globe,
+  Image as ImageIcon,
+  Code,
+  TrendingUp,
+  Eye,
+  EyeOff,
+  ExternalLink
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+
+const CHANGE_FREQUENCIES = [
+  { value: 'always', label: 'Always' },
+  { value: 'hourly', label: 'Hourly' },
+  { value: 'daily', label: 'Daily' },
+  { value: 'weekly', label: 'Weekly' },
+  { value: 'monthly', label: 'Monthly' },
+  { value: 'yearly', label: 'Yearly' },
+  { value: 'never', label: 'Never' },
+];
+
+const OG_TYPES = [
+  { value: 'website', label: 'Website' },
+  { value: 'article', label: 'Article' },
+  { value: 'product', label: 'Product' },
+];
+
+const TWITTER_CARDS = [
+  { value: 'summary', label: 'Summary' },
+  { value: 'summary_large_image', label: 'Summary Large Image' },
+  { value: 'app', label: 'App' },
+  { value: 'player', label: 'Player' },
+];
+
+const SEOManager = () => {
+  const [pages, setPages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [editingPage, setEditingPage] = useState(null);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Editor state
+  const [formData, setFormData] = useState({
+    page_path: '',
+    page_name: '',
+    meta_title: '',
+    meta_description: '',
+    meta_keywords: [],
+    og_title: '',
+    og_description: '',
+    og_image_url: '',
+    og_type: 'website',
+    twitter_card: 'summary_large_image',
+    twitter_title: '',
+    twitter_description: '',
+    twitter_image_url: '',
+    canonical_url: '',
+    robots_meta: 'index,follow',
+    sitemap_priority: 0.5,
+    sitemap_changefreq: 'weekly',
+    is_active: true,
+  });
+
+  const [keywordInput, setKeywordInput] = useState('');
+
+  useEffect(() => {
+    fetchPages();
+  }, []);
+
+  const fetchPages = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('seo_settings')
+        .select('*')
+        .order('page_path', { ascending: true });
+
+      if (error) throw error;
+      setPages(data || []);
+    } catch (error) {
+      console.error('Error fetching SEO pages:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load SEO settings',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOpenEditor = (page = null) => {
+    if (page) {
+      setEditingPage(page);
+      setFormData({
+        page_path: page.page_path || '',
+        page_name: page.page_name || '',
+        meta_title: page.meta_title || '',
+        meta_description: page.meta_description || '',
+        meta_keywords: page.meta_keywords || [],
+        og_title: page.og_title || '',
+        og_description: page.og_description || '',
+        og_image_url: page.og_image_url || '',
+        og_type: page.og_type || 'website',
+        twitter_card: page.twitter_card || 'summary_large_image',
+        twitter_title: page.twitter_title || '',
+        twitter_description: page.twitter_description || '',
+        twitter_image_url: page.twitter_image_url || '',
+        canonical_url: page.canonical_url || '',
+        robots_meta: page.robots_meta || 'index,follow',
+        sitemap_priority: page.sitemap_priority || 0.5,
+        sitemap_changefreq: page.sitemap_changefreq || 'weekly',
+        is_active: page.is_active !== false,
+      });
+    } else {
+      setEditingPage(null);
+      setFormData({
+        page_path: '',
+        page_name: '',
+        meta_title: '',
+        meta_description: '',
+        meta_keywords: [],
+        og_title: '',
+        og_description: '',
+        og_image_url: '',
+        og_type: 'website',
+        twitter_card: 'summary_large_image',
+        twitter_title: '',
+        twitter_description: '',
+        twitter_image_url: '',
+        canonical_url: '',
+        robots_meta: 'index,follow',
+        sitemap_priority: 0.5,
+        sitemap_changefreq: 'weekly',
+        is_active: true,
+      });
+    }
+    setIsEditorOpen(true);
+  };
+
+  const handleCloseEditor = () => {
+    setIsEditorOpen(false);
+    setEditingPage(null);
+    setKeywordInput('');
+  };
+
+  const handleAddKeyword = () => {
+    if (keywordInput.trim() && !formData.meta_keywords.includes(keywordInput.trim())) {
+      setFormData({
+        ...formData,
+        meta_keywords: [...formData.meta_keywords, keywordInput.trim()],
+      });
+      setKeywordInput('');
+    }
+  };
+
+  const handleRemoveKeyword = (keyword) => {
+    setFormData({
+      ...formData,
+      meta_keywords: formData.meta_keywords.filter(k => k !== keyword),
+    });
+  };
+
+  const handleSavePage = async () => {
+    try {
+      if (!formData.page_path || !formData.page_name) {
+        toast({
+          title: 'Validation Error',
+          description: 'Page path and name are required',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const pageData = {
+        ...formData,
+        updated_at: new Date().toISOString(),
+      };
+
+      if (editingPage) {
+        const { error } = await supabase
+          .from('seo_settings')
+          .update(pageData)
+          .eq('id', editingPage.id);
+
+        if (error) throw error;
+
+        toast({
+          title: 'Success',
+          description: 'SEO settings updated successfully',
+        });
+      } else {
+        const { error } = await supabase
+          .from('seo_settings')
+          .insert([pageData]);
+
+        if (error) throw error;
+
+        toast({
+          title: 'Success',
+          description: 'SEO settings created successfully',
+        });
+      }
+
+      handleCloseEditor();
+      fetchPages();
+    } catch (error) {
+      console.error('Error saving SEO settings:', error);
+      toast({
+        title: 'Error',
+        description: `Failed to save: ${error.message}`,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleDeletePage = async (id) => {
+    try {
+      const { error } = await supabase
+        .from('seo_settings')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: 'SEO settings deleted successfully',
+      });
+      fetchPages();
+    } catch (error) {
+      console.error('Error deleting SEO settings:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to delete SEO settings',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleteConfirmId(null);
+    }
+  };
+
+  const handleToggleActive = async (page) => {
+    try {
+      const { error } = await supabase
+        .from('seo_settings')
+        .update({ is_active: !page.is_active })
+        .eq('id', page.id);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: `SEO settings ${!page.is_active ? 'activated' : 'deactivated'}`,
+      });
+      fetchPages();
+    } catch (error) {
+      console.error('Error toggling active:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update SEO settings',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const filteredPages = pages.filter(page =>
+    page.page_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    page.page_path?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <TrendingUp className="w-6 h-6" />
+            SEO Manager
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Manage meta tags, Open Graph, and SEO settings for all pages
+          </p>
+        </div>
+        <Button onClick={() => handleOpenEditor()}>
+          <Plus className="w-4 h-4 mr-2" />
+          Add Page
+        </Button>
+      </div>
+
+      {/* Search */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="relative">
+            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search pages..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Pages List */}
+      <div className="space-y-4">
+        {filteredPages.length === 0 ? (
+          <Card>
+            <CardContent className="py-12 text-center">
+              <TrendingUp className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">
+                {searchQuery ? 'No pages match your search' : 'No SEO settings configured yet'}
+              </p>
+              {!searchQuery && (
+                <Button onClick={() => handleOpenEditor()} className="mt-4">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add First Page
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+        ) : (
+          filteredPages.map((page, index) => (
+            <motion.div
+              key={page.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+            >
+              <Card className={!page.is_active ? 'opacity-60' : ''}>
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between gap-4">
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="text-lg font-semibold">{page.page_name}</h3>
+                        <code className="text-xs px-2 py-1 bg-muted rounded">{page.page_path}</code>
+                        {!page.is_active && (
+                          <span className="text-xs px-2 py-1 bg-muted text-muted-foreground rounded">
+                            Inactive
+                          </span>
+                        )}
+                      </div>
+
+                      {page.meta_title && (
+                        <p className="text-sm font-medium text-foreground mb-1">{page.meta_title}</p>
+                      )}
+
+                      {page.meta_description && (
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                          {page.meta_description}
+                        </p>
+                      )}
+
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <Globe className="w-3 h-3" />
+                          {page.robots_meta}
+                        </span>
+                        <span>Priority: {page.sitemap_priority}</span>
+                        <span>Freq: {page.sitemap_changefreq}</span>
+                        {page.meta_keywords && page.meta_keywords.length > 0 && (
+                          <span>{page.meta_keywords.length} keywords</span>
+                        )}
+                        {page.og_image_url && (
+                          <span className="flex items-center gap-1">
+                            <ImageIcon className="w-3 h-3" />
+                            OG Image
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleToggleActive(page)}
+                      >
+                        {page.is_active ? (
+                          <Eye className="w-4 h-4" />
+                        ) : (
+                          <EyeOff className="w-4 h-4" />
+                        )}
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleOpenEditor(page)}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setDeleteConfirmId(page.id)}
+                      >
+                        <Trash2 className="w-4 h-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))
+        )}
+      </div>
+
+      {/* Editor Dialog */}
+      <Dialog open={isEditorOpen} onOpenChange={setIsEditorOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingPage ? 'Edit SEO Settings' : 'Add SEO Settings'}
+            </DialogTitle>
+            <DialogDescription>
+              Configure meta tags, Open Graph, and Twitter Card settings
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-4">
+            {/* Page Info */}
+            <div className="space-y-4">
+              <Label>Page Information</Label>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="page_path">Page Path *</Label>
+                  <Input
+                    id="page_path"
+                    value={formData.page_path}
+                    onChange={(e) => setFormData({ ...formData, page_path: e.target.value })}
+                    placeholder="/about"
+                    disabled={!!editingPage}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="page_name">Page Name *</Label>
+                  <Input
+                    id="page_name"
+                    value={formData.page_name}
+                    onChange={(e) => setFormData({ ...formData, page_name: e.target.value })}
+                    placeholder="About Us"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Meta Tags */}
+            <div className="space-y-4">
+              <Label>Meta Tags</Label>
+
+              <div className="space-y-2">
+                <Label htmlFor="meta_title">Meta Title</Label>
+                <Input
+                  id="meta_title"
+                  value={formData.meta_title}
+                  onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
+                  placeholder="About Us - GreenoFig"
+                />
+                <p className="text-xs text-muted-foreground">
+                  {formData.meta_title.length}/60 characters (recommended)
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="meta_description">Meta Description</Label>
+                <Textarea
+                  id="meta_description"
+                  value={formData.meta_description}
+                  onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
+                  placeholder="Enter meta description..."
+                  rows={3}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {formData.meta_description.length}/160 characters (recommended)
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Keywords</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={keywordInput}
+                    onChange={(e) => setKeywordInput(e.target.value)}
+                    placeholder="Add keyword"
+                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddKeyword())}
+                  />
+                  <Button type="button" onClick={handleAddKeyword} variant="outline">
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {formData.meta_keywords.map((keyword, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded text-sm"
+                    >
+                      {keyword}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveKeyword(keyword)}
+                        className="hover:text-destructive"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Open Graph */}
+            <div className="space-y-4">
+              <Label className="flex items-center gap-2">
+                <Globe className="w-4 h-4" />
+                Open Graph (Social Media)
+              </Label>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="og_title">OG Title</Label>
+                  <Input
+                    id="og_title"
+                    value={formData.og_title}
+                    onChange={(e) => setFormData({ ...formData, og_title: e.target.value })}
+                    placeholder="Leave empty to use meta title"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="og_type">OG Type</Label>
+                  <Select
+                    value={formData.og_type}
+                    onValueChange={(value) => setFormData({ ...formData, og_type: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {OG_TYPES.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="og_description">OG Description</Label>
+                <Textarea
+                  id="og_description"
+                  value={formData.og_description}
+                  onChange={(e) => setFormData({ ...formData, og_description: e.target.value })}
+                  placeholder="Leave empty to use meta description"
+                  rows={2}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="og_image_url">OG Image URL</Label>
+                <Input
+                  id="og_image_url"
+                  value={formData.og_image_url}
+                  onChange={(e) => setFormData({ ...formData, og_image_url: e.target.value })}
+                  placeholder="https://..."
+                />
+                <p className="text-xs text-muted-foreground">
+                  Recommended: 1200x630px
+                </p>
+              </div>
+            </div>
+
+            {/* Twitter Card */}
+            <div className="space-y-4">
+              <Label>Twitter Card</Label>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="twitter_card">Card Type</Label>
+                  <Select
+                    value={formData.twitter_card}
+                    onValueChange={(value) => setFormData({ ...formData, twitter_card: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TWITTER_CARDS.map((card) => (
+                        <SelectItem key={card.value} value={card.value}>
+                          {card.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="twitter_title">Twitter Title</Label>
+                  <Input
+                    id="twitter_title"
+                    value={formData.twitter_title}
+                    onChange={(e) => setFormData({ ...formData, twitter_title: e.target.value })}
+                    placeholder="Leave empty to use OG title"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="twitter_description">Twitter Description</Label>
+                <Textarea
+                  id="twitter_description"
+                  value={formData.twitter_description}
+                  onChange={(e) => setFormData({ ...formData, twitter_description: e.target.value })}
+                  placeholder="Leave empty to use OG description"
+                  rows={2}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="twitter_image_url">Twitter Image URL</Label>
+                <Input
+                  id="twitter_image_url"
+                  value={formData.twitter_image_url}
+                  onChange={(e) => setFormData({ ...formData, twitter_image_url: e.target.value })}
+                  placeholder="Leave empty to use OG image"
+                />
+              </div>
+            </div>
+
+            {/* Advanced Settings */}
+            <div className="space-y-4">
+              <Label>Advanced Settings</Label>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="canonical_url">Canonical URL</Label>
+                  <Input
+                    id="canonical_url"
+                    value={formData.canonical_url}
+                    onChange={(e) => setFormData({ ...formData, canonical_url: e.target.value })}
+                    placeholder="https://greenofig.com/about"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="robots_meta">Robots Meta</Label>
+                  <Select
+                    value={formData.robots_meta}
+                    onValueChange={(value) => setFormData({ ...formData, robots_meta: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="index,follow">Index, Follow</SelectItem>
+                      <SelectItem value="noindex,nofollow">No Index, No Follow</SelectItem>
+                      <SelectItem value="index,nofollow">Index, No Follow</SelectItem>
+                      <SelectItem value="noindex,follow">No Index, Follow</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="sitemap_priority">Sitemap Priority</Label>
+                  <Input
+                    id="sitemap_priority"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="1"
+                    value={formData.sitemap_priority}
+                    onChange={(e) => setFormData({ ...formData, sitemap_priority: parseFloat(e.target.value) || 0.5 })}
+                  />
+                  <p className="text-xs text-muted-foreground">0.0 to 1.0</p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="sitemap_changefreq">Change Frequency</Label>
+                  <Select
+                    value={formData.sitemap_changefreq}
+                    onValueChange={(value) => setFormData({ ...formData, sitemap_changefreq: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CHANGE_FREQUENCIES.map((freq) => (
+                        <SelectItem key={freq.value} value={freq.value}>
+                          {freq.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="is_active">Active</Label>
+                  <p className="text-xs text-muted-foreground">Enable SEO settings for this page</p>
+                </div>
+                <Switch
+                  id="is_active"
+                  checked={formData.is_active}
+                  onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+                />
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={handleCloseEditor}>
+              <X className="w-4 h-4 mr-2" />
+              Cancel
+            </Button>
+            <Button onClick={handleSavePage}>
+              <Save className="w-4 h-4 mr-2" />
+              Save Settings
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation */}
+      <AlertDialog open={!!deleteConfirmId} onOpenChange={() => setDeleteConfirmId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete SEO Settings</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete these SEO settings? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => handleDeletePage(deleteConfirmId)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+};
+
+export default SEOManager;

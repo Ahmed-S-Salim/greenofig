@@ -1,0 +1,263 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 220 15% 10%;
+  --foreground: 220 10% 95%;
+  --card: 220 15% 15%;
+  --card-foreground: 220 10% 95%;
+  --popover: 220 15% 15%;
+  --popover-foreground: 220 10% 95%;
+  --primary: 100 70% 55%;
+  --primary-foreground: 100 70% 15%;
+  --secondary: 220 10% 25%;
+  --secondary-foreground: 220 10% 95%;
+  --muted: 220 10% 18%;
+  --muted-foreground: 220 10% 65%;
+  --accent: 220 10% 20%;
+  --accent-foreground: 220 10% 95%;
+  --destructive: 0 62% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 10% 25%;
+  --input: 220 10% 25%;
+  --ring: 100 70% 60%;
+  --radius: 0.75rem;
+
+  --glass-bg: 220 15% 12% / 0.6;
+  --glass-border: 220 10% 25%;
+  --text-primary: 220 10% 98%;
+  --text-secondary: 220 10% 70%;
+}
+
+.dark {
+  --background: 220 15% 10%;
+  --foreground: 220 10% 95%;
+  --card: 220 15% 15%;
+  --card-foreground: 220 10% 95%;
+  --popover: 220 15% 15%;
+  --popover-foreground: 220 10% 95%;
+  --primary: 100 70% 55%;
+  --primary-foreground: 100 70% 15%;
+  --secondary: 220 10% 25%;
+  --secondary-foreground: 220 10% 95%;
+  --muted: 220 10% 18%;
+  --muted-foreground: 220 10% 65%;
+  --accent: 220 10% 20%;
+  --accent-foreground: 220 10% 95%;
+  --destructive: 0 62% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 10% 25%;
+  --input: 220 10% 25%;
+  --ring: 100 70% 60%;
+
+  --glass-bg: 220 15% 12% / 0.6;
+  --glass-border: 220 10% 25%;
+  --text-primary: 220 10% 98%;
+  --text-secondary: 220 10% 70%;
+}
+
+.light {
+  --background: 220 20% 96%;
+  --foreground: 220 15% 10%;
+  --card: 220 20% 100%;
+  --card-foreground: 220 15% 15%;
+  --popover: 220 20% 100%;
+  --popover-foreground: 220 15% 15%;
+  --primary: 100 80% 50%;
+  --primary-foreground: 100 80% 10%;
+  --secondary: 220 10% 75%;
+  --secondary-foreground: 220 15% 15%;
+  --muted: 220 10% 90%;
+  --muted-foreground: 220 10% 45%;
+  --accent: 220 10% 90%;
+  --accent-foreground: 220 15% 15%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 15% 88%;
+  --input: 220 15% 88%;
+  --ring: 100 80% 55%;
+
+  --glass-bg: 220 20% 98% / 0.8;
+  --glass-border: 220 15% 88%;
+  --text-primary: 220 15% 10%;
+  --text-secondary: 220 10% 35%;
+}
+
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  @supports (font-variation-settings: normal) {
+    body {
+      font-family: 'Inter var', sans-serif;
+    }
+  }
+
+  /* Enhanced focus-visible styles for better keyboard navigation */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Improved text readability */
+  h1, h2, h3, h4, h5, h6 {
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Better contrast for links */
+  a {
+    text-decoration-skip-ink: auto;
+  }
+
+  /* Smooth scrolling for better UX */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Skip to content link for accessibility */
+  .skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 0 0 4px 0;
+    z-index: 100;
+    transition: top 0.2s ease-in-out;
+  }
+
+  .skip-to-content:focus {
+    top: 0;
+  }
+
+  /* Screen reader only text */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .glass-effect {
+    background-color: hsl(var(--glass-bg));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid hsl(var(--glass-border));
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-green-400;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, hsl(var(--border) / 0.25) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.25) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.95;
+      transform: scale(1.02);
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 2s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite linear;
+    background: linear-gradient(
+      to right,
+      hsl(var(--muted)) 0%,
+      hsl(var(--accent)) 20%,
+      hsl(var(--muted)) 40%,
+      hsl(var(--muted)) 100%
+    );
+    background-size: 1000px 100%;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+
+  @keyframes slide-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.3s ease-out;
+  }
+
+  .nav-link-item:hover {
+    background: linear-gradient(to bottom right, hsl(var(--primary)), hsl(var(--primary) / 0.8)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+  }
+
+  .nav-link-item.active-link:hover {
+    background: linear-gradient(to bottom right, hsl(var(--primary)), hsl(var(--primary) / 0.9)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+  }
+}

@@ -1,0 +1,606 @@
+/**
+ * @fileoverview API functions for Website Content Management System
+ * Provides CRUD operations for all website content tables
+ */
+
+import { supabase } from './customSupabaseClient';
+
+// =====================================================
+// HOMEPAGE CONTENT API
+// =====================================================
+
+/**
+ * Get all homepage content sections
+ * @param {boolean} activeOnly - Only return active sections (default: true)
+ * @returns {Promise<{data: import('./websiteTypes').HomepageContent[], error: any}>}
+ */
+export async function getHomepageContent(activeOnly = true) {
+  let query = supabase
+    .from('homepage_content')
+    .select('*')
+    .order('section_order', { ascending: true });
+
+  if (activeOnly) {
+    query = query.eq('is_active', true);
+  }
+
+  return await query;
+}
+
+/**
+ * Get a specific homepage section
+ * @param {string} id - Section ID
+ * @returns {Promise<{data: import('./websiteTypes').HomepageContent, error: any}>}
+ */
+export async function getHomepageSection(id) {
+  return await supabase
+    .from('homepage_content')
+    .select('*')
+    .eq('id', id)
+    .single();
+}
+
+/**
+ * Get homepage sections by type
+ * @param {string} sectionType - Type of section ('hero', 'features', 'cta', etc.)
+ * @returns {Promise<{data: import('./websiteTypes').HomepageContent[], error: any}>}
+ */
+export async function getHomepageSectionsByType(sectionType) {
+  return await supabase
+    .from('homepage_content')
+    .select('*')
+    .eq('section_type', sectionType)
+    .eq('is_active', true)
+    .order('section_order', { ascending: true });
+}
+
+/**
+ * Create a new homepage section
+ * @param {Partial<import('./websiteTypes').HomepageContent>} section - Section data
+ * @returns {Promise<{data: import('./websiteTypes').HomepageContent, error: any}>}
+ */
+export async function createHomepageSection(section) {
+  return await supabase
+    .from('homepage_content')
+    .insert(section)
+    .select()
+    .single();
+}
+
+/**
+ * Update a homepage section
+ * @param {string} id - Section ID
+ * @param {Partial<import('./websiteTypes').HomepageContent>} updates - Fields to update
+ * @returns {Promise<{data: import('./websiteTypes').HomepageContent, error: any}>}
+ */
+export async function updateHomepageSection(id, updates) {
+  return await supabase
+    .from('homepage_content')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+}
+
+/**
+ * Delete a homepage section
+ * @param {string} id - Section ID
+ * @returns {Promise<{data: any, error: any}>}
+ */
+export async function deleteHomepageSection(id) {
+  return await supabase
+    .from('homepage_content')
+    .delete()
+    .eq('id', id);
+}
+
+// =====================================================
+// TESTIMONIALS API
+// =====================================================
+
+/**
+ * Get all testimonials
+ * @param {Object} options - Query options
+ * @param {boolean} options.activeOnly - Only return active testimonials
+ * @param {boolean} options.featuredOnly - Only return featured testimonials
+ * @param {string} options.category - Filter by category
+ * @param {number} options.minRating - Minimum rating filter
+ * @param {number} options.limit - Limit number of results
+ * @returns {Promise<{data: import('./websiteTypes').Testimonial[], error: any}>}
+ */
+export async function getTestimonials(options = {}) {
+  const {
+    activeOnly = true,
+    featuredOnly = false,
+    category,
+    minRating,
+    limit
+  } = options;
+
+  let query = supabase
+    .from('testimonials')
+    .select('*')
+    .order('display_order', { ascending: true })
+    .order('created_at', { ascending: false });
+
+  if (activeOnly) {
+    query = query.eq('is_active', true);
+  }
+
+  if (featuredOnly) {
+    query = query.eq('is_featured', true);
+  }
+
+  if (category) {
+    query = query.eq('category', category);
+  }
+
+  if (minRating) {
+    query = query.gte('rating', minRating);
+  }
+
+  if (limit) {
+    query = query.limit(limit);
+  }
+
+  return await query;
+}
+
+/**
+ * Get a single testimonial
+ * @param {string} id - Testimonial ID
+ * @returns {Promise<{data: import('./websiteTypes').Testimonial, error: any}>}
+ */
+export async function getTestimonial(id) {
+  return await supabase
+    .from('testimonials')
+    .select('*')
+    .eq('id', id)
+    .single();
+}
+
+/**
+ * Create a new testimonial
+ * @param {Partial<import('./websiteTypes').Testimonial>} testimonial - Testimonial data
+ * @returns {Promise<{data: import('./websiteTypes').Testimonial, error: any}>}
+ */
+export async function createTestimonial(testimonial) {
+  return await supabase
+    .from('testimonials')
+    .insert(testimonial)
+    .select()
+    .single();
+}
+
+/**
+ * Update a testimonial
+ * @param {string} id - Testimonial ID
+ * @param {Partial<import('./websiteTypes').Testimonial>} updates - Fields to update
+ * @returns {Promise<{data: import('./websiteTypes').Testimonial, error: any}>}
+ */
+export async function updateTestimonial(id, updates) {
+  return await supabase
+    .from('testimonials')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+}
+
+/**
+ * Delete a testimonial
+ * @param {string} id - Testimonial ID
+ * @returns {Promise<{data: any, error: any}>}
+ */
+export async function deleteTestimonial(id) {
+  return await supabase
+    .from('testimonials')
+    .delete()
+    .eq('id', id);
+}
+
+/**
+ * Get testimonial rating statistics
+ * @returns {Promise<{data: import('./websiteTypes').TestimonialRatingStats[], error: any}>}
+ */
+export async function getTestimonialRatingStats() {
+  return await supabase.rpc('get_testimonials_by_rating');
+}
+
+// =====================================================
+// CONTACT INFO API
+// =====================================================
+
+/**
+ * Get active contact information
+ * @returns {Promise<{data: import('./websiteTypes').ContactInfo, error: any}>}
+ */
+export async function getContactInfo() {
+  return await supabase
+    .from('contact_info')
+    .select('*')
+    .eq('is_active', true)
+    .single();
+}
+
+/**
+ * Update contact information
+ * @param {string} id - Contact info ID
+ * @param {Partial<import('./websiteTypes').ContactInfo>} updates - Fields to update
+ * @returns {Promise<{data: import('./websiteTypes').ContactInfo, error: any}>}
+ */
+export async function updateContactInfo(id, updates) {
+  return await supabase
+    .from('contact_info')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+}
+
+// =====================================================
+// NAVIGATION MENUS API
+// =====================================================
+
+/**
+ * Get navigation menu by type
+ * @param {string} menuType - Menu type ('header', 'footer', 'mobile', 'sidebar')
+ * @returns {Promise<{data: import('./websiteTypes').NavigationMenu, error: any}>}
+ */
+export async function getNavigationMenu(menuType) {
+  return await supabase
+    .from('navigation_menus')
+    .select('*')
+    .eq('menu_type', menuType)
+    .eq('is_active', true)
+    .single();
+}
+
+/**
+ * Get all navigation menus
+ * @returns {Promise<{data: import('./websiteTypes').NavigationMenu[], error: any}>}
+ */
+export async function getAllNavigationMenus() {
+  return await supabase
+    .from('navigation_menus')
+    .select('*')
+    .eq('is_active', true);
+}
+
+/**
+ * Create a new navigation menu
+ * @param {Partial<import('./websiteTypes').NavigationMenu>} menu - Menu data
+ * @returns {Promise<{data: import('./websiteTypes').NavigationMenu, error: any}>}
+ */
+export async function createNavigationMenu(menu) {
+  return await supabase
+    .from('navigation_menus')
+    .insert(menu)
+    .select()
+    .single();
+}
+
+/**
+ * Update a navigation menu
+ * @param {string} id - Menu ID
+ * @param {Partial<import('./websiteTypes').NavigationMenu>} updates - Fields to update
+ * @returns {Promise<{data: import('./websiteTypes').NavigationMenu, error: any}>}
+ */
+export async function updateNavigationMenu(id, updates) {
+  return await supabase
+    .from('navigation_menus')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+}
+
+/**
+ * Delete a navigation menu
+ * @param {string} id - Menu ID
+ * @returns {Promise<{data: any, error: any}>}
+ */
+export async function deleteNavigationMenu(id) {
+  return await supabase
+    .from('navigation_menus')
+    .delete()
+    .eq('id', id);
+}
+
+// =====================================================
+// SEO SETTINGS API
+// =====================================================
+
+/**
+ * Get SEO settings for a page
+ * @param {string} pagePath - Page path (e.g., '/', '/about')
+ * @returns {Promise<{data: import('./websiteTypes').SEOSettings, error: any}>}
+ */
+export async function getSEOSettings(pagePath) {
+  return await supabase
+    .from('seo_settings')
+    .select('*')
+    .eq('page_path', pagePath)
+    .eq('is_active', true)
+    .single();
+}
+
+/**
+ * Get all SEO settings
+ * @returns {Promise<{data: import('./websiteTypes').SEOSettings[], error: any}>}
+ */
+export async function getAllSEOSettings() {
+  return await supabase
+    .from('seo_settings')
+    .select('*')
+    .eq('is_active', true)
+    .order('page_path', { ascending: true });
+}
+
+/**
+ * Create SEO settings for a page
+ * @param {Partial<import('./websiteTypes').SEOSettings>} settings - SEO settings data
+ * @returns {Promise<{data: import('./websiteTypes').SEOSettings, error: any}>}
+ */
+export async function createSEOSettings(settings) {
+  return await supabase
+    .from('seo_settings')
+    .insert(settings)
+    .select()
+    .single();
+}
+
+/**
+ * Update SEO settings
+ * @param {string} id - SEO settings ID
+ * @param {Partial<import('./websiteTypes').SEOSettings>} updates - Fields to update
+ * @returns {Promise<{data: import('./websiteTypes').SEOSettings, error: any}>}
+ */
+export async function updateSEOSettings(id, updates) {
+  return await supabase
+    .from('seo_settings')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+}
+
+/**
+ * Delete SEO settings
+ * @param {string} id - SEO settings ID
+ * @returns {Promise<{data: any, error: any}>}
+ */
+export async function deleteSEOSettings(id) {
+  return await supabase
+    .from('seo_settings')
+    .delete()
+    .eq('id', id);
+}
+
+// =====================================================
+// MEDIA LIBRARY API
+// =====================================================
+
+/**
+ * Get media files
+ * @param {Object} options - Query options
+ * @param {string} options.fileType - Filter by file type ('image', 'video', 'document', 'audio')
+ * @param {string} options.folder - Filter by folder
+ * @param {string[]} options.tags - Filter by tags
+ * @param {number} options.limit - Limit number of results
+ * @returns {Promise<{data: import('./websiteTypes').MediaFile[], error: any}>}
+ */
+export async function getMediaFiles(options = {}) {
+  const { fileType, folder, tags, limit } = options;
+
+  let query = supabase
+    .from('media_library')
+    .select('*')
+    .order('uploaded_at', { ascending: false });
+
+  if (fileType) {
+    query = query.eq('file_type', fileType);
+  }
+
+  if (folder) {
+    query = query.eq('folder', folder);
+  }
+
+  if (tags && tags.length > 0) {
+    query = query.contains('tags', tags);
+  }
+
+  if (limit) {
+    query = query.limit(limit);
+  }
+
+  return await query;
+}
+
+/**
+ * Get a single media file
+ * @param {string} id - Media file ID
+ * @returns {Promise<{data: import('./websiteTypes').MediaFile, error: any}>}
+ */
+export async function getMediaFile(id) {
+  return await supabase
+    .from('media_library')
+    .select('*')
+    .eq('id', id)
+    .single();
+}
+
+/**
+ * Create a new media file entry
+ * @param {Partial<import('./websiteTypes').MediaFile>} media - Media file data
+ * @returns {Promise<{data: import('./websiteTypes').MediaFile, error: any}>}
+ */
+export async function createMediaFile(media) {
+  return await supabase
+    .from('media_library')
+    .insert(media)
+    .select()
+    .single();
+}
+
+/**
+ * Update a media file entry
+ * @param {string} id - Media file ID
+ * @param {Partial<import('./websiteTypes').MediaFile>} updates - Fields to update
+ * @returns {Promise<{data: import('./websiteTypes').MediaFile, error: any}>}
+ */
+export async function updateMediaFile(id, updates) {
+  return await supabase
+    .from('media_library')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+}
+
+/**
+ * Delete a media file entry
+ * @param {string} id - Media file ID
+ * @returns {Promise<{data: any, error: any}>}
+ */
+export async function deleteMediaFile(id) {
+  return await supabase
+    .from('media_library')
+    .delete()
+    .eq('id', id);
+}
+
+/**
+ * Increment media usage count
+ * @param {string} mediaId - Media file ID
+ * @param {string} location - Where the media is being used
+ * @returns {Promise<{data: any, error: any}>}
+ */
+export async function incrementMediaUsage(mediaId, location) {
+  return await supabase.rpc('increment_media_usage', {
+    media_id: mediaId,
+    used_location: location
+  });
+}
+
+// =====================================================
+// WEBSITE ACTIVITY LOG API
+// =====================================================
+
+/**
+ * Get activity logs
+ * @param {Object} options - Query options
+ * @param {string} options.tableName - Filter by table name
+ * @param {string} options.userId - Filter by user ID
+ * @param {string} options.action - Filter by action type
+ * @param {number} options.limit - Limit number of results (default: 50)
+ * @returns {Promise<{data: import('./websiteTypes').WebsiteActivityLog[], error: any}>}
+ */
+export async function getActivityLogs(options = {}) {
+  const { tableName, userId, action, limit = 50 } = options;
+
+  let query = supabase
+    .from('website_activity_log')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (tableName) {
+    query = query.eq('table_name', tableName);
+  }
+
+  if (userId) {
+    query = query.eq('user_id', userId);
+  }
+
+  if (action) {
+    query = query.eq('action', action);
+  }
+
+  return await query;
+}
+
+/**
+ * Get recent activity for a specific record
+ * @param {string} tableName - Table name
+ * @param {string} recordId - Record ID
+ * @returns {Promise<{data: import('./websiteTypes').WebsiteActivityLog[], error: any}>}
+ */
+export async function getRecordActivity(tableName, recordId) {
+  return await supabase
+    .from('website_activity_log')
+    .select('*')
+    .eq('table_name', tableName)
+    .eq('record_id', recordId)
+    .order('created_at', { ascending: false });
+}
+
+// =====================================================
+// UTILITY FUNCTIONS
+// =====================================================
+
+/**
+ * Get website statistics
+ * @returns {Promise<{data: import('./websiteTypes').WebsiteStatistics, error: any}>}
+ */
+export async function getWebsiteStatistics() {
+  const { data, error } = await supabase.rpc('get_website_statistics');
+
+  if (error) {
+    return { data: null, error };
+  }
+
+  // The RPC returns an array with one row, extract it
+  return { data: data[0] || null, error: null };
+}
+
+/**
+ * Search across all website content
+ * @param {string} searchTerm - Search term
+ * @returns {Promise<{data: Object, error: any}>}
+ */
+export async function searchWebsiteContent(searchTerm) {
+  const results = {
+    homepage: [],
+    testimonials: [],
+    seo: [],
+    media: []
+  };
+
+  // Search homepage content
+  const { data: homepageData } = await supabase
+    .from('homepage_content')
+    .select('*')
+    .or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
+    .eq('is_active', true);
+
+  if (homepageData) results.homepage = homepageData;
+
+  // Search testimonials
+  const { data: testimonialsData } = await supabase
+    .from('testimonials')
+    .select('*')
+    .or(`customer_name.ilike.%${searchTerm}%,quote.ilike.%${searchTerm}%`)
+    .eq('is_active', true);
+
+  if (testimonialsData) results.testimonials = testimonialsData;
+
+  // Search SEO settings
+  const { data: seoData } = await supabase
+    .from('seo_settings')
+    .select('*')
+    .or(`page_name.ilike.%${searchTerm}%,meta_title.ilike.%${searchTerm}%`)
+    .eq('is_active', true);
+
+  if (seoData) results.seo = seoData;
+
+  // Search media library
+  const { data: mediaData } = await supabase
+    .from('media_library')
+    .select('*')
+    .or(`file_name.ilike.%${searchTerm}%,alt_text.ilike.%${searchTerm}%`);
+
+  if (mediaData) results.media = mediaData;
+
+  return { data: results, error: null };
+}
