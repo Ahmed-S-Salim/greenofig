@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
-import { Database, TrendingUp, Users, CreditCard, ShieldQuestion, FileText, Globe, Ticket, Gift, DollarSign, LayoutDashboard, BarChart3, ArrowLeft, Wallet, Bot, UserCog, Zap } from 'lucide-react';
+import { Database, TrendingUp, Users, CreditCard, ShieldQuestion, FileText, Globe, Ticket, Gift, DollarSign, LayoutDashboard, BarChart3, ArrowLeft, Wallet, Bot, UserCog } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { getAccessibleTabs, isAdmin } from '@/lib/rbac';
@@ -19,7 +19,6 @@ import ReferralManager from '@/components/admin/ReferralManager';
 import RevenueAnalyticsPage from '@/pages/RevenueAnalyticsPage';
 import AiCoachSettings from '@/components/admin/AiCoachSettings';
 import UserManagement from '@/components/admin/UserManagement';
-import FeaturesManager from '@/components/admin/FeaturesManager';
 
 const AdminPanel = ({ user }) => {
   const [searchParams] = useSearchParams();
@@ -47,7 +46,6 @@ const AdminPanel = ({ user }) => {
     { id: 'issues', label: 'Support', icon: ShieldQuestion },
     { id: 'blog', label: 'Blog', icon: FileText },
     { id: 'website', label: 'Website', icon: Globe },
-    { id: 'features', label: 'Features', icon: Zap },
     { id: 'ai-coach', label: 'AI Coach', icon: Bot },
     { id: 'studio', label: 'Database', icon: Database },
   ];
@@ -104,8 +102,6 @@ const AdminPanel = ({ user }) => {
         return <EnhancedBlogManager user={user} />;
       case 'website':
         return <WebsiteManager user={user} />;
-      case 'features':
-        return <FeaturesManager user={user} />;
       case 'ai-coach':
         return <AiCoachSettings user={user} />;
       default:
