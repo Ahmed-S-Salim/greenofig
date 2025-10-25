@@ -236,17 +236,32 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
 
         const signOut = useCallback(async () => {
                 setLoading(true);
-                await supabase.auth.signOut();
-                setUser(null);
-                setUserProfile(null);
-                toast({
-                    title: "Signed Out",
-                    description: "You have been successfully signed out.",
-                });
-                // Force redirect to home and reload
+                try {
+                    // Clear Supabase session
+                    await supabase.auth.signOut();
+
+                    // Clear all local state
+                    setUser(null);
+                    setUserProfile(null);
+
+                    // Clear any cached data in localStorage
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    toast({
+                        title: "Signed Out",
+                        description: "You have been successfully signed out.",
+                    });
+                } catch (error) {
+                    console.error('SignOut error:', error);
+                }
+
+                // Force redirect to home with full reload to clear all state
                 const isGitHubPages = window.location.hostname.includes('github.io');
                 const homeUrl = isGitHubPages ? '/greenofig/home' : '/home';
-                window.location.href = homeUrl;
+
+                // Use replace to prevent back button issues
+                window.location.replace(homeUrl);
         }, [toast]);
 
         const value = useMemo(
