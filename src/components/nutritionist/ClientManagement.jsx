@@ -125,23 +125,23 @@ const ClientManagement = () => {
 
     return (
       <Card
-        className="glass-effect hover:shadow-lg transition-all cursor-pointer"
+        className="glass-effect hover:shadow-lg transition-all cursor-pointer h-full flex flex-col"
         onClick={() => handleClientClick(client)}
       >
-        <CardContent className="p-6">
+        <CardContent className="p-6 flex flex-col h-full">
           <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <span className="text-lg font-bold text-primary">
                   {client.full_name?.split(' ').map(n => n[0]).join('') || '?'}
                 </span>
               </div>
-              <div>
-                <h3 className="font-semibold text-lg">{client.full_name || 'Unknown'}</h3>
-                <p className="text-sm text-muted-foreground">{client.email}</p>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-semibold text-lg truncate">{client.full_name || 'Unknown'}</h3>
+                <p className="text-sm text-muted-foreground truncate">{client.email}</p>
               </div>
             </div>
-            <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+            <div className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ml-2 ${
               client.lastUpdate ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200'
             }`}>
               {client.lastUpdate ? 'Active' : 'Inactive'}
@@ -248,7 +248,7 @@ const ClientManagement = () => {
 
       {/* Client List */}
       {filteredClients.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
           {filteredClients.map((client) => (
             <ClientCard key={client.id} client={client} />
           ))}

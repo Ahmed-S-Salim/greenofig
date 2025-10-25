@@ -12,7 +12,8 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
   const navigate = useNavigate();
   const { user, userProfile, signOut } = useAuth();
   const [isSurveyOpen, setIsSurveyOpen] = useState(false);
-  
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const handleUnimplemented = (pageName) => {
     toast({
       title: `🚧 The ${pageName} page isn't implemented yet!`,
@@ -37,6 +38,103 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
     <>
       <div className="bg-background text-foreground min-h-screen">
         <div className="absolute inset-0 bg-grid-pattern opacity-50"></div>
+
+        {/* Mobile Menu Overlay */}
+        {isMobileMenuOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden">
+            <div className="fixed inset-0 bg-black/50" onClick={() => setIsMobileMenuOpen(false)} />
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="fixed right-0 top-0 bottom-0 w-72 bg-card border-l border-border p-6 overflow-y-auto"
+            >
+              <div className="flex items-center justify-between mb-8">
+                <Link to="/home" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
+                  <img src={logoUrl} alt="GreenoFig Logo" className="w-8 h-8" />
+                  <span className="text-xl font-bold gradient-text">GreenoFig</span>
+                </Link>
+                <Button size="icon" variant="ghost" onClick={() => setIsMobileMenuOpen(false)}>
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </Button>
+              </div>
+
+              <nav className="space-y-2">
+                {navLinks.map(link => (
+                  <button
+                    key={link.name}
+                    onClick={() => {
+                      if (link.unimplemented) {
+                        handleUnimplemented(link.pageName);
+                      } else {
+                        navigate(link.path);
+                      }
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-3 text-sm font-medium text-text-secondary hover:text-primary hover:bg-muted rounded-lg transition-colors"
+                  >
+                    {link.name}
+                  </button>
+                ))}
+              </nav>
+
+              <div className="mt-8 pt-8 border-t border-border space-y-2">
+                {user && userProfile ? (
+                  <>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start gap-2"
+                      onClick={() => {
+                        navigate('/app');
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      <User className="w-4 h-4" />
+                      {userProfile.full_name || 'Profile'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start gap-2"
+                      onClick={async () => {
+                        await signOut();
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => {
+                        navigate('/login');
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      Login
+                    </Button>
+                    <Button
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                      onClick={() => {
+                        navigate('/signup');
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      Sign Up
+                    </Button>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+
         <div className="relative z-10">
           <header className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-24">
@@ -72,7 +170,7 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                     <Button onClick={() => navigate('/signup')} className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg">Sign Up</Button>
                   </>
                 )}
-                <Button size="icon" variant="ghost" className="lg:hidden" onClick={() => handleUnimplemented('mobile menu')}>
+                <Button size="icon" variant="ghost" className="lg:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
                 </Button>
               </div>

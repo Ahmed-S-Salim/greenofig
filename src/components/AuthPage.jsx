@@ -44,17 +44,20 @@
         if(user && userProfile) {
             console.log('Navigating based on role:', userProfile.role);
             // Force full page navigation to ensure clean state
-            let destination = '/app/user';
+            const isGitHubPages = window.location.hostname.includes('github.io');
+            const basePath = isGitHubPages ? '/greenofig' : '';
+
+            let destination = `${basePath}/app/user`;
             switch (userProfile.role) {
                 case 'admin':
                 case 'super_admin':
-                    destination = '/app/admin';
+                    destination = `${basePath}/app/admin`;
                     break;
                 case 'nutritionist':
-                    destination = '/app/nutritionist';
+                    destination = `${basePath}/app/nutritionist`;
                     break;
                 default:
-                    destination = '/app/user';
+                    destination = `${basePath}/app/user`;
                     break;
             }
             window.location.href = destination;
@@ -119,13 +122,13 @@
       };
 
       return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+        <div className="min-h-screen flex items-center justify-center p-4 bg-background touch-auto">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="w-full max-w-md"
           >
-            <div className="glass-effect rounded-2xl p-8 shadow-2xl">
+            <div className="glass-effect rounded-2xl p-4 sm:p-8 shadow-2xl">
               <div className="text-center mb-8">
                 <Link to="/home" className="inline-block mb-4">
                   <motion.div
@@ -146,9 +149,10 @@
 
               <Button
                 variant="outline"
-                className="w-full py-3 rounded-lg shadow-lg flex items-center justify-center gap-2"
+                className="w-full py-3 min-h-[44px] rounded-lg shadow-lg flex items-center justify-center gap-2 touch-manipulation active:scale-95 transition-transform"
                 onClick={handleGoogleSignIn}
                 disabled={googleLoading || loading}
+                type="button"
               >
                 {googleLoading ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
@@ -177,10 +181,11 @@
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                        className="w-full pl-10 pr-4 py-3 min-h-[44px] bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring touch-manipulation"
                         placeholder="John Doe"
                         disabled={loading || googleLoading}
                         required
+                        autoComplete="name"
                       />
                     </div>
                   </div>
@@ -196,10 +201,12 @@
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                      className="w-full pl-10 pr-4 py-3 min-h-[44px] bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring touch-manipulation"
                       placeholder="you@example.com"
                       disabled={loading || googleLoading}
                       required
+                      autoComplete="email"
+                      inputMode="email"
                     />
                   </div>
                 </div>
@@ -214,17 +221,18 @@
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                      className="w-full pl-10 pr-4 py-3 min-h-[44px] bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring touch-manipulation"
                       placeholder="••••••••"
                       disabled={loading || googleLoading}
                       required
+                      autoComplete={isLogin ? "current-password" : "new-password"}
                     />
                   </div>
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 rounded-lg shadow-lg"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 min-h-[44px] rounded-lg shadow-lg touch-manipulation active:scale-95 transition-transform"
                   disabled={loading || googleLoading}
                 >
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -235,7 +243,8 @@
               <div className="mt-6 text-center">
                 <button
                   onClick={toggleAuthMode}
-                  className="text-text-secondary hover:text-primary transition-colors disabled:opacity-50"
+                  type="button"
+                  className="text-text-secondary hover:text-primary transition-colors disabled:opacity-50 min-h-[44px] py-2 px-4 touch-manipulation"
                   disabled={loading || googleLoading}
                 >
                   {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Login'}
