@@ -145,10 +145,16 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
 
         const signInWithGoogle = useCallback(async () => {
                 setLoading(true);
+                // Construct redirect URL based on environment
+                const isGitHubPages = window.location.hostname.includes('github.io');
+                const redirectTo = isGitHubPages
+                    ? `${window.location.origin}/greenofig/`
+                    : window.location.origin;
+
                 const { error } = await supabase.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        redirectTo: `${window.location.origin}${import.meta.env.BASE_URL || '/'}`,
+                        redirectTo: redirectTo,
                     },
                 });
                 if (error) {
@@ -238,7 +244,9 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
                     description: "You have been successfully signed out.",
                 });
                 // Force redirect to home and reload
-                window.location.href = `${import.meta.env.BASE_URL || '/'}home`;
+                const isGitHubPages = window.location.hostname.includes('github.io');
+                const homeUrl = isGitHubPages ? '/greenofig/home' : '/home';
+                window.location.href = homeUrl;
         }, [toast]);
 
         const value = useMemo(
