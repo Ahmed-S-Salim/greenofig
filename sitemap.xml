@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://greenofig.com/home</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <lastmod>2025-10-25</lastmod>
+  </url>
+
+  <!-- Main Pages -->
+  <url>
+    <loc>https://greenofig.com/features</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2025-10-25</lastmod>
+  </url>
+
+  <url>
+    <loc>https://greenofig.com/pricing</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2025-10-25</lastmod>
+  </url>
+
+  <url>
+    <loc>https://greenofig.com/blog</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2025-10-25</lastmod>
+  </url>
+
+  <url>
+    <loc>https://greenofig.com/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2025-10-25</lastmod>
+  </url>
+
+  <url>
+    <loc>https://greenofig.com/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2025-10-25</lastmod>
+  </url>
+
+  <url>
+    <loc>https://greenofig.com/faq</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2025-10-25</lastmod>
+  </url>
+
+  <url>
+    <loc>https://greenofig.com/reviews</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2025-10-25</lastmod>
+  </url>
+
+  <!-- Legal Pages -->
+  <url>
+    <loc>https://greenofig.com/privacy-policy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2025-10-25</lastmod>
+  </url>
+
+  <url>
+    <loc>https://greenofig.com/terms-of-service</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2025-10-25</lastmod>
+  </url>
+
+  <!-- Add blog posts dynamically when available -->
+  
+</urlset>
