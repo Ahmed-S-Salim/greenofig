@@ -149,7 +149,8 @@ const EnhancedBlogPostEditor = () => {
       };
       fetchPost();
     }
-  }, [postId, navigate, getBackUrl]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [postId]);
 
   // Auto-generate slug from title
   useEffect(() => {
