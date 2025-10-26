@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev:*)",
+      "Bash(npm install)",
+      "Bash(timeout:*)",
+      "Bash(exit 0)",
+      "Bash(git restore:*)",
+      "Bash(npx supabase:*)",
+      "Bash(node check-pricing.js:*)",
+      "Bash(node fix-elite-pricing.js:*)",
+      "Bash(del check-pricing.js fix-elite-pricing.js)",
+      "Bash(node:*)",
+      "Bash(npm install:*)",
+      "Bash(cat:*)",
+      "Bash(del run-migration.js)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(dir:*)",
+      "Bash(del:*)",
+      "Bash(copy \"Remove background project.png\" \"src\\assets\\Remove background project.png\")",
+      "Bash(npm audit --json)",
+      "Bash(npx eslint:*)",
+      "Bash(npm run build:*)",
+      "Bash(curl:*)",
+      "Bash(npm ls:*)",
+      "Bash(test:*)",
+      "Bash(npm --version:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
