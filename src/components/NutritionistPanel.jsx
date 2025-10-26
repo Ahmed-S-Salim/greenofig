@@ -12,7 +12,7 @@ import MessagingCenter from '@/components/nutritionist/MessagingCenter';
 import AnalyticsDashboard from '@/components/nutritionist/AnalyticsDashboard';
 import ResourceLibrary from '@/components/nutritionist/ResourceLibrary';
 import NutritionistSettings from '@/components/nutritionist/NutritionistSettings';
-import BlogManagement from '@/components/nutritionist/BlogManagement';
+import EnhancedBlogManager from '@/components/admin/EnhancedBlogManager';
 
 const NutritionistPanel = ({ user }) => {
   const [searchParams] = useSearchParams();
@@ -44,7 +44,7 @@ const NutritionistPanel = ({ user }) => {
       case 'resources':
         return <ResourceLibrary />;
       case 'blog':
-        return <BlogManagement />;
+        return <EnhancedBlogManager user={user} />;
       case 'settings':
         return <NutritionistSettings />;
       default:
