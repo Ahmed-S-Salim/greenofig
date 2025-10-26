@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/customSupabaseClient';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -38,7 +37,6 @@ import {
 import { format } from 'date-fns';
 
 const EnhancedBlogManager = ({ user }) => {
-  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
@@ -417,7 +415,7 @@ const EnhancedBlogManager = ({ user }) => {
                 const isGitHubPages = window.location.hostname.includes('github.io');
                 const basePath = isGitHubPages ? '/greenofig' : '';
                 const role = user?.role === 'nutritionist' ? 'nutritionist' : 'admin';
-                navigate(`${basePath}/app/${role}/blog/edit/${post.id}`);
+                window.location.href = `${basePath}/app/${role}/blog/edit/${post.id}`;
               }}
               className="flex-1"
             >
@@ -470,7 +468,7 @@ const EnhancedBlogManager = ({ user }) => {
             const isGitHubPages = window.location.hostname.includes('github.io');
             const basePath = isGitHubPages ? '/greenofig' : '';
             const role = user?.role === 'nutritionist' ? 'nutritionist' : 'admin';
-            navigate(`${basePath}/app/${role}/blog/new`);
+            window.location.href = `${basePath}/app/${role}/blog/new`;
           }}>
             <Plus className="w-4 h-4 mr-2" />
             Create Post
