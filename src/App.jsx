@@ -74,6 +74,17 @@
         return children;
     };
 
+    const BlogEditorRoute = ({ children }) => {
+        const { userProfile, loading } = useAuth();
+        if (loading) {
+            return <PageLoader />;
+        }
+        if (!['admin', 'super_admin', 'nutritionist'].includes(userProfile?.role)) {
+            return <Navigate to="/app" replace />;
+        }
+        return children;
+    };
+
     const RoleBasedRedirect = () => {
       const { userProfile, loading } = useAuth();
 
@@ -124,9 +135,11 @@
                     <Route path="fitness" element={<FitnessPage />} />
                     <Route path="progress" element={<ProgressPage />} />
                     <Route path="messages" element={<MessagingCenter />} />
-                    <Route path="admin/blog/new" element={<AdminRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></AdminRoute>} />
-                    <Route path="admin/blog/edit/:postId" element={<AdminRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></AdminRoute>} />
+                    <Route path="admin/blog/new" element={<BlogEditorRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></BlogEditorRoute>} />
+                    <Route path="admin/blog/edit/:postId" element={<BlogEditorRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></BlogEditorRoute>} />
                     <Route path="admin/blog/tags" element={<AdminRoute><BlogTagsManager logoUrl={logoUrl} /></AdminRoute>} />
+                    <Route path="nutritionist/blog/new" element={<BlogEditorRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></BlogEditorRoute>} />
+                    <Route path="nutritionist/blog/edit/:postId" element={<BlogEditorRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></BlogEditorRoute>} />
                     <Route path="admin/faq" element={<AdminRoute><AdminFAQPage /></AdminRoute>} />
                     <Route path="admin/revenue" element={<AdminRoute><RevenueAnalyticsPage /></AdminRoute>} />
                 </Route>

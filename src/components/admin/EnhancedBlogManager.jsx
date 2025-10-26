@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/customSupabaseClient';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { toast } from '@/components/ui/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -39,6 +38,7 @@ import {
 import { format } from 'date-fns';
 
 const EnhancedBlogManager = ({ user }) => {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
@@ -47,11 +47,8 @@ const EnhancedBlogManager = ({ user }) => {
   const [authorFilter, setAuthorFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('posts');
   const [selectedPosts, setSelectedPosts] = useState([]);
-  const [showEditor, setShowEditor] = useState(false);
-  const [editingPost, setEditingPost] = useState(null);
   const [authors, setAuthors] = useState([]);
   const [comments, setComments] = useState([]);
   const [pendingComments, setPendingComments] = useState([]);
@@ -66,23 +63,6 @@ const EnhancedBlogManager = ({ user }) => {
     totalComments: 0,
     pendingComments: 0,
     avgViewsPerPost: 0
-  });
-
-  const [postForm, setPostForm] = useState({
-    title: '',
-    slug: '',
-    excerpt: '',
-    content: '',
-    featured_image_url: '',
-    meta_title: '',
-    meta_description: '',
-    focus_keyword: '',
-    keywords: [],
-    category: '',
-    tags: [],
-    status: 'draft',
-    scheduled_for: '',
-    author_id: ''
   });
 
   useEffect(() => {
@@ -434,24 +414,10 @@ const EnhancedBlogManager = ({ user }) => {
               variant="outline"
               size="sm"
               onClick={() => {
-                setEditingPost(post);
-                setPostForm({
-                  title: post.title || '',
-                  slug: post.slug || '',
-                  excerpt: post.excerpt || '',
-                  content: post.content || '',
-                  featured_image_url: post.featured_image_url || '',
-                  meta_title: post.meta_title || '',
-                  meta_description: post.meta_description || '',
-                  focus_keyword: post.focus_keyword || '',
-                  keywords: post.keywords || [],
-                  category: post.category || '',
-                  tags: post.tags || [],
-                  status: post.status || 'draft',
-                  scheduled_for: post.scheduled_for || '',
-                  author_id: post.author_id || user?.id || ''
-                });
-                setShowEditor(true);
+                const isGitHubPages = window.location.hostname.includes('github.io');
+                const basePath = isGitHubPages ? '/greenofig' : '';
+                const role = user?.role === 'nutritionist' ? 'nutritionist' : 'admin';
+                navigate(`${basePath}/app/${role}/blog/edit/${post.id}`);
               }}
               className="flex-1"
             >
@@ -462,7 +428,11 @@ const EnhancedBlogManager = ({ user }) => {
               <Trash2 className="w-4 h-4" />
             </Button>
             {post.status === 'published' && (
-              <Button variant="outline" size="sm" onClick={() => window.open(`/blog/${post.slug}`, '_blank')}>
+              <Button variant="outline" size="sm" onClick={() => {
+                const isGitHubPages = window.location.hostname.includes('github.io');
+                const basePath = isGitHubPages ? '/greenofig' : '';
+                window.open(`${basePath}/blog/${post.slug}`, '_blank');
+              }}>
                 <Eye className="w-4 h-4" />
               </Button>
             )}
@@ -497,24 +467,10 @@ const EnhancedBlogManager = ({ user }) => {
             Refresh
           </Button>
           <Button onClick={() => {
-            setEditingPost(null);
-            setPostForm({
-              title: '',
-              slug: '',
-              excerpt: '',
-              content: '',
-              featured_image_url: '',
-              meta_title: '',
-              meta_description: '',
-              focus_keyword: '',
-              keywords: [],
-              category: '',
-              tags: [],
-              status: 'draft',
-              scheduled_for: '',
-              author_id: user?.id || ''
-            });
-            setShowEditor(true);
+            const isGitHubPages = window.location.hostname.includes('github.io');
+            const basePath = isGitHubPages ? '/greenofig' : '';
+            const role = user?.role === 'nutritionist' ? 'nutritionist' : 'admin';
+            navigate(`${basePath}/app/${role}/blog/new`);
           }}>
             <Plus className="w-4 h-4 mr-2" />
             Create Post
@@ -828,215 +784,6 @@ const EnhancedBlogManager = ({ user }) => {
           </Card>
         </TabsContent>
       </Tabs>
-
-      {/* Post Editor Dialog */}
-      <Dialog open={showEditor} onOpenChange={setShowEditor}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {editingPost ? 'Edit Post' : 'Create New Post'}
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            {/* Title */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">Title *</label>
-              <Input
-                placeholder="Enter post title..."
-                value={postForm.title}
-                onChange={(e) => {
-                  const title = e.target.value;
-                  const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-                  setPostForm({ ...postForm, title, slug });
-                }}
-              />
-            </div>
-
-            {/* Slug */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">URL Slug *</label>
-              <Input
-                placeholder="url-friendly-slug"
-                value={postForm.slug}
-                onChange={(e) => setPostForm({ ...postForm, slug: e.target.value })}
-              />
-            </div>
-
-            {/* Excerpt */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">Excerpt</label>
-              <Textarea
-                placeholder="Brief description of the post..."
-                rows={3}
-                value={postForm.excerpt}
-                onChange={(e) => setPostForm({ ...postForm, excerpt: e.target.value })}
-              />
-            </div>
-
-            {/* Content */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">Content *</label>
-              <Textarea
-                placeholder="Write your post content here..."
-                rows={10}
-                value={postForm.content}
-                onChange={(e) => setPostForm({ ...postForm, content: e.target.value })}
-              />
-            </div>
-
-            {/* Featured Image URL */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">Featured Image URL</label>
-              <Input
-                placeholder="https://example.com/image.jpg"
-                value={postForm.featured_image_url}
-                onChange={(e) => setPostForm({ ...postForm, featured_image_url: e.target.value })}
-              />
-            </div>
-
-            {/* Category & Status */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">Category</label>
-                <select
-                  value={postForm.category}
-                  onChange={(e) => setPostForm({ ...postForm, category: e.target.value })}
-                  className="w-full px-3 py-2 bg-background border border-border rounded-md"
-                >
-                  <option value="">Select category...</option>
-                  {categories.map(cat => (
-                    <option key={cat.id} value={cat.slug}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium mb-2 block">Status</label>
-                <select
-                  value={postForm.status}
-                  onChange={(e) => setPostForm({ ...postForm, status: e.target.value })}
-                  className="w-full px-3 py-2 bg-background border border-border rounded-md"
-                >
-                  <option value="draft">Draft</option>
-                  <option value="published">Published</option>
-                  <option value="scheduled">Scheduled</option>
-                </select>
-              </div>
-            </div>
-
-            {/* SEO Section */}
-            <div className="border-t pt-4">
-              <h3 className="text-sm font-medium mb-4 flex items-center gap-2">
-                <Target className="w-4 h-4" />
-                SEO Settings
-              </h3>
-
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Meta Title</label>
-                  <Input
-                    placeholder="SEO title for search engines"
-                    value={postForm.meta_title}
-                    onChange={(e) => setPostForm({ ...postForm, meta_title: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Meta Description</label>
-                  <Textarea
-                    placeholder="SEO description for search engines"
-                    rows={2}
-                    value={postForm.meta_description}
-                    onChange={(e) => setPostForm({ ...postForm, meta_description: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Focus Keyword</label>
-                  <Input
-                    placeholder="Primary SEO keyword"
-                    value={postForm.focus_keyword}
-                    onChange={(e) => setPostForm({ ...postForm, focus_keyword: e.target.value })}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setShowEditor(false)}>
-              Cancel
-            </Button>
-            <Button
-              onClick={async () => {
-                if (!postForm.title || !postForm.slug || !postForm.content) {
-                  toast({
-                    variant: 'destructive',
-                    title: 'Missing required fields',
-                    description: 'Please fill in title, slug, and content'
-                  });
-                  return;
-                }
-
-                setSaving(true);
-                try {
-                  const postData = {
-                    ...postForm,
-                    author_id: postForm.author_id || user?.id,
-                    published_at: postForm.status === 'published' ? new Date().toISOString() : null
-                  };
-
-                  if (editingPost) {
-                    const { error } = await supabase
-                      .from('blog_posts')
-                      .update(postData)
-                      .eq('id', editingPost.id);
-
-                    if (error) throw error;
-                    toast({ title: 'Post updated successfully' });
-                  } else {
-                    const { error } = await supabase
-                      .from('blog_posts')
-                      .insert([postData]);
-
-                    if (error) throw error;
-                    toast({ title: 'Post created successfully' });
-                  }
-
-                  setShowEditor(false);
-                  fetchPosts();
-                  fetchAnalytics();
-                } catch (error) {
-                  console.error('Error saving post:', error);
-                  toast({
-                    variant: 'destructive',
-                    title: 'Error',
-                    description: error.message || 'Failed to save post'
-                  });
-                } finally {
-                  setSaving(false);
-                }
-              }}
-              disabled={saving}
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <CheckCircle2 className="w-4 h-4 mr-2" />
-                  {editingPost ? 'Update Post' : 'Create Post'}
-                </>
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
