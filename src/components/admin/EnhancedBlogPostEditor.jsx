@@ -39,7 +39,7 @@ import {
 const EnhancedBlogPostEditor = () => {
   const { postId } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, userProfile } = useAuth();
 
   // Basic fields
   const [title, setTitle] = useState('');
@@ -70,6 +70,15 @@ const EnhancedBlogPostEditor = () => {
   const [isFetching, setIsFetching] = useState(!!postId);
   const [activeTab, setActiveTab] = useState('editor');
   const [autoSlug, setAutoSlug] = useState(true);
+
+  // Helper function to get back URL based on user role
+  const getBackUrl = () => {
+    const role = userProfile?.role;
+    if (role === 'nutritionist') {
+      return '/app/nutritionist?tab=blog';
+    }
+    return '/app/admin?tab=blog';
+  };
 
   // Fetch categories and tags
   useEffect(() => {
@@ -103,7 +112,7 @@ const EnhancedBlogPostEditor = () => {
 
         if (error) {
           toast({ title: 'Error fetching post data', description: error.message, variant: 'destructive' });
-          navigate('/app/admin?tab=blog');
+          navigate(getBackUrl());
         } else if (data) {
           setTitle(data.title);
           setContent(data.content || '');
@@ -252,7 +261,7 @@ const EnhancedBlogPostEditor = () => {
     }
 
     toast({ title: 'Post saved successfully!' });
-    navigate('/app/admin?tab=blog');
+    navigate(getBackUrl());
     setLoading(false);
   };
 
@@ -272,7 +281,7 @@ const EnhancedBlogPostEditor = () => {
     >
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/app/admin?tab=blog')} className="mr-2">
+          <Button variant="ghost" size="icon" onClick={() => navigate(getBackUrl())} className="mr-2">
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <h1 className="text-3xl font-bold">{postId ? 'Edit Post' : 'Create New Post'}</h1>
