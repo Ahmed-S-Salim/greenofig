@@ -80,7 +80,7 @@ INSERT INTO ai_coach_settings (
 ) VALUES (
   'gemini',
   true,
-  'AIzaSyBUH3HZjwbIzMqrk-RfxqqK5iU9TRiRrw0',
+  'YOUR_GOOGLE_API_KEY_HERE',
   'gemini-2.5-flash',
   0.7,
   500,

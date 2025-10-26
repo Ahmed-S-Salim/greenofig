@@ -35,3 +35,23 @@ dist-ssr
 build
 out
 .cache
+
+# Test/temp files that may contain secrets
+test-*.js
+test-*.html
+check-*.js
+fix-*.js
+skip-*.js
+list-*.js
+*-REPORT.md
+*_FIXES_*.md
+*_SETUP.md
+
+# Screenshots and temp images
+aa.jpeg
+broken.png
+dd.png
+ee.png
+er.png
+rr.png
+ss.png
