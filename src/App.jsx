@@ -76,12 +76,16 @@
 
     const BlogEditorRoute = ({ children }) => {
         const { userProfile, loading } = useAuth();
+        console.log('BlogEditorRoute - loading:', loading, 'userProfile:', userProfile);
         if (loading) {
+            console.log('BlogEditorRoute: Still loading auth...');
             return <PageLoader />;
         }
         if (!['admin', 'super_admin', 'nutritionist'].includes(userProfile?.role)) {
+            console.log('BlogEditorRoute: Access denied, role:', userProfile?.role, 'redirecting to /app');
             return <Navigate to="/app" replace />;
         }
+        console.log('BlogEditorRoute: Access granted for role:', userProfile.role);
         return children;
     };
 

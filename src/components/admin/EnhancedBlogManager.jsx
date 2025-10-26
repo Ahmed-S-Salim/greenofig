@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/customSupabaseClient';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,6 +38,7 @@ import {
 import { format } from 'date-fns';
 
 const EnhancedBlogManager = ({ user }) => {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
@@ -412,10 +414,9 @@ const EnhancedBlogManager = ({ user }) => {
               variant="outline"
               size="sm"
               onClick={() => {
-                const isGitHubPages = window.location.hostname.includes('github.io');
-                const basePath = isGitHubPages ? '/greenofig' : '';
                 const role = user?.role === 'nutritionist' ? 'nutritionist' : 'admin';
-                window.location.href = `${basePath}/app/${role}/blog/edit/${post.id}`;
+                console.log('Edit clicked, navigating to:', `/app/${role}/blog/edit/${post.id}`);
+                navigate(`/app/${role}/blog/edit/${post.id}`);
               }}
               className="flex-1"
             >
@@ -465,10 +466,9 @@ const EnhancedBlogManager = ({ user }) => {
             Refresh
           </Button>
           <Button onClick={() => {
-            const isGitHubPages = window.location.hostname.includes('github.io');
-            const basePath = isGitHubPages ? '/greenofig' : '';
             const role = user?.role === 'nutritionist' ? 'nutritionist' : 'admin';
-            window.location.href = `${basePath}/app/${role}/blog/new`;
+            console.log('Create Post clicked, navigating to:', `/app/${role}/blog/new`);
+            navigate(`/app/${role}/blog/new`);
           }}>
             <Plus className="w-4 h-4 mr-2" />
             Create Post
