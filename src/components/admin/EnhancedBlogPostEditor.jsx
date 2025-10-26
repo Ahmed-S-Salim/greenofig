@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/customSupabaseClient';
@@ -72,13 +72,13 @@ const EnhancedBlogPostEditor = () => {
   const [autoSlug, setAutoSlug] = useState(true);
 
   // Helper function to get back URL based on user role
-  const getBackUrl = () => {
+  const getBackUrl = useCallback(() => {
     const role = userProfile?.role;
     if (role === 'nutritionist') {
       return '/app/nutritionist?tab=blog';
     }
     return '/app/admin?tab=blog';
-  };
+  }, [userProfile]);
 
   // Fetch categories and tags
   useEffect(() => {
