@@ -99,45 +99,57 @@ const EnhancedBlogPostEditor = () => {
     if (postId) {
       const fetchPost = async () => {
         setIsFetching(true);
-        const { data, error } = await supabase
+
+        // Fetch post data
+        const { data: postData, error: postError } = await supabase
           .from('blog_posts')
-          .select(`
-            *,
-            blog_post_tags (
-              tag_id
-            )
-          `)
+          .select('*')
           .eq('id', postId)
           .single();
 
-        if (error) {
-          toast({ title: 'Error fetching post data', description: error.message, variant: 'destructive' });
+        if (postError) {
+          console.error('Error fetching post:', postError);
+          toast({ title: 'Error fetching post data', description: postError.message, variant: 'destructive' });
           navigate(getBackUrl());
-        } else if (data) {
-          setTitle(data.title);
-          setContent(data.content || '');
-          setCoverImageUrl(data.cover_image_url || '');
-          setStatus(data.status);
-          setSlug(data.slug || '');
-          setMetaDescription(data.meta_description || '');
-          setExcerpt(data.excerpt || '');
-          setKeywords(data.keywords || []);
-          setFeatured(data.featured || false);
-          setScheduledPublishAt(data.scheduled_publish_at || '');
-          setCategoryId(data.category_id || '');
-          setReadingTime(data.reading_time_minutes || 0);
+          setIsFetching(false);
+          return;
+        }
+
+        // Fetch post tags separately to avoid relationship error
+        const { data: postTags, error: tagsError } = await supabase
+          .from('blog_post_tags')
+          .select('tag_id')
+          .eq('post_id', postId);
+
+        if (tagsError) {
+          console.error('Error fetching tags:', tagsError);
+        }
+
+        if (postData) {
+          setTitle(postData.title);
+          setContent(postData.content || '');
+          setCoverImageUrl(postData.cover_image_url || '');
+          setStatus(postData.status);
+          setSlug(postData.slug || '');
+          setMetaDescription(postData.meta_description || '');
+          setExcerpt(postData.excerpt || '');
+          setKeywords(postData.keywords || []);
+          setFeatured(postData.featured || false);
+          setScheduledPublishAt(postData.scheduled_publish_at || '');
+          setCategoryId(postData.category_id || '');
+          setReadingTime(postData.reading_time_minutes || 0);
           setAutoSlug(false);
 
           // Set selected tags
-          if (data.blog_post_tags) {
-            setSelectedTags(data.blog_post_tags.map(pt => pt.tag_id));
+          if (postTags && postTags.length > 0) {
+            setSelectedTags(postTags.map(pt => pt.tag_id));
           }
         }
         setIsFetching(false);
       };
       fetchPost();
     }
-  }, [postId, navigate]);
+  }, [postId, navigate, getBackUrl]);
 
   // Auto-generate slug from title
   useEffect(() => {
