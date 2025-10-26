@@ -33,7 +33,8 @@ import {
   MoreVertical,
   Check,
   X,
-  Wand2
+  Wand2,
+  Archive
 } from 'lucide-react';
 import { format } from 'date-fns';
 
