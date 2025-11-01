@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<link rel="icon" type="image/png" href="/greenofig/favicon.png" />
+		<link rel="icon" type="image/png" href="/favicon.png" />
 		<meta name="generator" content="Hostinger Horizons" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="theme-color" content="#10b981" />
@@ -126,12 +126,41 @@
 		}(window.location))
 	</script>
 	<!-- End Single Page Apps for GitHub Pages -->
-		<script type="module" crossorigin src="/greenofig/assets/index-05318a06.js"></script>
-		<link rel="modulepreload" crossorigin href="/greenofig/assets/vendor-react-c35372bd.js">
-		<link rel="modulepreload" crossorigin href="/greenofig/assets/vendor-ui-fc6158c5.js">
-		<link rel="modulepreload" crossorigin href="/greenofig/assets/vendor-editor-c22fa4d3.js">
-		<link rel="modulepreload" crossorigin href="/greenofig/assets/vendor-utils-1c344488.js">
-		<link rel="stylesheet" href="/greenofig/assets/index-4937ec1e.css">
+
+	<!-- Mobile Debug Console - Shows errors directly on phone screen -->
+	<script>
+		// Only load on mobile devices
+		if (/Mobile|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+			// Load Eruda from CDN
+			var script = document.createElement('script');
+			script.src = 'https://cdn.jsdelivr.net/npm/eruda@3.0.1/eruda.min.js';
+			script.onload = function() {
+				eruda.init({
+					autoScale: true,
+					defaults: {
+						displaySize: 50,
+						transparency: 0.9
+					}
+				});
+				// Move button to left side to avoid AI chat button conflict
+				setTimeout(function() {
+					var erudaBtn = document.querySelector('.eruda-entry-btn');
+					if (erudaBtn) {
+						erudaBtn.style.right = 'auto';
+						erudaBtn.style.left = '10px';
+					}
+				}, 500);
+				console.log('📱 Mobile Debug Console Loaded on LEFT side!');
+			};
+			document.head.appendChild(script);
+		}
+	</script>
+		<script type="module" crossorigin src="/assets/index-CKU5P2TY.js"></script>
+		<link rel="modulepreload" crossorigin href="/assets/vendor-react-Dds8VpLH.js">
+		<link rel="modulepreload" crossorigin href="/assets/vendor-ui-gkPPHEPH.js">
+		<link rel="modulepreload" crossorigin href="/assets/vendor-editor-DGqHsWbs.js">
+		<link rel="modulepreload" crossorigin href="/assets/vendor-utils-CisQTPNT.js">
+		<link rel="stylesheet" crossorigin href="/assets/index-DGLivJ9Y.css">
 		<script type="module">
 window.onerror = (message, source, lineno, colno, errorObj) => {
 	const errorDetails = errorObj ? JSON.stringify({
@@ -292,6 +321,5 @@ if (window.navigation && window.self !== window.top) {
 				<p>Please enable JavaScript to use GreenoFig.</p>
 			</div>
 		</noscript>
-		
 	</body>
 </html>
