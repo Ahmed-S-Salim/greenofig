@@ -9,7 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowRight, Loader2, Calendar, User, ArrowLeft } from 'lucide-react';
 import SiteLayout from '@/components/SiteLayout';
 import { toast } from '@/components/ui/use-toast';
-import FloatingFruits from '@/components/ui/FloatingFruits';
 
 const BlogPage = ({ logoUrl }) => {
   const { postId } = useParams();
@@ -240,7 +239,6 @@ const BlogPage = ({ logoUrl }) => {
           <title>{post.title} - GreenoFig Blog</title>
           <meta name="description" content={post.content.substring(0, 160)} />
         </Helmet>
-        <FloatingFruits />
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -311,7 +309,6 @@ const BlogPage = ({ logoUrl }) => {
         <meta property="og:url" content="https://greenofig.com/blog" />
         <meta property="og:type" content="website" />
       </Helmet>
-      <FloatingFruits />
       <div className="w-full px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         {/* Green Fruit Banner - FULL WIDTH */}
         <motion.div
