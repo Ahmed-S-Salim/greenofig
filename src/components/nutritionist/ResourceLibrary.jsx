@@ -480,7 +480,7 @@ const ResourceLibrary = () => {
 
       {/* Create/Edit Resource Dialog */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="glass-effect custom-scrollbar max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {selectedResource ? 'Edit Resource' : 'Add New Resource'}
@@ -641,7 +641,7 @@ const ResourceLibrary = () => {
 
       {/* View Resource Dialog */}
       <Dialog open={showViewDialog} onOpenChange={setShowViewDialog}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="glass-effect custom-scrollbar max-w-3xl max-h-[90vh] overflow-y-auto">
           {selectedResource && (
             <>
               <DialogHeader>

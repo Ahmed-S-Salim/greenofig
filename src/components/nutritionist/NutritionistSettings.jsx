@@ -352,19 +352,19 @@ const NutritionistSettings = () => {
                     </label>
                   </div>
                   {settings.working_hours[day]?.enabled && (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
                       <Input
                         type="time"
                         value={settings.working_hours[day]?.start || '09:00'}
                         onChange={(e) => updateWorkingHours(day, 'start', e.target.value)}
-                        className="w-32"
+                        className="w-32 min-w-0"
                       />
                       <span>to</span>
                       <Input
                         type="time"
                         value={settings.working_hours[day]?.end || '17:00'}
                         onChange={(e) => updateWorkingHours(day, 'end', e.target.value)}
-                        className="w-32"
+                        className="w-32 min-w-0"
                       />
                     </div>
                   )}

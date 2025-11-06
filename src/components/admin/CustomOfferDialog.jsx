@@ -195,9 +195,9 @@ const CustomOfferDialog = ({ isOpen, onClose, user, onOfferCreated }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="glass-effect max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="glass-effect custom-scrollbar max-w-[95vw] sm:max-w-4xl lg:max-w-5xl xl:max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="text-base sm:text-lg lg:text-xl">
             {user?.bulk
               ? `Create Bulk Offer for ${user.users?.length} Customers`
               : `${existingOffer ? 'Edit' : 'Create'} Custom Offer for ${user?.full_name}`
@@ -205,73 +205,77 @@ const CustomOfferDialog = ({ isOpen, onClose, user, onOfferCreated }) => {
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 lg:space-y-8 min-w-0 max-w-full">
           {/* Pricing Section */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-primary" />
+          <div className="space-y-4 lg:space-y-5 min-w-0">
+            <h3 className="text-base sm:text-lg lg:text-xl font-semibold flex items-center gap-2">
+              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
               Pricing
             </h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Custom Price ($)</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0">
+              <div className="space-y-2 min-w-0">
+                <Label className="text-sm">Custom Price ($)</Label>
                 <Input
                   type="number"
                   step="0.01"
                   value={formData.customPrice}
                   onChange={(e) => setFormData({...formData, customPrice: e.target.value})}
                   placeholder="29.99"
-                  className="glass-effect"
+                  className="glass-effect w-full min-w-0 text-base"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
-              <div>
-                <Label>Discount (%)</Label>
+              <div className="space-y-2 min-w-0">
+                <Label className="text-sm">Discount (%)</Label>
                 <Input
                   type="number"
                   value={formData.discountPercentage}
                   onChange={(e) => setFormData({...formData, discountPercentage: e.target.value})}
                   placeholder="20"
-                  className="glass-effect"
+                  className="glass-effect w-full min-w-0 text-base"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
-              <div>
-                <Label>Discount Amount ($)</Label>
+              <div className="space-y-2 min-w-0">
+                <Label className="text-sm">Discount Amount ($)</Label>
                 <Input
                   type="number"
                   step="0.01"
                   value={formData.discountAmount}
                   onChange={(e) => setFormData({...formData, discountAmount: e.target.value})}
                   placeholder="5.00"
-                  className="glass-effect"
+                  className="glass-effect w-full min-w-0 text-base"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
-              <div>
-                <Label>Coupon Code (Optional)</Label>
+              <div className="space-y-2 min-w-0">
+                <Label className="text-sm">Coupon Code (Optional)</Label>
                 <Input
                   type="text"
                   value={formData.couponCode}
                   onChange={(e) => setFormData({...formData, couponCode: e.target.value.toUpperCase()})}
                   placeholder="SUMMER2024"
-                  className="glass-effect"
+                  className="glass-effect w-full min-w-0 text-base"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
             </div>
           </div>
 
           {/* Subscription Details */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-primary" />
+          <div className="space-y-4 lg:space-y-5 min-w-0">
+            <h3 className="text-base sm:text-lg lg:text-xl font-semibold flex items-center gap-2">
+              <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
               Subscription Details
             </h3>
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <Label>Subscription Type</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 min-w-0">
+              <div className="space-y-2 min-w-0">
+                <Label className="text-sm">Subscription Type</Label>
                 <Select value={formData.subscriptionType} onValueChange={(val) => setFormData({...formData, subscriptionType: val})}>
-                  <SelectTrigger className="glass-effect">
+                  <SelectTrigger className="glass-effect w-full min-w-0 text-base">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="glass-effect">
+                  <SelectContent className="glass-effect max-w-[90vw]">
                     <SelectItem value="premium">Premium</SelectItem>
                     <SelectItem value="pro">Pro</SelectItem>
                     <SelectItem value="elite">Elite</SelectItem>
@@ -279,13 +283,13 @@ const CustomOfferDialog = ({ isOpen, onClose, user, onOfferCreated }) => {
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <Label>Billing Cycle</Label>
+              <div className="space-y-2 min-w-0">
+                <Label className="text-sm">Billing Cycle</Label>
                 <Select value={formData.billingCycle} onValueChange={(val) => setFormData({...formData, billingCycle: val})}>
-                  <SelectTrigger className="glass-effect">
+                  <SelectTrigger className="glass-effect w-full min-w-0 text-base">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="glass-effect">
+                  <SelectContent className="glass-effect max-w-[90vw]">
                     <SelectItem value="monthly">Monthly</SelectItem>
                     <SelectItem value="quarterly">Quarterly</SelectItem>
                     <SelectItem value="annual">Annual</SelectItem>
@@ -293,34 +297,36 @@ const CustomOfferDialog = ({ isOpen, onClose, user, onOfferCreated }) => {
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <Label>Trial Days</Label>
+              <div className="space-y-2 min-w-0">
+                <Label className="text-sm">Trial Days</Label>
                 <Input
                   type="number"
                   value={formData.trialDays}
                   onChange={(e) => setFormData({...formData, trialDays: e.target.value})}
-                  className="glass-effect"
+                  className="glass-effect w-full min-w-0 text-base"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
             </div>
-            <div>
-              <Label>Offer End Date (Optional)</Label>
+            <div className="space-y-2 min-w-0 w-full">
+              <Label className="text-sm">Offer End Date (Optional)</Label>
               <Input
                 type="date"
                 value={formData.offerEndDate}
                 onChange={(e) => setFormData({...formData, offerEndDate: e.target.value})}
-                className="glass-effect"
+                className="glass-effect w-full min-w-0 text-base"
+                style={{ fontSize: '16px' }}
               />
             </div>
           </div>
 
           {/* Features */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <Gift className="w-5 h-5 text-primary" />
+          <div className="space-y-4 lg:space-y-5">
+            <h3 className="text-lg lg:text-xl xl:text-2xl font-semibold flex items-center gap-2 lg:gap-3">
+              <Gift className="w-5 h-5 lg:w-6 lg:h-6 text-primary" />
               Features & Limits
             </h3>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
               <div className="space-y-4">
                 <div>
                   <Label className="text-base font-semibold text-primary">Base Features</Label>
@@ -639,19 +645,19 @@ const CustomOfferDialog = ({ isOpen, onClose, user, onOfferCreated }) => {
           </div>
 
           {/* Payment Plans */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <CreditCard className="w-5 h-5 text-primary" />
+          <div className="space-y-4 lg:space-y-5 min-w-0">
+            <h3 className="text-base sm:text-lg lg:text-xl font-semibold flex items-center gap-2">
+              <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
               Payment Plan
             </h3>
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <Label>Payment Type</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 min-w-0">
+              <div className="space-y-2 min-w-0">
+                <Label className="text-sm">Payment Type</Label>
                 <Select value={formData.paymentPlanType} onValueChange={(val) => setFormData({...formData, paymentPlanType: val})}>
-                  <SelectTrigger className="glass-effect">
+                  <SelectTrigger className="glass-effect w-full min-w-0 text-base">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="glass-effect">
+                  <SelectContent className="glass-effect max-w-[90vw]">
                     <SelectItem value="full">Full Payment</SelectItem>
                     <SelectItem value="split_payment">Split Payment</SelectItem>
                     <SelectItem value="installment">Installment Plan</SelectItem>
@@ -661,23 +667,24 @@ const CustomOfferDialog = ({ isOpen, onClose, user, onOfferCreated }) => {
               </div>
               {formData.paymentPlanType !== 'full' && formData.paymentPlanType !== 'pay_as_you_go' && (
                 <>
-                  <div>
-                    <Label>Number of Payments</Label>
+                  <div className="space-y-2 min-w-0">
+                    <Label className="text-sm">Number of Payments</Label>
                     <Input
                       type="number"
                       value={formData.numberOfPayments}
                       onChange={(e) => setFormData({...formData, numberOfPayments: e.target.value})}
-                      className="glass-effect"
+                      className="glass-effect w-full min-w-0 text-base"
+                      style={{ fontSize: '16px' }}
                       min="2"
                     />
                   </div>
-                  <div>
-                    <Label>Payment Frequency</Label>
+                  <div className="space-y-2 min-w-0">
+                    <Label className="text-sm">Payment Frequency</Label>
                     <Select value={formData.paymentFrequency} onValueChange={(val) => setFormData({...formData, paymentFrequency: val})}>
-                      <SelectTrigger className="glass-effect">
+                      <SelectTrigger className="glass-effect w-full min-w-0 text-base">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="glass-effect">
+                      <SelectContent className="glass-effect max-w-[90vw]">
                         <SelectItem value="weekly">Weekly</SelectItem>
                         <SelectItem value="biweekly">Bi-weekly</SelectItem>
                         <SelectItem value="monthly">Monthly</SelectItem>
@@ -690,34 +697,36 @@ const CustomOfferDialog = ({ isOpen, onClose, user, onOfferCreated }) => {
           </div>
 
           {/* Notes */}
-          <div className="space-y-4">
-            <div>
-              <Label>Customer Notes (Visible to customer)</Label>
+          <div className="space-y-4 min-w-0">
+            <div className="space-y-2 min-w-0">
+              <Label className="text-sm">Customer Notes (Visible to customer)</Label>
               <Textarea
                 value={formData.notes}
                 onChange={(e) => setFormData({...formData, notes: e.target.value})}
                 placeholder="Special offer for being a loyal customer..."
-                className="glass-effect"
+                className="glass-effect w-full min-w-0 resize-none text-base"
+                style={{ fontSize: '16px' }}
                 rows={3}
               />
             </div>
-            <div>
-              <Label>Internal Notes (Admin only)</Label>
+            <div className="space-y-2 min-w-0">
+              <Label className="text-sm">Internal Notes (Admin only)</Label>
               <Textarea
                 value={formData.internalNotes}
                 onChange={(e) => setFormData({...formData, internalNotes: e.target.value})}
                 placeholder="Notes for internal use..."
-                className="glass-effect"
+                className="glass-effect w-full min-w-0 resize-none text-base"
+                style={{ fontSize: '16px' }}
                 rows={2}
               />
             </div>
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+          <DialogFooter className="flex flex-wrap gap-2 sm:gap-3">
+            <Button type="button" variant="outline" onClick={onClose} size="sm" className="h-9 px-3">
               Cancel
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} size="sm" className="h-9 px-3">
               {loading ? 'Saving...' : existingOffer ? 'Update Offer' : 'Create Offer'}
             </Button>
           </DialogFooter>

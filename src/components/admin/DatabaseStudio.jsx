@@ -350,31 +350,33 @@ const DatabaseStudio = ({ user }) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-purple-200 mb-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
+              <div className="w-full">
+                <label className="block text-xs sm:text-sm font-medium text-purple-200 mb-1 sm:mb-2">
                   Date From
                 </label>
                 <input
                   type="date"
                   value={filters.dateFrom}
                   onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full h-10 px-3 py-2 bg-white/10 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-purple-200 mb-2">
+              <div className="w-full">
+                <label className="block text-xs sm:text-sm font-medium text-purple-200 mb-1 sm:mb-2">
                   Date To
                 </label>
                 <input
                   type="date"
                   value={filters.dateTo}
                   onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full h-10 px-3 py-2 bg-white/10 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-purple-200 mb-2">
+              <div className="w-full">
+                <label className="block text-xs sm:text-sm font-medium text-purple-200 mb-1 sm:mb-2">
                   Search
                 </label>
                 <input
@@ -382,7 +384,8 @@ const DatabaseStudio = ({ user }) => {
                   value={filters.search}
                   onChange={(e) => setFilters({ ...filters, search: e.target.value })}
                   placeholder="Search..."
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full h-10 px-3 py-2 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
             </div>
@@ -402,17 +405,17 @@ const DatabaseStudio = ({ user }) => {
               </div>
             )}
 
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
               <Button
                 onClick={handleRunQuery}
-                className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+                className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
               >
                 <Play className="w-4 h-4 mr-2" />
                 Run Query
               </Button>
               <Button
                 onClick={handleSaveQuery}
-                className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600"
+                className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600"
               >
                 <Save className="w-4 h-4 mr-2" />
                 Save Query
@@ -420,7 +423,7 @@ const DatabaseStudio = ({ user }) => {
               <Button
                 onClick={handleExport}
                 disabled={!queryResults || queryResults.length === 0}
-                className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600"
+                className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600"
               >
                 <Download className="w-4 h-4 mr-2" />
                 Export CSV

@@ -1,5 +1,5 @@
 
-    import React, { lazy, Suspense } from 'react';
+    import React, { lazy, Suspense, useEffect } from 'react';
     import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
     import { Helmet } from 'react-helmet';
     import { Toaster } from '@/components/ui/toaster';
@@ -10,6 +10,21 @@
     // Eager load critical components
     import AuthPage from '@/components/AuthPage';
     import AppLayout from '@/components/AppLayout';
+
+    // Scroll to top component - runs on every route change
+    const ScrollToTop = () => {
+      const { pathname } = useLocation();
+
+      useEffect(() => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'instant' // Use 'instant' for immediate scroll
+        });
+      }, [pathname]);
+
+      return null;
+    };
 
     // Lazy load pages for code splitting
     const HomePage = lazy(() => import('@/pages/HomePage'));
@@ -40,6 +55,7 @@
     const PrivacyPolicyPage = lazy(() => import('@/pages/PrivacyPolicyPage'));
     const TermsOfServicePage = lazy(() => import('@/pages/TermsOfServicePage'));
     const AdminFAQPage = lazy(() => import('@/pages/AdminFAQPage'));
+    const DownloadPage = lazy(() => import('@/pages/DownloadPage'));
 
     // Loading component
     const PageLoader = () => (
@@ -49,10 +65,17 @@
     );
 
     const ProtectedRoute = ({ children }) => {
-        const { user, loading } = useAuth();
+        const { user, userProfile, loading } = useAuth();
         const location = useLocation();
 
-        if (loading) {
+        // Skip loading screen if we have both user and profile
+        // This prevents loading screen after successful login
+        if (user && userProfile) {
+            return children;
+        }
+
+        // Only show loading if we don't have a user yet
+        if (loading && !user) {
             return <PageLoader />;
         }
 
@@ -60,12 +83,15 @@
             return <Navigate to="/login" state={{ from: location }} replace />;
         }
 
+        // If we have user but waiting for profile, show children anyway
+        // Profile will load in background
         return children;
     };
 
     const AdminRoute = ({ children }) => {
-        const { userProfile, loading } = useAuth();
-        if (loading) {
+        const { user, userProfile, loading } = useAuth();
+        // Only show loading if we don't have a user yet
+        if (loading && !user) {
             return <PageLoader />;
         }
         if (userProfile?.role !== 'admin' && userProfile?.role !== 'super_admin') {
@@ -75,9 +101,10 @@
     };
 
     const BlogEditorRoute = ({ children }) => {
-        const { userProfile, loading } = useAuth();
+        const { user, userProfile, loading } = useAuth();
         console.log('BlogEditorRoute - loading:', loading, 'userProfile:', userProfile);
-        if (loading) {
+        // Only show loading if we don't have a user yet
+        if (loading && !user) {
             console.log('BlogEditorRoute: Still loading auth...');
             return <PageLoader />;
         }
@@ -90,13 +117,21 @@
     };
 
     const RoleBasedRedirect = () => {
-      const { userProfile, loading } = useAuth();
+      const { user, userProfile, loading } = useAuth();
 
-      if (loading) {
+      // Show loading while auth is initializing OR while we have user but no profile yet
+      if (loading || (user && !userProfile)) {
         return <PageLoader />;
       }
 
+      // Only redirect to login if we have no user AND not loading
+      if (!user) {
+        return <Navigate to="/login" replace />;
+      }
+
+      // At this point we should have both user and userProfile
       if (!userProfile) {
+        // Shouldn't happen, but safety check
         return <Navigate to="/login" replace />;
       }
 
@@ -111,10 +146,28 @@
       return <Navigate to={path} replace />;
     };
 
+    // Component to handle root path - redirect to dashboard if logged in, otherwise home
+    const RootRedirect = () => {
+      const { user, loading } = useAuth();
+
+      if (loading) {
+        return <PageLoader />;
+      }
+
+      // If user is logged in, redirect to their dashboard
+      if (user) {
+        return <Navigate to="/app" replace />;
+      }
+
+      // Otherwise, show the homepage
+      return <Navigate to="/home" replace />;
+    };
+
     function App() {
       const location = useLocation();
       return (
         <>
+          <ScrollToTop />
           <Helmet>
             <title>GreenoFig - AI-Powered Health & Wellness</title>
             <meta name="description" content="Your AI-Powered Health Companion. Achieve your wellness goals with personalized nutrition, fitness, and lifestyle coaching." />
@@ -154,6 +207,7 @@
                 <Route path="/home" element={<HomePage logoUrl={logoUrl} />} />
                 <Route path="/features" element={<FeaturesPage logoUrl={logoUrl} />} />
                 <Route path="/pricing" element={<PricingPage logoUrl={logoUrl} />} />
+                <Route path="/download" element={<DownloadPage logoUrl={logoUrl} />} />
                 <Route path="/blog" element={<BlogPage logoUrl={logoUrl} />} />
                 <Route path="/blog/:postId" element={<BlogPage logoUrl={logoUrl} />} />
                 <Route path="/reviews" element={<ReviewsPage logoUrl={logoUrl} />} />
@@ -162,7 +216,7 @@
                 <Route path="/about" element={<AboutPage logoUrl={logoUrl} />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage logoUrl={logoUrl} />} />
                 <Route path="/terms-of-service" element={<TermsOfServicePage logoUrl={logoUrl} />} />
-                <Route path="/" element={<Navigate to="/home" replace />} />
+                <Route path="/" element={<RootRedirect />} />
                 <Route path="/*" element={<Navigate to="/home" replace />} />
               </Routes>
             </AnimatePresence>

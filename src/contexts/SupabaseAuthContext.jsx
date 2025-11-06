@@ -16,8 +16,8 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
                 setUserProfile(null);
                 return null;
             }
+
             try {
-                console.log('fetchUserProfile called for user:', sessionUser.id);
                 let { data, error } = await supabase
                     .from('user_profiles')
                     .select('*')
@@ -26,8 +26,6 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
 
                 // If profile doesn't exist (OAuth user), create it
                 if (error && error.code === 'PGRST116') {
-                    console.log('Profile not found, creating for OAuth user...');
-
                     const fullName = sessionUser.user_metadata?.full_name ||
                                    sessionUser.user_metadata?.name ||
                                    sessionUser.email?.split('@')[0] || 'User';
@@ -48,25 +46,22 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
                         .single();
 
                     if (createError) {
-                        console.error('Error creating profile:', createError);
                         throw createError;
                     }
 
                     data = newProfile;
-                    console.log('Profile created successfully:', data);
                 } else if (error) {
                     throw error;
                 }
 
-                console.log('Profile fetched from database:', data);
                 setUserProfile(data);
                 return data;
             } catch (error) {
-                console.error('Error fetching user profile:', error);
+                console.error('Error fetching profile:', error);
                 toast({
                     variant: "destructive",
                     title: "Error",
-                    description: "Could not fetch user profile.",
+                    description: "Could not load profile. Please refresh the page.",
                 });
                 return null;
             }
@@ -94,15 +89,25 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
             getSession();
 
             const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-                console.log('onAuthStateChange event:', event, 'session user:', session?.user?.email);
-                setLoading(true);
                 const sessionUser = session?.user ?? null;
                 setUser(sessionUser);
+
+                // Clean up OAuth code from URL and reload when sign in happens
+                if (event === 'SIGNED_IN' && window.location.search.includes('code=')) {
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('code');
+
+                    // Reload the page to ensure fresh session
+                    window.location.href = url.toString();
+                    return; // Stop execution, page will reload
+                }
+
                 if (sessionUser) {
                     await fetchUserProfile(sessionUser);
                 } else {
                     setUserProfile(null);
                 }
+
                 setLoading(false);
             });
 
@@ -112,11 +117,9 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
         }, [fetchUserProfile]);
 
         const signIn = useCallback(async (credentials) => {
-                setLoading(true);
                 const { data, error } = await supabase.auth.signInWithPassword(credentials);
 
                 if (error) {
-                    setLoading(false);
                     toast({
                         variant: "destructive",
                         title: "Login Failed",
@@ -127,29 +130,27 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
 
                 console.log('Login successful, user:', data.user);
 
-                // Fetch and set the user profile to trigger navigation
+                // Fetch profile immediately for navigation
                 const profile = await fetchUserProfile(data.user);
                 console.log('Fetched profile:', profile);
 
+                // Set both user and profile immediately for instant navigation
+                // onAuthStateChange will fire but we already have the data
                 setUser(data.user);
                 setUserProfile(profile);
 
-                setLoading(false);
                 toast({
                     title: "Login Successful",
                     description: `Welcome back${profile?.full_name ? ', ' + profile.full_name : ''}!`,
                 });
 
-                return { error: null };
+                return { error: null, profile };
         }, [fetchUserProfile, toast]);
 
         const signInWithGoogle = useCallback(async () => {
                 setLoading(true);
-                // Construct redirect URL based on environment
-                const isGitHubPages = window.location.hostname.includes('github.io');
-                const redirectTo = isGitHubPages
-                    ? `${window.location.origin}/greenofig/`
-                    : window.location.origin;
+                // Redirect directly to /app after OAuth
+                const redirectTo = `${window.location.origin}/app`;
 
                 const { error } = await supabase.auth.signInWithOAuth({
                     provider: 'google',
@@ -169,9 +170,8 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
         }, [toast]);
 
         const signUp = useCallback(async (credentials) => {
-                setLoading(true);
                 const { email, password, full_name } = credentials;
-                
+
                 let role = 'user';
                 if (email.endsWith('@greenofig.com')) {
                     if (email.startsWith('nutritionist@')) role = 'nutritionist';
@@ -191,7 +191,6 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
                 });
 
                 if (signUpError) {
-                    setLoading(false);
                     toast({
                         variant: "destructive",
                         title: "Sign Up Failed",
@@ -199,12 +198,11 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
                     });
                     return { user: null, error: signUpError };
                 }
-                
+
                 // Manually sign in the user after successful sign-up to create a session
                 const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
 
                 if (signInError) {
-                    setLoading(false);
                      toast({
                         variant: "destructive",
                         title: "Sign-in after sign-up failed.",
@@ -226,12 +224,11 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
 
                 const profile = await fetchUserProfile(signInData.user);
 
-                // Set user state to trigger navigation
+                // Set both user and profile immediately for instant navigation
                 setUser(signInData.user);
                 setUserProfile(profile);
 
-                setLoading(false);
-                return { user: signInData.user, error: null };
+                return { user: signInData.user, error: null, profile };
         }, [fetchUserProfile, toast]);
 
         const signOut = useCallback(async () => {
@@ -257,8 +254,8 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
                 }
 
                 // Force redirect to home with full reload to clear all state
-                const isGitHubPages = window.location.hostname.includes('github.io');
-                const homeUrl = isGitHubPages ? '/greenofig/home' : '/home';
+                // Always use root path on production
+                const homeUrl = '/home';
 
                 // Use replace to prevent back button issues
                 window.location.replace(homeUrl);

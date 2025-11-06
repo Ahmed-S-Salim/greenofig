@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { DollarSign, CheckCircle, XCircle, Clock, Settings, Search, Download, TrendingUp, RefreshCw } from 'lucide-react';
 import PaymentSettings from './PaymentSettings';
+import ResponsiveTable from '@/components/ui/ResponsiveTable';
 
 const PaymentsManager = () => {
   const [transactions, setTransactions] = useState([]);
@@ -105,14 +106,22 @@ const PaymentsManager = () => {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">Payment Transactions</h2>
+          <p className="text-xs sm:text-sm text-text-secondary mt-1">Track and manage payment transactions</p>
+        </div>
+      </div>
+
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="glass-effect">
-          <CardContent className="pt-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-text-secondary">Total Revenue</p>
-                <p className="text-2xl font-bold mt-1">${stats.total.toFixed(2)}</p>
+                <p className="text-xs sm:text-sm text-text-secondary">Total Revenue</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold">${stats.total.toFixed(2)}</p>
               </div>
               <DollarSign className="w-8 h-8 text-green-400" />
             </div>
@@ -120,11 +129,11 @@ const PaymentsManager = () => {
         </Card>
 
         <Card className="glass-effect">
-          <CardContent className="pt-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-text-secondary">Succeeded</p>
-                <p className="text-2xl font-bold mt-1">${stats.succeeded.toFixed(2)}</p>
+                <p className="text-xs sm:text-sm text-text-secondary">Succeeded</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold">${stats.succeeded.toFixed(2)}</p>
               </div>
               <CheckCircle className="w-8 h-8 text-green-400" />
             </div>
@@ -132,11 +141,11 @@ const PaymentsManager = () => {
         </Card>
 
         <Card className="glass-effect">
-          <CardContent className="pt-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-text-secondary">Pending</p>
-                <p className="text-2xl font-bold mt-1">{stats.pending}</p>
+                <p className="text-xs sm:text-sm text-text-secondary">Pending</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold">{stats.pending}</p>
               </div>
               <Clock className="w-8 h-8 text-yellow-400" />
             </div>
@@ -144,11 +153,11 @@ const PaymentsManager = () => {
         </Card>
 
         <Card className="glass-effect">
-          <CardContent className="pt-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-text-secondary">Failed</p>
-                <p className="text-2xl font-bold mt-1">{stats.failed}</p>
+                <p className="text-xs sm:text-sm text-text-secondary">Failed</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold">{stats.failed}</p>
               </div>
               <XCircle className="w-8 h-8 text-red-400" />
             </div>
@@ -159,43 +168,45 @@ const PaymentsManager = () => {
       {/* Transactions Table */}
       <Card className="glass-effect">
         <CardHeader>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <CardTitle className="text-3xl font-bold">Payment Transactions</CardTitle>
-            <div className="flex gap-2">
-              <Button onClick={() => setShowSettings(true)} variant="outline">
-                <Settings className="w-4 h-4 mr-2" />
-                Settings
-              </Button>
-              <Button onClick={fetchTransactions} variant="outline">
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Refresh
-              </Button>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <CardTitle className="text-3xl font-bold">Payment Transactions</CardTitle>
+              <div className="flex gap-2 ml-auto">
+                <Button onClick={() => setShowSettings(true)} variant="outline">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Settings
+                </Button>
+                <Button onClick={fetchTransactions} variant="outline">
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Refresh
+                </Button>
+              </div>
             </div>
-          </div>
 
-          {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-4 mt-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
-              <Input
-                placeholder="Search by customer name, email, or transaction ID..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
+            {/* Filters */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
+                <Input
+                  placeholder="Search transactions..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="succeeded">Succeeded</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="failed">Failed</SelectItem>
+                  <SelectItem value="refunded">Refunded</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full md:w-[180px]">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="succeeded">Succeeded</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="failed">Failed</SelectItem>
-                <SelectItem value="refunded">Refunded</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </CardHeader>
         <CardContent>
@@ -213,41 +224,37 @@ const PaymentsManager = () => {
               ))}
           </div>
         ) : (
-          <motion.div 
-            variants={containerVariants} 
-            initial="hidden" 
-            animate="visible"
-            className="overflow-x-auto"
-          >
-            <table className="w-full text-left">
-              <thead>
-                <tr className="border-b border-white/10">
-                  <th className="p-4">Customer</th>
-                  <th className="p-4">Amount</th>
-                  <th className="p-4">Status</th>
-                  <th className="p-4">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredTransactions.map(tx => (
-                  <motion.tr variants={itemVariants} key={tx.id} className="border-b border-white/5 hover:bg-white/5">
-                    <td className="p-4">
-                      <div className="font-medium">{tx.user_profiles?.full_name || 'Unknown'}</div>
-                      <div className="text-sm text-text-secondary">{tx.user_profiles?.email || 'No email'}</div>
-                    </td>
-                    <td className="p-4 font-semibold text-lg">${parseFloat(tx.amount).toFixed(2)}</td>
-                    <td className="p-4">{getStatusBadge(tx.status)}</td>
-                    <td className="p-4 text-text-secondary">{new Date(tx.created_at).toLocaleString()}</td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-            {filteredTransactions.length === 0 && !loading && (
-                <p className="text-text-secondary text-center py-8">
-                  {searchQuery ? 'No transactions match your search' : 'No payment transactions found.'}
-                </p>
-            )}
-          </motion.div>
+          <ResponsiveTable
+            data={filteredTransactions}
+            columns={[
+              {
+                header: 'Customer',
+                accessor: 'user_profiles',
+                render: (tx) => (
+                  <div>
+                    <div className="font-medium text-sm">{tx.user_profiles?.full_name || 'Unknown'}</div>
+                    <div className="text-xs text-text-secondary">{tx.user_profiles?.email || 'No email'}</div>
+                  </div>
+                )
+              },
+              {
+                header: 'Amount',
+                accessor: 'amount',
+                render: (tx) => <span className="font-semibold text-base">${parseFloat(tx.amount).toFixed(2)}</span>
+              },
+              {
+                header: 'Status',
+                accessor: 'status',
+                render: (tx) => getStatusBadge(tx.status)
+              },
+              {
+                header: 'Date',
+                accessor: 'created_at',
+                render: (tx) => <span className="text-sm text-text-secondary">{new Date(tx.created_at).toLocaleDateString()}</span>
+              }
+            ]}
+            emptyMessage={searchQuery ? 'No transactions match your search' : 'No payment transactions found.'}
+          />
         )}
         </CardContent>
       </Card>

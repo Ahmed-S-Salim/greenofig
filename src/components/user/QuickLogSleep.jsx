@@ -94,12 +94,12 @@ const QuickLogSleep = ({ onSuccess }) => {
           Log Sleep
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="glass-effect custom-scrollbar sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Log Your Sleep</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+          <div className="min-w-0">
             <Label htmlFor="date">Night of</Label>
             <Input
               id="date"
@@ -108,6 +108,7 @@ const QuickLogSleep = ({ onSuccess }) => {
               onChange={(e) => setFormData({ ...formData, date: e.target.value })}
               max={new Date().toISOString().split('T')[0]}
               required
+              className="w-full min-w-0"
             />
             <p className="text-xs text-muted-foreground mt-1">
               Select the night you went to bed

@@ -239,22 +239,22 @@ const RevenueAnalyticsPage = () => {
   };
 
   const MetricCard = ({ title, value, icon: Icon, trend, trendValue, prefix = '', suffix = '' }) => (
-    <Card className="p-6">
+    <Card className="p-3 sm:p-4 lg:p-6 w-full">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-text-secondary mb-1">{title}</p>
-          <h3 className="text-3xl font-bold">
+          <p className="text-xs sm:text-sm text-text-secondary mb-1">{title}</p>
+          <h3 className="text-2xl sm:text-3xl font-bold">
             {prefix}{typeof value === 'number' ? value.toLocaleString(undefined, { maximumFractionDigits: 2 }) : value}{suffix}
           </h3>
           {trend && (
-            <div className={`flex items-center gap-1 mt-2 text-sm ${trend === 'up' ? 'text-primary' : 'text-destructive'}`}>
-              {trend === 'up' ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />}
+            <div className={`flex items-center gap-1 mt-2 text-xs sm:text-sm ${trend === 'up' ? 'text-primary' : 'text-destructive'}`}>
+              {trend === 'up' ? <ArrowUp className="w-3 h-3 sm:w-4 sm:h-4" /> : <ArrowDown className="w-3 h-3 sm:w-4 sm:h-4" />}
               <span>{trendValue}% vs last period</span>
             </div>
           )}
         </div>
-        <div className="p-3 bg-primary/10 rounded-lg">
-          <Icon className="w-6 h-6 text-primary" />
+        <div className="p-2 sm:p-3 bg-primary/10 rounded-lg">
+          <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
         </div>
       </div>
     </Card>
@@ -269,32 +269,44 @@ const RevenueAnalyticsPage = () => {
   }
 
   return (
-    <div className="space-y-6 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Revenue Analytics</h1>
-          <p className="text-text-secondary mt-1">Track your revenue, subscriptions, and growth metrics</p>
+    <div className="min-h-screen px-2 sm:px-4 lg:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
+      {/* Header - Stacked and centered on mobile */}
+      <div className="flex flex-col sm:flex-row items-center sm:items-start sm:justify-between gap-4">
+        <div className="text-center sm:text-left w-full sm:w-auto">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">Revenue Analytics</h1>
+          <p className="text-sm sm:text-base text-text-secondary mt-1">Track your revenue, subscriptions, and growth metrics</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setTimeRange('week')} className={timeRange === 'week' ? 'bg-primary text-primary-foreground' : ''}>
+        <div className="flex flex-wrap justify-center sm:justify-end gap-2 w-full sm:w-auto">
+          <Button
+            variant="outline"
+            onClick={() => setTimeRange('week')}
+            className={`h-9 px-3 text-sm ${timeRange === 'week' ? 'bg-primary text-primary-foreground' : ''}`}
+          >
             Week
           </Button>
-          <Button variant="outline" onClick={() => setTimeRange('month')} className={timeRange === 'month' ? 'bg-primary text-primary-foreground' : ''}>
+          <Button
+            variant="outline"
+            onClick={() => setTimeRange('month')}
+            className={`h-9 px-3 text-sm ${timeRange === 'month' ? 'bg-primary text-primary-foreground' : ''}`}
+          >
             Month
           </Button>
-          <Button variant="outline" onClick={() => setTimeRange('year')} className={timeRange === 'year' ? 'bg-primary text-primary-foreground' : ''}>
+          <Button
+            variant="outline"
+            onClick={() => setTimeRange('year')}
+            className={`h-9 px-3 text-sm ${timeRange === 'year' ? 'bg-primary text-primary-foreground' : ''}`}
+          >
             Year
           </Button>
-          <Button variant="outline" onClick={exportToCSV}>
+          <Button variant="outline" onClick={exportToCSV} className="h-9 px-3 text-sm">
             <Download className="w-4 h-4 mr-2" />
             Export CSV
           </Button>
         </div>
       </div>
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Key Metrics - Single column on mobile */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
         <MetricCard
           title="Monthly Recurring Revenue"
           value={analytics.mrr}
@@ -324,72 +336,76 @@ const RevenueAnalyticsPage = () => {
       </div>
 
       {/* Charts */}
-      <Tabs defaultValue="revenue" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="revenue">Revenue Trend</TabsTrigger>
-          <TabsTrigger value="plans">Plan Breakdown</TabsTrigger>
-          <TabsTrigger value="transactions">Recent Transactions</TabsTrigger>
+      <Tabs defaultValue="revenue" className="space-y-4 sm:space-y-6">
+        <TabsList className="w-full sm:w-auto flex-wrap h-auto">
+          <TabsTrigger value="revenue" className="text-xs sm:text-sm">Revenue Trend</TabsTrigger>
+          <TabsTrigger value="plans" className="text-xs sm:text-sm">Plan Breakdown</TabsTrigger>
+          <TabsTrigger value="transactions" className="text-xs sm:text-sm">Recent Transactions</TabsTrigger>
         </TabsList>
 
         <TabsContent value="revenue">
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Revenue Over Time</h3>
-            <ResponsiveContainer width="100%" height={400}>
-              <AreaChart data={revenueData}>
-                <defs>
-                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip formatter={(value) => `$${value}`} />
-                <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorRevenue)" />
-              </AreaChart>
-            </ResponsiveContainer>
+          <Card className="p-3 sm:p-4 lg:p-6 w-full">
+            <h3 className="text-base sm:text-lg font-semibold mb-4">Revenue Over Time</h3>
+            <div className="h-[300px] sm:h-[400px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={revenueData}>
+                  <defs>
+                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip formatter={(value) => `$${value}`} />
+                  <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorRevenue)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </Card>
         </TabsContent>
 
         <TabsContent value="plans">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Revenue by Plan</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={planBreakdown}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={100}
-                    fill="hsl(217, 91%, 60%)"
-                    dataKey="value"
-                  >
-                    {planBreakdown.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
-                </PieChart>
-              </ResponsiveContainer>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-4">
+            <Card className="p-3 sm:p-4 lg:p-6 w-full">
+              <h3 className="text-base sm:text-lg font-semibold mb-4">Revenue by Plan</h3>
+              <div className="h-[250px] sm:h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={planBreakdown}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={100}
+                      fill="hsl(217, 91%, 60%)"
+                      dataKey="value"
+                    >
+                      {planBreakdown.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             </Card>
 
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Plan Statistics</h3>
-              <div className="space-y-4">
+            <Card className="p-3 sm:p-4 lg:p-6 w-full">
+              <h3 className="text-base sm:text-lg font-semibold mb-4">Plan Statistics</h3>
+              <div className="space-y-3 sm:space-y-4">
                 {planBreakdown.map((plan, index) => (
                   <div key={index} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3">
                       <div
-                        className="w-4 h-4 rounded"
+                        className="w-3 h-3 sm:w-4 sm:h-4 rounded flex-shrink-0"
                         style={{ backgroundColor: COLORS[index % COLORS.length] }}
                       />
-                      <span className="font-medium">{plan.name}</span>
+                      <span className="text-sm sm:text-base font-medium">{plan.name}</span>
                     </div>
-                    <span className="text-lg font-bold">${plan.value.toFixed(2)}/mo</span>
+                    <span className="text-base sm:text-lg font-bold">${plan.value.toFixed(2)}/mo</span>
                   </div>
                 ))}
               </div>
@@ -398,33 +414,33 @@ const RevenueAnalyticsPage = () => {
         </TabsContent>
 
         <TabsContent value="transactions">
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Recent Transactions</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
+          <Card className="p-3 sm:p-4 lg:p-6 w-full">
+            <h3 className="text-base sm:text-lg font-semibold mb-4">Recent Transactions</h3>
+            <div className="overflow-x-auto -mx-3 sm:mx-0">
+              <table className="w-full min-w-[640px]">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4">Date</th>
-                    <th className="text-left py-3 px-4">Plan</th>
-                    <th className="text-left py-3 px-4">Amount</th>
-                    <th className="text-left py-3 px-4">Status</th>
-                    <th className="text-left py-3 px-4">Transaction ID</th>
+                    <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">Date</th>
+                    <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">Plan</th>
+                    <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">Amount</th>
+                    <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">Status</th>
+                    <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">Transaction ID</th>
                   </tr>
                 </thead>
                 <tbody>
                   {recentTransactions.map((transaction) => (
                     <tr key={transaction.id} className="border-b hover:bg-muted/50">
-                      <td className="py-3 px-4">
+                      <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">
                         {format(new Date(transaction.created_at), 'MMM dd, yyyy')}
                       </td>
-                      <td className="py-3 px-4">{transaction.subscription_plans?.name || 'N/A'}</td>
-                      <td className="py-3 px-4 font-semibold">${transaction.amount}</td>
-                      <td className="py-3 px-4">
+                      <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">{transaction.subscription_plans?.name || 'N/A'}</td>
+                      <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm font-semibold">${transaction.amount}</td>
+                      <td className="py-2 sm:py-3 px-2 sm:px-4">
                         <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
                           {transaction.status}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-xs text-text-secondary">
+                      <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs text-text-secondary">
                         {transaction.payment_intent_id}
                       </td>
                     </tr>
@@ -436,30 +452,30 @@ const RevenueAnalyticsPage = () => {
         </TabsContent>
       </Tabs>
 
-      {/* Additional Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <DollarSign className="w-5 h-5 text-primary" />
-            <h3 className="font-semibold">Avg Revenue Per User</h3>
+      {/* Additional Metrics - Single column on mobile */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
+        <Card className="p-3 sm:p-4 lg:p-6 w-full">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <h3 className="text-sm sm:text-base font-semibold">Avg Revenue Per User</h3>
           </div>
-          <p className="text-3xl font-bold">${analytics.avgRevenuePerUser.toFixed(2)}</p>
+          <p className="text-2xl sm:text-3xl font-bold">${analytics.avgRevenuePerUser.toFixed(2)}</p>
         </Card>
 
-        <Card className="p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <TrendingUp className="w-5 h-5 text-primary" />
-            <h3 className="font-semibold">Customer Lifetime Value</h3>
+        <Card className="p-3 sm:p-4 lg:p-6 w-full">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <h3 className="text-sm sm:text-base font-semibold">Customer Lifetime Value</h3>
           </div>
-          <p className="text-3xl font-bold">${analytics.lifetimeValue.toFixed(2)}</p>
+          <p className="text-2xl sm:text-3xl font-bold">${analytics.lifetimeValue.toFixed(2)}</p>
         </Card>
 
-        <Card className="p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <CreditCard className="w-5 h-5 text-primary" />
-            <h3 className="font-semibold">Total Revenue</h3>
+        <Card className="p-3 sm:p-4 lg:p-6 w-full">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <h3 className="text-sm sm:text-base font-semibold">Total Revenue</h3>
           </div>
-          <p className="text-3xl font-bold">${analytics.totalRevenue.toFixed(2)}</p>
+          <p className="text-2xl sm:text-3xl font-bold">${analytics.totalRevenue.toFixed(2)}</p>
         </Card>
       </div>
     </div>

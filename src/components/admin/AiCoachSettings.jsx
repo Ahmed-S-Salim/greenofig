@@ -266,7 +266,7 @@ const AiCoachSettings = () => {
               Add AI Provider
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="glass-effect max-w-2xl lg:max-w-4xl xl:max-w-5xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingItem ? 'Edit AI Provider' : 'Add AI Provider'}
@@ -284,10 +284,10 @@ const AiCoachSettings = () => {
                     value={formState.provider}
                     onValueChange={handleProviderChange}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="glass-effect">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="glass-effect">
                       <SelectItem value="gemini">🔮 Google Gemini</SelectItem>
                       <SelectItem value="openai">🤖 OpenAI (GPT)</SelectItem>
                       <SelectItem value="claude">🧠 Anthropic Claude</SelectItem>

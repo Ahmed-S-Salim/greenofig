@@ -29,16 +29,22 @@ const DashboardOverview = ({ user, onNavigate }) => {
 
   useEffect(() => {
     const fetchStats = async () => {
-      // Fetch users
-      const { data: users, count: totalCount } = await supabase
-        .from('user_profiles')
-        .select('*', { count: 'exact' })
-        .order('created_at', { ascending: false });
+      try {
+        // Fetch users
+        const { data: users, count: totalCount } = await supabase
+          .from('user_profiles')
+          .select('*', { count: 'exact' })
+          .order('created_at', { ascending: false });
 
-      // Fetch subscriptions for revenue
-      const { data: subscriptions } = await supabase
-        .from('subscriptions')
-        .select('*');
+        // Fetch subscriptions for revenue (handle table not existing)
+        const { data: subscriptions, error: subsError } = await supabase
+          .from('subscriptions')
+          .select('*');
+
+        // If subscriptions table doesn't exist, continue without it
+        if (subsError && subsError.code === 'PGRST116') {
+          console.log('Subscriptions table not yet created');
+        }
 
       // Calculate revenue
       let totalRevenue = 0;
@@ -82,17 +88,20 @@ const DashboardOverview = ({ user, onNavigate }) => {
         setRecentUsers(users.slice(0, 5));
       }
 
-      // Marketing analysis
-      setMarketingData({
-        sources: [
-          { name: 'Organic Search', visitors: Math.floor(totalCount * 1.2), conversions: Math.floor(totalCount * 0.4) },
-          { name: 'Social Media', visitors: Math.floor(totalCount * 0.8), conversions: Math.floor(totalCount * 0.25) },
-          { name: 'Direct', visitors: Math.floor(totalCount * 0.6), conversions: Math.floor(totalCount * 0.2) },
-          { name: 'Referral', visitors: Math.floor(totalCount * 0.4), conversions: Math.floor(totalCount * 0.15) },
-        ],
-        conversions: subscriptions?.length || 0,
-        clickThroughRate: 3.2,
-      });
+        // Marketing analysis
+        setMarketingData({
+          sources: [
+            { name: 'Organic Search', visitors: Math.floor(totalCount * 1.2), conversions: Math.floor(totalCount * 0.4) },
+            { name: 'Social Media', visitors: Math.floor(totalCount * 0.8), conversions: Math.floor(totalCount * 0.25) },
+            { name: 'Direct', visitors: Math.floor(totalCount * 0.6), conversions: Math.floor(totalCount * 0.2) },
+            { name: 'Referral', visitors: Math.floor(totalCount * 0.4), conversions: Math.floor(totalCount * 0.15) },
+          ],
+          conversions: subscriptions?.length || 0,
+          clickThroughRate: 3.2,
+        });
+      } catch (error) {
+        console.error('Error fetching dashboard stats:', error);
+      }
     };
 
     fetchStats();
@@ -162,8 +171,16 @@ const DashboardOverview = ({ user, onNavigate }) => {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">Dashboard Overview</h2>
+          <p className="text-xs sm:text-sm text-text-secondary mt-1">Track key metrics and platform performance</p>
+        </div>
+      </div>
+
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {cards.map((card, index) => {
           const Icon = card.icon;
           return (
@@ -172,14 +189,16 @@ const DashboardOverview = ({ user, onNavigate }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="glass-effect rounded-xl p-6 shadow-xl"
+              className="glass-effect rounded-xl p-4 sm:p-6 shadow-xl"
             >
-              <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${card.gradient} flex items-center justify-center mb-4`}>
-                <Icon className="w-6 h-6 text-white" />
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs sm:text-sm text-text-secondary">{card.title}</p>
+                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold">{card.value}</p>
+                  <p className="text-xs sm:text-sm text-primary mt-1">{card.change}</p>
+                </div>
+                <Icon className="w-8 h-8" />
               </div>
-              <h3 className="text-sm text-text-secondary mb-1">{card.title}</h3>
-              <p className="text-3xl font-bold mb-2">{card.value}</p>
-              <p className="text-sm text-primary">{card.change}</p>
             </motion.div>
           );
         })}
@@ -191,8 +210,8 @@ const DashboardOverview = ({ user, onNavigate }) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
       >
-        <h3 className="text-xl font-bold mb-4">Quick Actions</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <h3 className="text-2xl font-bold mb-4">Quick Actions</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickActions.map((action, index) => {
             const Icon = action.icon;
             return (
@@ -204,7 +223,7 @@ const DashboardOverview = ({ user, onNavigate }) => {
                 <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${action.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                   <Icon className="w-6 h-6 text-white" />
                 </div>
-                <h4 className="font-semibold mb-1">{action.title}</h4>
+                <h4 className="text-base font-semibold mb-2">{action.title}</h4>
                 <p className="text-sm text-text-secondary">{action.description}</p>
               </button>
             );
@@ -212,12 +231,12 @@ const DashboardOverview = ({ user, onNavigate }) => {
         </div>
       </motion.div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="glass-effect rounded-xl p-6 shadow-xl"
+          className="glass-effect rounded-xl p-4 sm:p-6 shadow-xl"
         >
           <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
             <Calendar className="w-5 h-5 text-primary" />
@@ -227,12 +246,12 @@ const DashboardOverview = ({ user, onNavigate }) => {
             {recentUsers.length > 0 ? recentUsers.map((usr, i) => {
               const timeAgo = usr.created_at ? new Date(Date.now() - new Date(usr.created_at)).getHours() : 0;
               return (
-                <div key={i} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
-                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                <div key={i} className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 bg-muted/30 rounded-lg">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
                     <span className="text-xs font-bold text-primary">{usr.full_name?.[0] || 'U'}</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{usr.full_name || 'User'}</p>
+                    <p className="text-xs sm:text-sm font-medium truncate">{usr.full_name || 'User'}</p>
                     <p className="text-xs text-text-secondary">signed up as {usr.role}</p>
                   </div>
                   <span className="text-xs text-text-secondary whitespace-nowrap">
@@ -241,7 +260,7 @@ const DashboardOverview = ({ user, onNavigate }) => {
                 </div>
               );
             }) : (
-              <p className="text-text-secondary text-sm">No recent activity</p>
+              <p className="text-text-secondary text-xs sm:text-sm">No recent activity</p>
             )}
           </div>
         </motion.div>
@@ -250,7 +269,7 @@ const DashboardOverview = ({ user, onNavigate }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="glass-effect rounded-xl p-6 shadow-xl"
+          className="glass-effect rounded-xl p-4 sm:p-6 shadow-xl"
         >
           <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
             <CreditCard className="w-5 h-5 text-primary" />
@@ -310,13 +329,13 @@ const DashboardOverview = ({ user, onNavigate }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="glass-effect rounded-xl p-6 shadow-xl"
+        className="glass-effect rounded-xl p-4 sm:p-6 shadow-xl"
       >
         <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
           <Target className="w-5 h-5 text-primary" />
           Marketing Analysis
         </h3>
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <h4 className="text-sm font-semibold text-text-secondary mb-3">Traffic Sources</h4>
             <div className="space-y-3">

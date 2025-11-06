@@ -46,56 +46,73 @@ const Analytics = ({ user }) => {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">Analytics Dashboard</h2>
+          <p className="text-xs sm:text-sm text-text-secondary mt-1">Monitor platform performance and user metrics</p>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-effect rounded-xl p-6 shadow-xl"
+          className="glass-effect rounded-xl p-4 sm:p-6 shadow-xl"
         >
-          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center mb-4">
-            <Users className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs sm:text-sm text-text-secondary">Total Users</p>
+              <p className="text-xl sm:text-2xl lg:text-3xl font-bold">{stats.totalUsers}</p>
+            </div>
+            <Users className="w-8 h-8" />
           </div>
-          <h3 className="text-sm text-text-secondary mb-1">Total Users</h3>
-          <p className="text-3xl font-bold">{stats.totalUsers}</p>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="glass-effect rounded-xl p-6 shadow-xl"
+          className="glass-effect rounded-xl p-4 sm:p-6 shadow-xl"
         >
-          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center mb-4">
-            <Activity className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs sm:text-sm text-text-secondary">Active Users</p>
+              <p className="text-xl sm:text-2xl lg:text-3xl font-bold">{stats.activeUsers}</p>
+            </div>
+            <Activity className="w-8 h-8" />
           </div>
-          <h3 className="text-sm text-text-secondary mb-1">Active Users</h3>
-          <p className="text-3xl font-bold">{stats.activeUsers}</p>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="glass-effect rounded-xl p-6 shadow-xl"
+          className="glass-effect rounded-xl p-4 sm:p-6 shadow-xl"
         >
-          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center mb-4">
-            <TrendingUp className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs sm:text-sm text-text-secondary">Total Workouts</p>
+              <p className="text-xl sm:text-2xl lg:text-3xl font-bold">{stats.totalWorkouts}</p>
+            </div>
+            <TrendingUp className="w-8 h-8" />
           </div>
-          <h3 className="text-sm text-text-secondary mb-1">Total Workouts</h3>
-          <p className="text-3xl font-bold">{stats.totalWorkouts}</p>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="glass-effect rounded-xl p-6 shadow-xl"
+          className="glass-effect rounded-xl p-4 sm:p-6 shadow-xl"
         >
-          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-4">
-            <Calendar className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs sm:text-sm text-text-secondary">Total Meals Logged</p>
+              <p className="text-xl sm:text-2xl lg:text-3xl font-bold">{stats.totalMeals}</p>
+            </div>
+            <Calendar className="w-8 h-8" />
           </div>
-          <h3 className="text-sm text-text-secondary mb-1">Total Meals Logged</h3>
-          <p className="text-3xl font-bold">{stats.totalMeals}</p>
         </motion.div>
       </div>
 
@@ -103,9 +120,9 @@ const Analytics = ({ user }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="glass-effect rounded-xl p-6 shadow-xl"
+        className="glass-effect rounded-xl p-4 sm:p-5 lg:p-6 shadow-xl"
       >
-        <h3 className="text-2xl font-bold mb-6">User Growth</h3>
+        <h3 className="text-base sm:text-lg font-bold mb-4 sm:mb-6">User Growth</h3>
         <div className="h-64 flex items-end justify-between gap-4">
           {chartData.map((data, index) => (
             <motion.div
@@ -130,9 +147,9 @@ const Analytics = ({ user }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="glass-effect rounded-xl p-6 shadow-xl"
+        className="glass-effect rounded-xl p-4 sm:p-5 lg:p-6 shadow-xl"
       >
-        <h3 className="text-2xl font-bold mb-4">Recent Activity Logs</h3>
+        <h3 className="text-base sm:text-lg font-bold mb-4">Recent Activity Logs</h3>
         <div className="space-y-2">
           {activityLogs
             .slice(-5)

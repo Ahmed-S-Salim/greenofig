@@ -18,4 +18,29 @@ if (import.meta.env.DEV) {
   console.log('🔑 Supabase Key (first 20 chars):', supabaseAnonKey.substring(0, 20) + '...');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Mobile-friendly session persistence configuration
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    // Use localStorage for better mobile compatibility
+    storage: window.localStorage,
+    storageKey: 'greenofig-auth',
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+    // Force session to persist across page reloads on mobile
+    flowType: 'pkce'
+  },
+  realtime: {
+    // Configure realtime with proper WebSocket support
+    params: {
+      eventsPerSecond: 10
+    }
+    // Let Supabase auto-detect WebSocket availability
+    // Don't force transport - it causes constructor errors on mobile
+  },
+  global: {
+    headers: {
+      'X-Client-Info': 'greenofig-web'
+    }
+  }
+});

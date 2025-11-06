@@ -134,12 +134,12 @@ const QuickLogWorkout = ({ onSuccess }) => {
           Log Workout
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] overflow-y-auto">
+      <DialogContent className="glass-effect custom-scrollbar sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Log Your Workout</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+          <div className="min-w-0">
             <Label htmlFor="date">Date</Label>
             <Input
               id="date"
@@ -148,6 +148,7 @@ const QuickLogWorkout = ({ onSuccess }) => {
               onChange={(e) => setFormData({ ...formData, date: e.target.value })}
               max={new Date().toISOString().split('T')[0]}
               required
+              className="w-full min-w-0"
             />
           </div>
           <div>
@@ -179,7 +180,7 @@ const QuickLogWorkout = ({ onSuccess }) => {
               </SelectContent>
             </Select>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="duration">Duration (minutes) *</Label>
               <Input

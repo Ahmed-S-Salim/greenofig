@@ -421,7 +421,7 @@ const MealPlanning = () => {
 
       {/* Meal Plan Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="glass-effect custom-scrollbar max-w-5xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingPlan ? 'Edit Meal Plan' : 'Create New Meal Plan'}</DialogTitle>
           </DialogHeader>
@@ -471,21 +471,23 @@ const MealPlanning = () => {
                   />
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <label className="text-sm font-medium mb-2 block">Start Date *</label>
                   <Input
                     type="date"
                     value={planForm.start_date}
                     onChange={(e) => setPlanForm({ ...planForm, start_date: e.target.value })}
+                    className="w-full min-w-0"
                   />
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <label className="text-sm font-medium mb-2 block">End Date *</label>
                   <Input
                     type="date"
                     value={planForm.end_date}
                     onChange={(e) => setPlanForm({ ...planForm, end_date: e.target.value })}
+                    className="w-full min-w-0"
                   />
                 </div>
 
@@ -621,7 +623,7 @@ const MealPlanning = () => {
 
       {/* Recipe Selector Dialog */}
       <Dialog open={showRecipeSelector} onOpenChange={setShowRecipeSelector}>
-        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="glass-effect custom-scrollbar max-w-6xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               Select Recipe for {selectedDay && selectedMeal && (

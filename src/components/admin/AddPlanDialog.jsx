@@ -227,37 +227,41 @@ const AddPlanDialog = ({ open, onOpenChange, onPlanAdded, editPlan = null }) => 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="glass-effect custom-scrollbar max-w-[95vw] sm:max-w-2xl lg:max-w-4xl xl:max-w-5xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{editPlan ? 'Edit Plan' : 'Add New Subscription Plan'}</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-base sm:text-lg lg:text-xl">{editPlan ? 'Edit Plan' : 'Add New Subscription Plan'}</DialogTitle>
+          <DialogDescription className="text-sm">
             {editPlan ? 'Update the subscription plan details below.' : 'Create a new subscription plan for your customers.'}
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 min-w-0 max-w-full">
           {/* Basic Info */}
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="name">Plan Name *</Label>
+          <div className="space-y-4 min-w-0">
+            <div className="space-y-2 min-w-0">
+              <Label htmlFor="name" className="text-sm">Plan Name *</Label>
               <Input
                 id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
                 placeholder="e.g., Premium, Ultimate, Elite"
+                className="w-full min-w-0 text-base"
+                style={{ fontSize: '16px' }}
                 required
               />
             </div>
 
-            <div>
-              <Label htmlFor="description">Description *</Label>
+            <div className="space-y-2 min-w-0">
+              <Label htmlFor="description" className="text-sm">Description *</Label>
               <Textarea
                 id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
                 placeholder="Brief description of the plan"
+                className="w-full min-w-0 resize-none text-base"
+                style={{ fontSize: '16px' }}
                 rows={3}
                 required
               />
@@ -265,9 +269,9 @@ const AddPlanDialog = ({ open, onOpenChange, onPlanAdded, editPlan = null }) => 
           </div>
 
           {/* Pricing */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="price_monthly">Monthly Price ($) *</Label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0">
+            <div className="space-y-2 min-w-0">
+              <Label htmlFor="price_monthly" className="text-sm">Monthly Price ($) *</Label>
               <Input
                 id="price_monthly"
                 name="price_monthly"
@@ -277,12 +281,14 @@ const AddPlanDialog = ({ open, onOpenChange, onPlanAdded, editPlan = null }) => 
                 value={formData.price_monthly}
                 onChange={handleInputChange}
                 placeholder="9.99"
+                className="w-full min-w-0 text-base"
+                style={{ fontSize: '16px' }}
                 required
               />
             </div>
 
-            <div>
-              <Label htmlFor="price_yearly">Yearly Price ($)</Label>
+            <div className="space-y-2 min-w-0">
+              <Label htmlFor="price_yearly" className="text-sm">Yearly Price ($)</Label>
               <Input
                 id="price_yearly"
                 name="price_yearly"
@@ -292,39 +298,41 @@ const AddPlanDialog = ({ open, onOpenChange, onPlanAdded, editPlan = null }) => 
                 value={formData.price_yearly}
                 onChange={handleInputChange}
                 placeholder="99.00"
+                className="w-full min-w-0 text-base"
+                style={{ fontSize: '16px' }}
               />
             </div>
           </div>
 
           {/* Features */}
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <Label>Features *</Label>
-              <div className="flex gap-2">
-                <Button type="button" onClick={() => addFeature('predefined')} size="sm" variant="outline">
-                  <Plus className="w-4 h-4 mr-1" />
+          <div className="space-y-3 min-w-0">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+              <Label className="text-sm">Features *</Label>
+              <div className="flex flex-wrap gap-2">
+                <Button type="button" onClick={() => addFeature('predefined')} size="sm" variant="outline" className="h-8 text-xs">
+                  <Plus className="w-3 h-3 mr-1" />
                   Add from List
                 </Button>
-                <Button type="button" onClick={() => addFeature('custom')} size="sm" variant="outline">
-                  <Plus className="w-4 h-4 mr-1" />
+                <Button type="button" onClick={() => addFeature('custom')} size="sm" variant="outline" className="h-8 text-xs">
+                  <Plus className="w-3 h-3 mr-1" />
                   Custom Feature
                 </Button>
               </div>
             </div>
 
-            <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
+            <div className="space-y-3 max-h-80 overflow-y-auto pr-2 min-w-0">
               {features.map((feature, index) => (
-                <div key={index} className="flex gap-2 items-start p-3 border border-green-500/30 rounded-lg bg-background/50">
-                  <div className="flex-grow space-y-2">
+                <div key={index} className="flex gap-2 items-start p-3 border border-green-500/30 rounded-lg bg-background/50 min-w-0">
+                  <div className="flex-grow space-y-2 min-w-0">
                     {feature.type === 'predefined' ? (
                       <Select
                         value={feature.value}
                         onValueChange={(value) => handleFeatureValueChange(index, value)}
                       >
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-full min-w-0 text-base">
                           <SelectValue placeholder="Select a feature..." />
                         </SelectTrigger>
-                        <SelectContent className="max-h-[300px]">
+                        <SelectContent className="glass-effect max-h-[300px] max-w-[90vw]">
                           <SelectItem value="All Base Features">All Base Features</SelectItem>
                           <SelectItem value="All Premium Features">All Premium Features</SelectItem>
                           <SelectItem value="All Ultimate Features">All Ultimate Features</SelectItem>
@@ -340,7 +348,8 @@ const AddPlanDialog = ({ open, onOpenChange, onPlanAdded, editPlan = null }) => 
                         value={feature.value}
                         onChange={(e) => handleFeatureValueChange(index, e.target.value)}
                         placeholder="Enter custom feature..."
-                        className="w-full"
+                        className="w-full min-w-0 text-base"
+                        style={{ fontSize: '16px' }}
                       />
                     )}
                     <Button
@@ -359,7 +368,7 @@ const AddPlanDialog = ({ open, onOpenChange, onPlanAdded, editPlan = null }) => 
                       onClick={() => removeFeature(index)}
                       variant="ghost"
                       size="icon"
-                      className="mt-1 flex-shrink-0"
+                      className="mt-1 flex-shrink-0 h-8 w-8"
                     >
                       <X className="w-4 h-4" />
                     </Button>
@@ -370,66 +379,72 @@ const AddPlanDialog = ({ open, onOpenChange, onPlanAdded, editPlan = null }) => 
           </div>
 
           {/* Stripe Integration (Optional) */}
-          <div className="space-y-4 border-t pt-4">
+          <div className="space-y-4 border-t pt-4 min-w-0">
             <h3 className="font-semibold text-sm">Stripe Integration (Optional)</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="stripe_price_id">Stripe Price ID</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0">
+              <div className="space-y-2 min-w-0">
+                <Label htmlFor="stripe_price_id" className="text-sm">Stripe Price ID</Label>
                 <Input
                   id="stripe_price_id"
                   name="stripe_price_id"
                   value={formData.stripe_price_id}
                   onChange={handleInputChange}
                   placeholder="price_xxxxx"
+                  className="w-full min-w-0 text-base"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
 
-              <div>
-                <Label htmlFor="stripe_product_id">Stripe Product ID</Label>
+              <div className="space-y-2 min-w-0">
+                <Label htmlFor="stripe_product_id" className="text-sm">Stripe Product ID</Label>
                 <Input
                   id="stripe_product_id"
                   name="stripe_product_id"
                   value={formData.stripe_product_id}
                   onChange={handleInputChange}
                   placeholder="prod_xxxxx"
+                  className="w-full min-w-0 text-base"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
             </div>
           </div>
 
           {/* Toggles */}
-          <div className="space-y-4 border-t pt-4">
-            <div className="flex items-center gap-3">
+          <div className="space-y-4 border-t pt-4 min-w-0">
+            <div className="flex items-start gap-3">
               <Checkbox
                 id="is_popular"
                 checked={formData.is_popular}
                 onCheckedChange={(checked) => handleSwitchChange('is_popular', checked)}
+                className="mt-1"
               />
-              <div>
-                <Label htmlFor="is_popular">Mark as Popular</Label>
-                <p className="text-sm text-text-secondary">Display a "Most Popular" badge</p>
+              <div className="flex-1 min-w-0">
+                <Label htmlFor="is_popular" className="text-sm">Mark as Popular</Label>
+                <p className="text-xs text-text-secondary">Display a "Most Popular" badge</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-start gap-3">
               <Checkbox
                 id="is_active"
                 checked={formData.is_active}
                 onCheckedChange={(checked) => handleSwitchChange('is_active', checked)}
+                className="mt-1"
               />
-              <div>
-                <Label htmlFor="is_active">Active</Label>
-                <p className="text-sm text-text-secondary">Make this plan available to customers</p>
+              <div className="flex-1 min-w-0">
+                <Label htmlFor="is_active" className="text-sm">Active</Label>
+                <p className="text-xs text-text-secondary">Make this plan available to customers</p>
               </div>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-4 border-t">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+          <div className="flex flex-wrap justify-end gap-2 sm:gap-3 pt-4 border-t">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} size="sm" className="h-9 px-3">
               Cancel
             </Button>
-            <Button type="submit" disabled={saving}>
+            <Button type="submit" disabled={saving} size="sm" className="h-9 px-3">
               {saving ? 'Saving...' : editPlan ? 'Update Plan' : 'Create Plan'}
             </Button>
           </div>

@@ -195,7 +195,7 @@ const SEOManager = () => {
 
       {/* Edit/Create Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="glass-effect max-w-3xl lg:max-w-4xl xl:max-w-5xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingPage?.id ? 'Edit SEO Settings' : 'Create New SEO Settings'}</DialogTitle>
           </DialogHeader>

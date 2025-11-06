@@ -77,7 +77,7 @@ const RefundRequestDialog = ({ open, onOpenChange, transaction, onSuccess }) => 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="glass-effect custom-scrollbar max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <DollarSign className="w-5 h-5" />
@@ -116,7 +116,8 @@ const RefundRequestDialog = ({ open, onOpenChange, transaction, onSuccess }) => 
             <select
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-3 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary min-h-[44px]"
+              style={{ fontSize: '16px' }}
               required
             >
               <option value="">Select a reason...</option>

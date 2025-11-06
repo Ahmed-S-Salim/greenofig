@@ -36,12 +36,16 @@ const UserDashboard = memo(({ logoUrl }) => {
       const today = new Date().toISOString().split('T')[0];
 
       // Fetch today's metrics
-      const { data: metrics } = await supabase
+      const { data: metrics, error: metricsError } = await supabase
         .from('daily_metrics')
         .select('*')
         .eq('user_id', userProfile.id)
         .eq('date', today)
-        .single();
+        .maybeSingle();
+
+      if (metricsError && metricsError.code !== 'PGRST116') {
+        console.error('Error fetching metrics:', metricsError);
+      }
 
       setTodayMetrics(metrics);
 
@@ -126,27 +130,27 @@ const UserDashboard = memo(({ logoUrl }) => {
         <title>Dashboard - GreenoFig</title>
         <meta name="description" content="Your personal health and wellness dashboard." />
       </Helmet>
-      <motion.div 
+      <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-8"
+        className="w-full space-y-6 sm:space-y-8 lg:space-y-10 xl:space-y-12 px-4 sm:px-0"
       >
         <motion.div variants={itemVariants}>
-          <h1 className="text-4xl font-bold">
-            Welcome back, <span className="gradient-text">{userProfile?.full_name?.split(' ')[0] || 'User'}!</span>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
+            Welcome back, <span className="gradient-text">{(userProfile?.full_name || 'User').split(' ')[0]}!</span>
           </h1>
-          <p className="text-text-secondary mt-2">Here's your wellness snapshot for today. Let's make it a great one!</p>
+          <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-text-secondary mt-2">Here's your wellness snapshot for today. Let's make it a great one!</p>
         </motion.div>
 
         {/* Quick Actions */}
-        <motion.div variants={containerVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <motion.div variants={containerVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           <motion.div variants={itemVariants} className="lg:col-span-2">
             <Card className="glass-effect">
-              <CardHeader>
-                <CardTitle className="text-xl font-bold">Quick Actions</CardTitle>
+              <CardHeader className="p-4 sm:p-6 lg:p-8">
+                <CardTitle className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold">Quick Actions</CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 lg:gap-4 p-4 sm:p-6 lg:p-8 pt-0">
                 <QuickLogWeight onSuccess={handleRefresh} />
                 <QuickLogMeal onSuccess={handleRefresh} />
                 <QuickLogWorkout onSuccess={handleRefresh} />
@@ -162,15 +166,15 @@ const UserDashboard = memo(({ logoUrl }) => {
         </motion.div>
 
         {/* Stats Cards */}
-        <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div variants={containerVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           <motion.div variants={itemVariants}>
             <Card className="glass-effect h-full">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Weight</CardTitle>
-                <Scale className="h-4 w-4 text-muted-foreground" />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6 lg:p-8 lg:pb-4">
+                <CardTitle className="text-xs sm:text-sm lg:text-base xl:text-lg font-medium">Weight</CardTitle>
+                <Scale className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
+              <CardContent className="p-4 sm:p-6 lg:p-8 pt-0 lg:pt-0">
+                <div className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold">
                   {todayMetrics?.weight_kg || userProfile?.weight_kg || 'N/A'}
                   {(todayMetrics?.weight_kg || userProfile?.weight_kg) && ' kg'}
                 </div>
@@ -182,24 +186,24 @@ const UserDashboard = memo(({ logoUrl }) => {
           </motion.div>
           <motion.div variants={itemVariants}>
             <Card className="glass-effect h-full">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">BMI</CardTitle>
-                <HeartPulse className="h-4 w-4 text-muted-foreground" />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6">
+                <CardTitle className="text-xs sm:text-sm font-medium">BMI</CardTitle>
+                <HeartPulse className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{bmi}</div>
+              <CardContent className="p-4 sm:p-6 pt-0">
+                <div className="text-xl sm:text-2xl font-bold">{bmi}</div>
                 <p className="text-xs text-muted-foreground">{category}</p>
               </CardContent>
             </Card>
           </motion.div>
           <motion.div variants={itemVariants}>
             <Card className="glass-effect h-full">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Calories Today</CardTitle>
-                <Flame className="h-4 w-4 text-muted-foreground" />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6">
+                <CardTitle className="text-xs sm:text-sm font-medium">Calories Today</CardTitle>
+                <Flame className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
+              <CardContent className="p-4 sm:p-6 pt-0">
+                <div className="text-xl sm:text-2xl font-bold">
                   {todayMetrics?.calories_burned || 0}
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -210,12 +214,12 @@ const UserDashboard = memo(({ logoUrl }) => {
           </motion.div>
           <motion.div variants={itemVariants}>
             <Card className="glass-effect h-full">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Sleep</CardTitle>
-                <Moon className="h-4 w-4 text-muted-foreground" />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6">
+                <CardTitle className="text-xs sm:text-sm font-medium">Sleep</CardTitle>
+                <Moon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
+              <CardContent className="p-4 sm:p-6 pt-0">
+                <div className="text-xl sm:text-2xl font-bold">
                   {todayMetrics?.sleep_hours ? `${todayMetrics.sleep_hours}h` : 'Not logged'}
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -251,19 +255,19 @@ const UserDashboard = memo(({ logoUrl }) => {
         {streaks.length >= 2 && (
           <motion.div variants={itemVariants}>
             <Card className="glass-effect">
-              <CardHeader>
-                <CardTitle className="text-xl font-bold flex items-center gap-2">
-                  <Trophy className="w-5 h-5 text-yellow-500" />
+              <CardHeader className="p-4 sm:p-6">
+                <CardTitle className="text-lg sm:text-xl font-bold flex items-center gap-2">
+                  <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500" />
                   Your Streaks
                 </CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-6 pt-0">
                 {streaks.map(streak => (
-                  <div key={streak.id} className="text-center p-4 bg-muted rounded-lg">
-                    <div className="text-3xl font-bold text-primary">
+                  <div key={streak.id} className="text-center p-3 sm:p-4 bg-muted rounded-lg">
+                    <div className="text-2xl sm:text-3xl font-bold text-primary">
                       {streak.current_streak}
                     </div>
-                    <div className="text-sm text-muted-foreground capitalize">
+                    <div className="text-xs sm:text-sm text-muted-foreground capitalize">
                       {streak.streak_type.replace(/_/g, ' ')}
                     </div>
                     <div className="text-xs text-muted-foreground mt-1">
@@ -275,18 +279,18 @@ const UserDashboard = memo(({ logoUrl }) => {
             </Card>
           </motion.div>
         )}
-        
-        <motion.div variants={containerVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <motion.div variants={containerVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Activity Feed */}
           <motion.div variants={itemVariants} className="lg:col-span-2">
             <Card className="glass-effect h-full">
-              <CardHeader>
-                <CardTitle className="text-xl font-bold flex items-center gap-2">
-                  <Activity className="w-5 h-5" />
+              <CardHeader className="p-4 sm:p-6">
+                <CardTitle className="text-lg sm:text-xl font-bold flex items-center gap-2">
+                  <Activity className="w-4 h-4 sm:w-5 sm:h-5" />
                   Recent Activity
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-3 p-4 sm:p-6 pt-0">
                 {recentActivity.length > 0 ? (
                   recentActivity.map(activity => (
                     <motion.div
@@ -324,10 +328,10 @@ const UserDashboard = memo(({ logoUrl }) => {
           {/* Goals */}
           <motion.div variants={itemVariants}>
              <Card className="glass-effect h-full">
-              <CardHeader>
-                <CardTitle className="text-xl font-bold">Your Goals</CardTitle>
+              <CardHeader className="p-4 sm:p-6">
+                <CardTitle className="text-lg sm:text-xl font-bold">Your Goals</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6 pt-0">
                 {userProfile?.health_goals && userProfile.health_goals.length > 0 ? (
                   userProfile.health_goals.map(goal => (
                     <motion.div
@@ -335,14 +339,14 @@ const UserDashboard = memo(({ logoUrl }) => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4 }}
-                      className="flex items-center gap-4 bg-muted p-3 rounded-lg"
+                      className="flex items-center gap-3 sm:gap-4 bg-muted p-3 rounded-lg"
                     >
                       {getGoalIcon(goal)}
-                      <span className="font-medium text-text-primary capitalize">{goal.replace(/_/g, ' ')}</span>
+                      <span className="text-sm sm:text-base font-medium text-text-primary capitalize">{goal.replace(/_/g, ' ')}</span>
                     </motion.div>
                   ))
                 ) : (
-                  <p className="text-text-secondary">No goals set yet. Update your profile to add goals!</p>
+                  <p className="text-sm sm:text-base text-text-secondary">No goals set yet. Update your profile to add goals!</p>
                 )}
               </CardContent>
             </Card>
@@ -355,16 +359,16 @@ const UserDashboard = memo(({ logoUrl }) => {
         </motion.div>
 
         {/* AI Tools & Insights */}
-        <motion.div variants={containerVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <motion.div variants={containerVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <motion.div variants={itemVariants}>
             <PersonalizedInsights />
           </motion.div>
           <motion.div variants={itemVariants}>
             <Card className="glass-effect h-full">
-              <CardHeader>
-                <CardTitle className="text-xl font-bold">AI-Powered Tools</CardTitle>
+              <CardHeader className="p-4 sm:p-6">
+                <CardTitle className="text-lg sm:text-xl font-bold">AI-Powered Tools</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-3 p-4 sm:p-6 pt-0">
                 <AiMealPlanGenerator onSuccess={handleRefresh} />
                 <AiWorkoutPlanner onSuccess={handleRefresh} />
               </CardContent>

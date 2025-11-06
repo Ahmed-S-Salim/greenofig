@@ -193,15 +193,17 @@ const CouponCodesManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-bold">Coupon Codes</h2>
-          <p className="text-text-secondary">Create and manage discount codes</p>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">Coupon Codes</h2>
+          <p className="text-xs sm:text-sm text-text-secondary mt-1">Create and manage discount codes</p>
         </div>
-        <Button onClick={() => { resetForm(); setIsDialogOpen(true); }} className="flex items-center gap-2">
-          <Plus className="w-4 h-4" />
-          New Coupon
-        </Button>
+        <div className="flex gap-2 ml-auto">
+          <Button size="sm" className="h-9 px-3 text-sm" onClick={() => { resetForm(); setIsDialogOpen(true); }}>
+            <Plus className="w-4 h-4 mr-2" />
+            New Coupon
+          </Button>
+        </div>
       </div>
 
       <div className="relative">
@@ -237,9 +239,9 @@ const CouponCodesManager = () => {
                           variant="ghost"
                           size="icon"
                           onClick={() => copyCode(coupon.code)}
-                          className="h-6 w-6"
+                          className="h-9 w-9 p-0"
                         >
-                          <Copy className="w-3 h-3" />
+                          <Copy className="w-4 h-4" />
                         </Button>
                         <Badge variant={coupon.is_active ? 'default' : 'secondary'}>
                           {coupon.is_active ? 'Active' : 'Inactive'}
@@ -298,6 +300,7 @@ const CouponCodesManager = () => {
                         size="icon"
                         onClick={() => toggleActive(coupon)}
                         title={coupon.is_active ? 'Deactivate' : 'Activate'}
+                        className="h-9 w-9 p-0"
                       >
                         {coupon.is_active ? (
                           <CheckCircle className="w-4 h-4 text-green-400" />
@@ -309,6 +312,7 @@ const CouponCodesManager = () => {
                         variant="ghost"
                         size="icon"
                         onClick={() => handleEdit(coupon)}
+                        className="h-9 w-9 p-0"
                       >
                         <Edit className="w-4 h-4" />
                       </Button>
@@ -316,6 +320,7 @@ const CouponCodesManager = () => {
                         variant="ghost"
                         size="icon"
                         onClick={() => handleDelete(coupon.id)}
+                        className="h-9 w-9 p-0"
                       >
                         <Trash2 className="w-4 h-4 text-red-400" />
                       </Button>
@@ -332,32 +337,33 @@ const CouponCodesManager = () => {
       )}
 
       <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
-        <DialogContent className="glass-effect max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="glass-effect custom-scrollbar max-w-[95vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-base sm:text-lg">
               {editingCoupon ? 'Edit Coupon' : 'Create New Coupon'}
             </DialogTitle>
           </DialogHeader>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Coupon Code *</Label>
+          {/* Cache Buster v3: 2025-11-02-14:30 FIXED */}
+          <form onSubmit={handleSubmit} className="space-y-4 min-w-0 max-w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0">
+              <div className="space-y-2 min-w-0 max-w-full overflow-hidden">
+                <Label className="text-sm">Coupon Code *</Label>
                 <Input
                   value={formData.code}
                   onChange={(e) => setFormData({...formData, code: e.target.value.toUpperCase()})}
                   placeholder="SUMMER2024"
-                  className="glass-effect font-mono"
+                  className="glass-effect font-mono w-full min-w-0 max-w-full text-base"
+                  style={{ fontSize: '16px' }}
                   required
                 />
               </div>
-              <div>
-                <Label>Discount Type *</Label>
+              <div className="space-y-2 min-w-0 max-w-full overflow-hidden">
+                <Label className="text-sm">Discount Type *</Label>
                 <Select value={formData.discountType} onValueChange={(val) => setFormData({...formData, discountType: val})}>
-                  <SelectTrigger className="glass-effect">
+                  <SelectTrigger className="glass-effect w-full min-w-0 max-w-full text-base">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="glass-effect">
+                  <SelectContent className="glass-effect max-w-[90vw]">
                     <SelectItem value="percentage">Percentage (%)</SelectItem>
                     <SelectItem value="fixed_amount">Fixed Amount ($)</SelectItem>
                   </SelectContent>
@@ -365,72 +371,78 @@ const CouponCodesManager = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Discount Value *</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0">
+              <div className="space-y-2 min-w-0 max-w-full overflow-hidden">
+                <Label className="text-sm">Discount Value *</Label>
                 <Input
                   type="number"
                   step="0.01"
                   value={formData.discountValue}
                   onChange={(e) => setFormData({...formData, discountValue: e.target.value})}
                   placeholder={formData.discountType === 'percentage' ? '20' : '10.00'}
-                  className="glass-effect"
+                  className="glass-effect w-full min-w-0 max-w-full text-base"
+                  style={{ fontSize: '16px' }}
                   required
                 />
               </div>
-              <div>
-                <Label>Min Purchase Amount</Label>
+              <div className="space-y-2 min-w-0 max-w-full overflow-hidden">
+                <Label className="text-sm">Min Purchase Amount</Label>
                 <Input
                   type="number"
                   step="0.01"
                   value={formData.minPurchaseAmount}
                   onChange={(e) => setFormData({...formData, minPurchaseAmount: e.target.value})}
                   placeholder="50.00"
-                  className="glass-effect"
+                  className="glass-effect w-full min-w-0 max-w-full text-base"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Max Total Uses</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0">
+              <div className="space-y-2 min-w-0 max-w-full overflow-hidden">
+                <Label className="text-sm">Max Total Uses</Label>
                 <Input
                   type="number"
                   value={formData.maxUses}
                   onChange={(e) => setFormData({...formData, maxUses: e.target.value})}
                   placeholder="Unlimited"
-                  className="glass-effect"
+                  className="glass-effect w-full min-w-0 max-w-full text-base"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
-              <div>
-                <Label>Max Uses Per User *</Label>
+              <div className="space-y-2 min-w-0 max-w-full overflow-hidden">
+                <Label className="text-sm">Max Uses Per User *</Label>
                 <Input
                   type="number"
                   value={formData.maxUsesPerUser}
                   onChange={(e) => setFormData({...formData, maxUsesPerUser: e.target.value})}
-                  className="glass-effect"
+                  className="glass-effect w-full min-w-0 max-w-full text-base"
+                  style={{ fontSize: '16px' }}
                   required
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Valid From</Label>
-                <Input
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0">
+              <div className="space-y-2 min-w-0 max-w-full overflow-hidden">
+                <Label className="text-sm">Valid From</Label>
+                <input
                   type="date"
                   value={formData.validFrom}
                   onChange={(e) => setFormData({...formData, validFrom: e.target.value})}
-                  className="glass-effect"
+                  className="flex h-12 lg:h-14 w-full min-w-0 max-w-full rounded-2xl border border-input bg-background/50 backdrop-blur-sm px-4 lg:px-5 py-3 lg:py-3.5 text-base lg:text-lg text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 hover:border-primary/50 glass-effect"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
-              <div>
-                <Label>Valid Until</Label>
-                <Input
+              <div className="space-y-2 min-w-0 max-w-full overflow-hidden">
+                <Label className="text-sm">Valid Until</Label>
+                <input
                   type="date"
                   value={formData.validUntil}
                   onChange={(e) => setFormData({...formData, validUntil: e.target.value})}
-                  className="glass-effect"
+                  className="flex h-12 lg:h-14 w-full min-w-0 max-w-full rounded-2xl border border-input bg-background/50 backdrop-blur-sm px-4 lg:px-5 py-3 lg:py-3.5 text-base lg:text-lg text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 hover:border-primary/50 glass-effect"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
             </div>
@@ -440,36 +452,38 @@ const CouponCodesManager = () => {
                 checked={formData.isRecurring}
                 onCheckedChange={(checked) => setFormData({...formData, isRecurring: checked})}
               />
-              <Label className="cursor-pointer">Recurring Discount (applies to all future payments)</Label>
+              <Label className="cursor-pointer text-sm">Recurring Discount (applies to all future payments)</Label>
             </div>
 
-            <div>
-              <Label>Description (visible to customers)</Label>
+            <div className="space-y-2 min-w-0 max-w-full overflow-hidden">
+              <Label className="text-sm">Description (visible to customers)</Label>
               <Textarea
                 value={formData.description}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
                 placeholder="Get 20% off your first month!"
-                className="glass-effect"
+                className="glass-effect w-full min-w-0 max-w-full resize-none text-base"
+                style={{ fontSize: '16px' }}
                 rows={2}
               />
             </div>
 
-            <div>
-              <Label>Internal Notes</Label>
+            <div className="space-y-2 min-w-0 max-w-full overflow-hidden">
+              <Label className="text-sm">Internal Notes</Label>
               <Textarea
                 value={formData.internalNotes}
                 onChange={(e) => setFormData({...formData, internalNotes: e.target.value})}
                 placeholder="Marketing campaign: Summer 2024"
-                className="glass-effect"
+                className="glass-effect w-full min-w-0 max-w-full resize-none text-base"
+                style={{ fontSize: '16px' }}
                 rows={2}
               />
             </div>
 
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+            <DialogFooter className="flex flex-wrap gap-2 sm:gap-3">
+              <Button size="sm" className="h-9 px-3" type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit">
+              <Button size="sm" className="h-9 px-3" type="submit">
                 {editingCoupon ? 'Update Coupon' : 'Create Coupon'}
               </Button>
             </DialogFooter>

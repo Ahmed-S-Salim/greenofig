@@ -9,7 +9,7 @@ import {
   User, Mail, Search, Loader2, Badge as BadgeIcon, Download,
   Trash2, UserX, Send, Eye, X, Filter, ChevronLeft, ChevronRight,
   Calendar, Activity, CreditCard, CheckCircle, XCircle, Users, MessageCircle, Gift,
-  Clock, DollarSign, ShoppingCart, TrendingUp
+  Clock, DollarSign, ShoppingCart, TrendingUp, Plus
 } from 'lucide-react';
 import { getUserActivityLogs } from '@/lib/activityLogger';
 import { format } from 'date-fns';
@@ -62,6 +62,15 @@ const CustomersManager = () => {
   const [userPayments, setUserPayments] = useState([]);
   const [loadingDetails, setLoadingDetails] = useState(false);
 
+  // Create User Dialog
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [newUser, setNewUser] = useState({
+    email: '',
+    full_name: '',
+    role: 'user'
+  });
+  const [creatingUser, setCreatingUser] = useState(false);
+
   // Filters
   const [roleFilter, setRoleFilter] = useState('all');
   const [subscriptionFilter, setSubscriptionFilter] = useState('all');
@@ -88,10 +97,15 @@ const CustomersManager = () => {
       .select('*')
       .order('created_at', { ascending: false });
 
-    // Fetch subscriptions
+    // Fetch subscriptions (handle table not existing)
     const { data: subsData, error: subsError } = await supabase
       .from('subscriptions')
       .select('*');
+
+    // Suppress error if subscriptions table doesn't exist yet
+    if (subsError && subsError.code !== 'PGRST116') {
+      console.error('Error fetching subscriptions:', subsError);
+    }
 
     if (usersError) {
       toast({ title: 'Error fetching users', description: usersError.message, variant: 'destructive' });
@@ -218,6 +232,72 @@ const CustomersManager = () => {
     }
   };
 
+  const handleCreateUser = async () => {
+    if (!newUser.email || !newUser.full_name) {
+      toast({
+        variant: 'destructive',
+        title: 'Missing fields',
+        description: 'Please fill in email and full name',
+      });
+      return;
+    }
+
+    setCreatingUser(true);
+    try {
+      // Generate a temporary random password
+      const tempPassword = Math.random().toString(36).slice(-12) + 'A1!';
+
+      // Create the user in Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: newUser.email,
+        password: tempPassword,
+        options: {
+          data: {
+            full_name: newUser.full_name,
+            role: newUser.role,
+          },
+          emailRedirectTo: `${window.location.origin}/reset-password`,
+        },
+      });
+
+      if (authError) throw authError;
+
+      // Wait a bit for the trigger to create the profile
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Update the profile with the correct role
+      if (newUser.role !== 'user') {
+        const { error: updateError } = await supabase
+          .from('user_profiles')
+          .update({ role: newUser.role })
+          .eq('id', authData.user.id);
+
+        if (updateError) {
+          console.error('Error updating role:', updateError);
+        }
+      }
+
+      toast({
+        title: 'User created successfully',
+        description: `${newUser.full_name} has been invited to set their password.`,
+      });
+
+      setCreateDialogOpen(false);
+      setNewUser({ email: '', full_name: '', role: 'user' });
+
+      fetchUsers();
+    } catch (error) {
+      console.error('Error creating user:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error creating user',
+        description: error.message,
+      });
+    } finally {
+      setCreatingUser(false);
+    }
+  };
+
   const handleExportCSV = () => {
     if (filteredUsers.length === 0) {
       toast({ title: "No data to export", variant: 'destructive' });
@@ -296,9 +376,9 @@ const CustomersManager = () => {
   return (
     <div className="space-y-6">
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="glass-effect">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-secondary">Total Users</p>
@@ -310,7 +390,7 @@ const CustomersManager = () => {
         </Card>
 
         <Card className="glass-effect">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-secondary">Active Users</p>
@@ -322,7 +402,7 @@ const CustomersManager = () => {
         </Card>
 
         <Card className="glass-effect">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-secondary">With Subscription</p>
@@ -334,7 +414,7 @@ const CustomersManager = () => {
         </Card>
 
         <Card className="glass-effect">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-secondary">New This Month</p>
@@ -347,9 +427,12 @@ const CustomersManager = () => {
       </div>
 
       {/* Header with Search and Actions */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <h2 className="text-3xl font-bold">User Management</h2>
-        <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">User Management</h2>
+          <p className="text-xs sm:text-sm text-text-secondary mt-1">Manage platform users and customer relationships</p>
+        </div>
+        <div className="flex gap-2 ml-auto">
           {isBulkOfferMode && selectedUsers.length > 0 && (
             <>
               <Button
@@ -358,9 +441,10 @@ const CustomersManager = () => {
                   setSelectedCustomer({ bulk: true, users: selectedUsers });
                 }}
                 variant="default"
-                className="flex items-center gap-2"
+                size="sm"
+                className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
               >
-                <Gift className="w-4 h-4" />
+                <Gift className="w-4 h-4 mr-2" />
                 Create Bulk Offer ({selectedUsers.length})
               </Button>
               <Button
@@ -369,6 +453,8 @@ const CustomersManager = () => {
                   setSelectedUsers([]);
                 }}
                 variant="outline"
+                size="sm"
+                className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
               >
                 Cancel
               </Button>
@@ -379,14 +465,28 @@ const CustomersManager = () => {
               <Button
                 onClick={() => setIsBulkOfferMode(true)}
                 variant="outline"
-                className="flex items-center gap-2"
+                size="sm"
+                className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
               >
-                <Users className="w-4 h-4" />
+                <Users className="w-4 h-4 mr-2" />
                 Bulk Offers
               </Button>
-              <Button onClick={handleExportCSV} className="flex items-center gap-2">
-                <Download className="w-4 h-4" />
+              <Button
+                onClick={handleExportCSV}
+                variant="outline"
+                size="sm"
+                className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
+              >
+                <Download className="w-4 h-4 mr-2" />
                 Export CSV
+              </Button>
+              <Button
+                onClick={() => setCreateDialogOpen(true)}
+                size="sm"
+                className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Create User
               </Button>
             </>
           )}
@@ -405,10 +505,10 @@ const CustomersManager = () => {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-4">
         <Select value={roleFilter} onValueChange={setRoleFilter}>
-          <SelectTrigger className="w-[180px] glass-effect">
-            <Filter className="w-4 h-4 mr-2" />
+          <SelectTrigger className="w-full sm:w-[180px] glass-effect">
+            <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
             <SelectValue placeholder="Filter by role" />
           </SelectTrigger>
           <SelectContent className="glass-effect">
@@ -421,8 +521,8 @@ const CustomersManager = () => {
         </Select>
 
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[180px] glass-effect">
-            <Activity className="w-4 h-4 mr-2" />
+          <SelectTrigger className="w-full sm:w-[180px] glass-effect">
+            <Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent className="glass-effect">
@@ -433,8 +533,8 @@ const CustomersManager = () => {
         </Select>
 
         <Select value={subscriptionFilter} onValueChange={setSubscriptionFilter}>
-          <SelectTrigger className="w-[180px] glass-effect">
-            <CreditCard className="w-4 h-4 mr-2" />
+          <SelectTrigger className="w-full sm:w-[180px] glass-effect">
+            <CreditCard className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
             <SelectValue placeholder="Filter by subscription" />
           </SelectTrigger>
           <SelectContent className="glass-effect">
@@ -477,8 +577,8 @@ const CustomersManager = () => {
               return (
                 <motion.div variants={itemVariants} key={user.id}>
                   <Card className={`glass-effect hover:bg-white/10 transition-colors ${isSelected ? 'ring-2 ring-primary' : ''}`}>
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-4">
+                    <CardContent className="p-3 sm:p-4 lg:p-6">
+                      <div className="flex items-start sm:items-center gap-2 sm:gap-3 lg:gap-4">
                         {isBulkOfferMode && (
                           <Checkbox
                             checked={isSelected}
@@ -491,46 +591,47 @@ const CustomersManager = () => {
                             }}
                           />
                         )}
-                        <Avatar className="w-12 h-12">
+                        <Avatar className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
                           <AvatarImage src={user.profile_picture_url} alt={user.full_name} />
-                          <AvatarFallback>{getInitials(user.full_name)}</AvatarFallback>
+                          <AvatarFallback className="text-sm sm:text-base">{getInitials(user.full_name)}</AvatarFallback>
                         </Avatar>
 
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <p className="font-bold text-lg">{user.full_name || 'N/A'}</p>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
+                            <p className="font-bold text-sm sm:text-base truncate">{user.full_name || 'N/A'}</p>
                             {user.is_active ? (
-                              <CheckCircle className="w-4 h-4 text-green-400" />
+                              <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-400 flex-shrink-0" />
                             ) : (
-                              <XCircle className="w-4 h-4 text-red-400" />
+                              <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-400 flex-shrink-0" />
                             )}
                           </div>
-                          <p className="text-sm text-text-secondary flex items-center gap-2">
-                            <Mail className="w-4 h-4" />{user.email}
+                          <p className="text-xs sm:text-sm text-text-secondary flex items-center gap-1.5 sm:gap-2 truncate">
+                            <Mail className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                            <span className="truncate">{user.email}</span>
                           </p>
-                          {userSub && (
-                            <p className="text-xs text-primary flex items-center gap-1 mt-1">
-                              <CreditCard className="w-3 h-3" />
-                              {userSub.plan} subscription
-                            </p>
-                          )}
+                          <div className="flex flex-wrap items-center gap-2 mt-1.5">
+                            <Badge variant={roleBadgeVariant[user.role] || 'secondary'} className="capitalize text-xs">
+                              {user.role?.replace('_', ' ')}
+                            </Badge>
+                            {userSub && (
+                              <p className="text-xs text-primary flex items-center gap-1">
+                                <CreditCard className="w-3 h-3" />
+                                {userSub.plan}
+                              </p>
+                            )}
+                          </div>
+                          <p className="text-xs text-text-secondary mt-1">
+                            Joined {new Date(user.created_at).toLocaleDateString()}
+                          </p>
                         </div>
 
-                        <div className="text-right flex-shrink-0">
-                           <Badge variant={roleBadgeVariant[user.role] || 'secondary'} className="capitalize mb-1">
-                             {user.role?.replace('_', ' ')}
-                           </Badge>
-                           <p className="text-xs text-text-secondary">
-                             Joined {new Date(user.created_at).toLocaleDateString()}
-                           </p>
-                        </div>
-
-                        <div className="flex gap-2">
+                        <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 flex-shrink-0">
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => openUserDetails(user)}
                             title="View Details"
+                            className="h-9 w-9 p-0"
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
@@ -543,13 +644,14 @@ const CustomersManager = () => {
                               setIsChatDialogOpen(true);
                             }}
                             title="Chat with Customer"
+                            className="h-9 w-9 p-0 hidden sm:flex"
                           >
                             <MessageCircle className="w-4 h-4" />
                           </Button>
 
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon">
+                                <Button variant="ghost" size="icon" className="h-9 w-9 p-0">
                                     <span className="sr-only">Open menu</span>
                                     •••
                                 </Button>
@@ -616,13 +718,13 @@ const CustomersManager = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-6">
+            <div className="flex items-center justify-center gap-2 mt-4 sm:mt-6">
               <Button
                 variant="outline"
                 size="icon"
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="glass-effect"
+                className="h-9 w-9 p-0"
               >
                 <ChevronLeft className="w-4 h-4" />
               </Button>
@@ -636,7 +738,7 @@ const CustomersManager = () => {
                 size="icon"
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="glass-effect"
+                className="h-9 w-9 p-0"
               >
                 <ChevronRight className="w-4 h-4" />
               </Button>
@@ -647,7 +749,7 @@ const CustomersManager = () => {
 
       {/* Enhanced User Details Modal */}
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-        <DialogContent className="glass-effect max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="glass-effect max-w-[95vw] sm:max-w-2xl lg:max-w-4xl xl:max-w-5xl max-h-[90vh] sm:max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>User Profile</DialogTitle>
           </DialogHeader>
@@ -679,6 +781,7 @@ const CustomersManager = () => {
                 <div className="flex gap-2">
                   <Button
                     size="sm"
+                    className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
                     onClick={() => {
                       setSelectedCustomer(selectedUser);
                       setIsChatDialogOpen(true);
@@ -691,6 +794,7 @@ const CustomersManager = () => {
                   <Button
                     size="sm"
                     variant="outline"
+                    className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
                     onClick={() => {
                       setSelectedCustomer(selectedUser);
                       setIsOfferDialogOpen(true);
@@ -872,11 +976,64 @@ const CustomersManager = () => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+            <Button size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm" variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleDeleteUser}>
+            <Button size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm" variant="destructive" onClick={handleDeleteUser}>
               Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create User Dialog */}
+      <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New User</DialogTitle>
+            <DialogDescription>
+              Create a new user account. They will receive an email to set their password.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block">Email</label>
+              <Input
+                placeholder="user@example.com"
+                value={newUser.email}
+                onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-2 block">Full Name</label>
+              <Input
+                placeholder="John Doe"
+                value={newUser.full_name}
+                onChange={(e) => setNewUser({ ...newUser, full_name: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-2 block">Role</label>
+              <Select value={newUser.role} onValueChange={(value) => setNewUser({ ...newUser, role: value })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="nutritionist">Nutritionist</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="super_admin">Super Admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm" variant="outline" onClick={() => setCreateDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm" onClick={handleCreateUser} disabled={creatingUser}>
+              {creatingUser && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Create User
             </Button>
           </DialogFooter>
         </DialogContent>

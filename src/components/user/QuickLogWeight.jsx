@@ -102,18 +102,18 @@ const QuickLogWeight = ({ onSuccess }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full">
-          <Scale className="w-4 h-4 mr-2" />
-          Log Weight
+        <Button className="w-full h-12 min-h-[44px] text-sm sm:text-base">
+          <Scale className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+          <span className="truncate">Log Weight</span>
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="glass-effect custom-scrollbar sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Log Your Weight</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="date">Date</Label>
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+          <div className="min-w-0">
+            <Label htmlFor="date" className="text-sm sm:text-base">Date</Label>
             <Input
               id="date"
               type="date"
@@ -121,10 +121,11 @@ const QuickLogWeight = ({ onSuccess }) => {
               onChange={(e) => setFormData({ ...formData, date: e.target.value })}
               max={new Date().toISOString().split('T')[0]}
               required
+              className="mt-1.5 w-full min-w-0"
             />
           </div>
           <div>
-            <Label htmlFor="weight">Weight (kg) *</Label>
+            <Label htmlFor="weight" className="text-sm sm:text-base">Weight (kg) *</Label>
             <Input
               id="weight"
               type="number"
@@ -133,10 +134,11 @@ const QuickLogWeight = ({ onSuccess }) => {
               value={formData.weight_kg}
               onChange={(e) => setFormData({ ...formData, weight_kg: e.target.value })}
               required
+              className="mt-1.5"
             />
           </div>
           <div>
-            <Label htmlFor="body_fat">Body Fat % (optional)</Label>
+            <Label htmlFor="body_fat" className="text-sm sm:text-base">Body Fat % (optional)</Label>
             <Input
               id="body_fat"
               type="number"
@@ -144,13 +146,14 @@ const QuickLogWeight = ({ onSuccess }) => {
               placeholder="18.5"
               value={formData.body_fat_percentage}
               onChange={(e) => setFormData({ ...formData, body_fat_percentage: e.target.value })}
+              className="mt-1.5"
             />
           </div>
-          <div className="flex gap-2">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)} className="flex-1">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
+            <Button type="button" variant="outline" onClick={() => setOpen(false)} className="flex-1 h-12 min-h-[44px] text-sm sm:text-base">
               Cancel
             </Button>
-            <Button type="submit" disabled={loading} className="flex-1">
+            <Button type="submit" disabled={loading} className="flex-1 h-12 min-h-[44px] text-sm sm:text-base">
               {loading ? 'Logging...' : 'Log Weight'}
             </Button>
           </div>

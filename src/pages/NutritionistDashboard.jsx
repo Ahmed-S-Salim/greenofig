@@ -289,7 +289,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 
             {/* Client Profile Modal */}
             <Dialog open={showClientModal} onOpenChange={setShowClientModal}>
-              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto glass-effect">
+              <DialogContent className="glass-effect custom-scrollbar max-w-4xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle className="text-2xl flex items-center gap-3">
                     <Avatar className="h-12 w-12">
@@ -468,7 +468,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 
             {/* Meal Plan Modal */}
             <Dialog open={showMealPlanModal} onOpenChange={setShowMealPlanModal}>
-              <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto glass-effect">
+              <DialogContent className="glass-effect custom-scrollbar max-w-3xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle className="text-2xl">Create Meal Plan</DialogTitle>
                   <DialogDescription>

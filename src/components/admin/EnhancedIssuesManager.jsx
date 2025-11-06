@@ -10,6 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import ResponsiveTable from '@/components/ui/ResponsiveTable';
 import {
   AlertTriangle,
   CheckCircle,
@@ -344,55 +345,63 @@ const EnhancedIssuesManager = ({ user }) => {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">Customer Issues</h2>
+          <p className="text-xs sm:text-sm text-text-secondary mt-1">Track and resolve customer support tickets</p>
+        </div>
+      </div>
+
       {/* Statistics Dashboard */}
       {statistics && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="glass-effect">
-            <CardContent className="p-4">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-text-secondary">Total Issues</p>
-                  <p className="text-2xl font-bold">{statistics.total_issues || 0}</p>
+                  <p className="text-xs sm:text-sm text-text-secondary">Total Issues</p>
+                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold">{statistics.total_issues || 0}</p>
                 </div>
-                <TrendingUp className="w-8 h-8 text-primary opacity-50" />
+                <TrendingUp className="w-8 h-8 text-primary" />
               </div>
             </CardContent>
           </Card>
 
           <Card className="glass-effect">
-            <CardContent className="p-4">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-text-secondary">Open Issues</p>
-                  <p className="text-2xl font-bold text-blue-400">{statistics.open_issues || 0}</p>
+                  <p className="text-xs sm:text-sm text-text-secondary">Open Issues</p>
+                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-400">{statistics.open_issues || 0}</p>
                 </div>
-                <ShieldQuestion className="w-8 h-8 text-blue-400 opacity-50" />
+                <ShieldQuestion className="w-8 h-8 text-blue-400" />
               </div>
             </CardContent>
           </Card>
 
           <Card className="glass-effect">
-            <CardContent className="p-4">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-text-secondary">Avg Response Time</p>
-                  <p className="text-2xl font-bold text-green-400">
+                  <p className="text-xs sm:text-sm text-text-secondary">Avg Response Time</p>
+                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-400">
                     {statistics.avg_first_response_minutes ? `${Math.round(statistics.avg_first_response_minutes)}m` : 'N/A'}
                   </p>
                 </div>
-                <Clock className="w-8 h-8 text-green-400 opacity-50" />
+                <Clock className="w-8 h-8 text-green-400" />
               </div>
             </CardContent>
           </Card>
 
           <Card className="glass-effect">
-            <CardContent className="p-4">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-text-secondary">Urgent Issues</p>
-                  <p className="text-2xl font-bold text-red-400">{statistics.urgent_issues || 0}</p>
+                  <p className="text-xs sm:text-sm text-text-secondary">Urgent Issues</p>
+                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-red-400">{statistics.urgent_issues || 0}</p>
                 </div>
-                <AlertTriangle className="w-8 h-8 text-red-400 opacity-50" />
+                <AlertTriangle className="w-8 h-8 text-red-400" />
               </div>
             </CardContent>
           </Card>
@@ -402,173 +411,144 @@ const EnhancedIssuesManager = ({ user }) => {
       {/* Main Issues Card */}
       <Card className="glass-effect">
         <CardHeader>
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex flex-col gap-3 sm:gap-4">
             <div>
-              <CardTitle className="text-3xl font-bold">Customer Issues</CardTitle>
-              <p className="text-text-secondary">Track and resolve customer support tickets</p>
+              <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold">Customer Issues</CardTitle>
+              <p className="text-xs sm:text-sm text-text-secondary">Track and resolve customer support tickets</p>
             </div>
           </div>
 
           {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-3 mt-4">
+          <div className="flex flex-col gap-2 sm:gap-3 mt-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-secondary" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-text-secondary" />
               <Input
-                placeholder="Search by subject, customer name, or email..."
+                placeholder="Search issues..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-9 sm:pl-10 text-xs sm:text-sm"
               />
             </div>
 
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full md:w-[150px]">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="open">Open</SelectItem>
-                <SelectItem value="in_progress">In Progress</SelectItem>
-                <SelectItem value="resolved">Resolved</SelectItem>
-                <SelectItem value="closed">Closed</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full text-xs sm:text-sm">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="open">Open</SelectItem>
+                  <SelectItem value="in_progress">In Progress</SelectItem>
+                  <SelectItem value="resolved">Resolved</SelectItem>
+                  <SelectItem value="closed">Closed</SelectItem>
+                </SelectContent>
+              </Select>
 
-            <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-              <SelectTrigger className="w-full md:w-[150px]">
-                <SelectValue placeholder="Priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Priority</SelectItem>
-                <SelectItem value="urgent">Urgent</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="low">Low</SelectItem>
-              </SelectContent>
-            </Select>
+              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                <SelectTrigger className="w-full text-xs sm:text-sm">
+                  <SelectValue placeholder="Priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Priority</SelectItem>
+                  <SelectItem value="urgent">Urgent</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                </SelectContent>
+              </Select>
 
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-full md:w-[150px]">
-                <SelectValue placeholder="Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                {categories.map(cat => (
-                  <SelectItem key={cat.id} value={cat.slug}>{cat.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-full text-xs sm:text-sm">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {categories.map(cat => (
+                    <SelectItem key={cat.id} value={cat.slug}>{cat.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-            <Select value={assignedFilter} onValueChange={setAssignedFilter}>
-              <SelectTrigger className="w-full md:w-[150px]">
-                <SelectValue placeholder="Assigned" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Assignments</SelectItem>
-                <SelectItem value="unassigned">Unassigned</SelectItem>
-                <SelectItem value="me">Assigned to Me</SelectItem>
-                <DropdownMenuSeparator />
-                {adminUsers.map(admin => (
-                  <SelectItem key={admin.id} value={admin.id}>{admin.full_name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <Select value={assignedFilter} onValueChange={setAssignedFilter}>
+                <SelectTrigger className="w-full text-xs sm:text-sm col-span-2 sm:col-span-1">
+                  <SelectValue placeholder="Assigned" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Assignments</SelectItem>
+                  <SelectItem value="unassigned">Unassigned</SelectItem>
+                  <SelectItem value="me">Assigned to Me</SelectItem>
+                  <DropdownMenuSeparator />
+                  {adminUsers.map(admin => (
+                    <SelectItem key={admin.id} value={admin.id}>{admin.full_name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardHeader>
 
         <CardContent>
           {loading ? (
             <div className="flex justify-center items-center py-10">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              <span className="ml-4 text-lg">Loading Issues...</span>
+              <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-primary" />
+              <span className="ml-3 sm:ml-4 text-sm sm:text-base">Loading Issues...</span>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="border-b border-white/10">
-                    <th className="p-4">Priority</th>
-                    <th className="p-4">Subject</th>
-                    <th className="p-4">Category</th>
-                    <th className="p-4">Customer</th>
-                    <th className="p-4">Assigned To</th>
-                    <th className="p-4">Status</th>
-                    <th className="p-4">Last Updated</th>
-                    <th className="p-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredIssues.map(issue => (
-                    <motion.tr
-                      key={issue.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="border-b border-white/5 hover:bg-white/5 cursor-pointer"
-                      onClick={() => openIssueDetail(issue)}
-                    >
-                      <td className="p-4">{getPriorityBadge(issue.priority)}</td>
-                      <td className="p-4 font-medium">{issue.subject}</td>
-                      <td className="p-4">{getCategoryBadge(issue.category)}</td>
-                      <td className="p-4">
-                        <div className="font-medium">{issue.user_profiles?.full_name || 'N/A'}</div>
-                        <div className="text-sm text-text-secondary">{issue.user_profiles?.email || 'N/A'}</div>
-                      </td>
-                      <td className="p-4">
-                        {issue.assigned_user ? (
-                          <div className="flex items-center gap-2">
-                            <User className="w-4 h-4" />
-                            <span className="text-sm">{issue.assigned_user.full_name}</span>
-                          </div>
-                        ) : (
-                          <span className="text-text-secondary text-sm">Unassigned</span>
-                        )}
-                      </td>
-                      <td className="p-4">{getStatusBadge(issue.status)}</td>
-                      <td className="p-4 text-text-secondary">{new Date(issue.updated_at).toLocaleDateString()}</td>
-                      <td className="p-4 text-right" onClick={(e) => e.stopPropagation()}>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="glass-effect">
-                            <DropdownMenuItem onClick={() => openIssueDetail(issue)}>
-                              <MessageSquare className="w-4 h-4 mr-2" />
-                              View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => handleStatusUpdate(issue.id, 'in_progress')}>
-                              Set to In Progress
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleStatusUpdate(issue.id, 'resolved')}>
-                              Set to Resolved
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleStatusUpdate(issue.id, 'closed')}>
-                              Set to Closed
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => handlePriorityUpdate(issue.id, 'urgent')}>
-                              Set Priority: Urgent
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handlePriorityUpdate(issue.id, 'high')}>
-                              Set Priority: High
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
-              {filteredIssues.length === 0 && (
-                <p className="text-text-secondary text-center py-8">
-                  {searchQuery || statusFilter !== 'all' || priorityFilter !== 'all' || categoryFilter !== 'all'
-                    ? 'No issues match your filters'
-                    : 'No customer issues found. Great job!'}
-                </p>
+            <ResponsiveTable
+              data={filteredIssues}
+              columns={[
+                {
+                  header: 'Priority',
+                  accessor: 'priority',
+                  render: (issue) => getPriorityBadge(issue.priority)
+                },
+                {
+                  header: 'Subject',
+                  accessor: 'subject',
+                  render: (issue) => <span className="font-medium text-sm">{issue.subject}</span>
+                },
+                {
+                  header: 'Category',
+                  accessor: 'category',
+                  render: (issue) => getCategoryBadge(issue.category)
+                },
+                {
+                  header: 'Customer',
+                  accessor: 'user_profiles',
+                  render: (issue) => (
+                    <div>
+                      <div className="font-medium text-sm">{issue.user_profiles?.full_name || 'N/A'}</div>
+                      <div className="text-xs text-text-secondary">{issue.user_profiles?.email || 'N/A'}</div>
+                    </div>
+                  )
+                },
+                {
+                  header: 'Status',
+                  accessor: 'status',
+                  render: (issue) => getStatusBadge(issue.status)
+                },
+                {
+                  header: 'Last Updated',
+                  accessor: 'updated_at',
+                  render: (issue) => <span className="text-sm text-text-secondary">{new Date(issue.updated_at).toLocaleDateString()}</span>
+                }
+              ]}
+              actions={(issue) => (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => openIssueDetail(issue)}
+                  className="h-8 px-2 sm:px-3"
+                >
+                  <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                </Button>
               )}
-            </div>
+              emptyMessage={
+                searchQuery || statusFilter !== 'all' || priorityFilter !== 'all' || categoryFilter !== 'all'
+                  ? 'No issues match your filters'
+                  : 'No customer issues found. Great job!'
+              }
+            />
           )}
         </CardContent>
       </Card>

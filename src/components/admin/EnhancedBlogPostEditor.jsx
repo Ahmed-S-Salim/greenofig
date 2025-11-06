@@ -175,14 +175,16 @@ const EnhancedBlogPostEditor = () => {
     }
   }, [content]);
 
-  // Auto-generate excerpt from content if not set
+  // Auto-generate excerpt from content if not set (only on initial content add)
   useEffect(() => {
-    if (content && !excerpt) {
+    if (content && !excerpt && !postId) {
       const text = content.replace(/<[^>]*>/g, ''); // Strip HTML
-      const autoExcerpt = text.substring(0, 200).trim() + '...';
-      setExcerpt(autoExcerpt);
+      const autoExcerpt = text.substring(0, 200).trim();
+      if (autoExcerpt.length > 0) {
+        setExcerpt(autoExcerpt);
+      }
     }
-  }, [content, excerpt]);
+  }, [content, excerpt, postId]);
 
   const handleAddKeyword = () => {
     if (keywordInput.trim() && !keywords.includes(keywordInput.trim())) {
@@ -562,6 +564,7 @@ const EnhancedBlogPostEditor = () => {
                   type="datetime-local"
                   value={scheduledPublishAt}
                   onChange={(e) => setScheduledPublishAt(e.target.value)}
+                  className="w-full min-w-0"
                 />
               </div>
             </CardContent>

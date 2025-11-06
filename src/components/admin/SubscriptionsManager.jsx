@@ -131,22 +131,27 @@ const SubscriptionsManager = () => {
       animate="visible"
       className="space-y-6"
     >
-      <motion.div variants={itemVariants} className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">Subscription Plans</h2>
-        <Button onClick={handleAddPlan}>
-          <PlusCircle className="w-4 h-4 mr-2" />
-          Add New Plan
-        </Button>
+      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">Subscription Plans</h2>
+          <p className="text-xs sm:text-sm text-text-secondary mt-1">Manage subscription tiers and pricing</p>
+        </div>
+        <div className="flex gap-2 ml-auto">
+          <Button onClick={handleAddPlan} size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm">
+            <PlusCircle className="w-4 h-4 mr-2" />
+            Add New Plan
+          </Button>
+        </div>
       </motion.div>
 
       {/* Subscription Analytics */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="glass-effect">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-text-secondary">Active Subscriptions</p>
-                <p className="text-3xl font-bold">{subscriptionStats.totalActive}</p>
+                <p className="text-xs sm:text-sm text-text-secondary">Active Subscriptions</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold">{subscriptionStats.totalActive}</p>
               </div>
               <Users className="w-8 h-8 text-primary" />
             </div>
@@ -154,11 +159,11 @@ const SubscriptionsManager = () => {
         </Card>
 
         <Card className="glass-effect">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-text-secondary">New This Month</p>
-                <p className="text-3xl font-bold text-green-400">{subscriptionStats.newThisMonth}</p>
+                <p className="text-xs sm:text-sm text-text-secondary">New This Month</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-400">{subscriptionStats.newThisMonth}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-green-400" />
             </div>
@@ -166,11 +171,11 @@ const SubscriptionsManager = () => {
         </Card>
 
         <Card className="glass-effect">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-text-secondary">Canceled This Month</p>
-                <p className="text-3xl font-bold text-red-400">{subscriptionStats.canceledThisMonth}</p>
+                <p className="text-xs sm:text-sm text-text-secondary">Canceled This Month</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-red-400">{subscriptionStats.canceledThisMonth}</p>
               </div>
               <TrendingDown className="w-8 h-8 text-red-400" />
             </div>
@@ -178,11 +183,11 @@ const SubscriptionsManager = () => {
         </Card>
 
         <Card className="glass-effect">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-text-secondary">Payment Failures</p>
-                <p className="text-3xl font-bold text-orange-400">{subscriptionStats.paymentFailures}</p>
+                <p className="text-xs sm:text-sm text-text-secondary">Payment Failures</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-400">{subscriptionStats.paymentFailures}</p>
               </div>
               <AlertCircle className="w-8 h-8 text-orange-400" />
             </div>
@@ -205,7 +210,7 @@ const SubscriptionsManager = () => {
             ))}
         </div>
       ) : (
-        <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div variants={containerVariants} className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
           {plans.map(plan => (
             <motion.div variants={itemVariants} key={plan.id}>
               <Card className={`glass-effect h-full flex flex-col ${plan.is_popular ? 'border-purple-500 border-2' : ''}`}>

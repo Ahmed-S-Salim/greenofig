@@ -492,7 +492,7 @@ const MessagingCenter = () => {
 
       {/* New Message Dialog */}
       <Dialog open={showNewMessageDialog} onOpenChange={setShowNewMessageDialog}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="glass-effect custom-scrollbar max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>New Message</DialogTitle>
           </DialogHeader>

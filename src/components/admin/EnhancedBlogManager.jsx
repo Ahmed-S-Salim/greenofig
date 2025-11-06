@@ -451,48 +451,60 @@ const EnhancedBlogManager = ({ user }) => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold flex items-center gap-2">
-            <FileText className="w-8 h-8 text-primary" />
-            Blog Management
-          </h2>
-          <p className="text-muted-foreground mt-1">Manage all blog posts, categories, and comments</p>
+    <div className="min-h-screen">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">Blog Management</h2>
+            <p className="text-xs sm:text-sm text-text-secondary mt-1">Manage all blog posts, categories, and comments</p>
+          </div>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Button variant="outline" size="sm" onClick={fetchPosts} className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm">
+              <RefreshCw className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Refresh</span>
+            </Button>
+            <Button size="sm" onClick={() => {
+              const role = user?.role === 'nutritionist' ? 'nutritionist' : 'admin';
+              console.log('Create Post clicked, navigating to:', `/app/${role}/blog/new`);
+              navigate(`/app/${role}/blog/new`);
+            }} className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm">
+              <Plus className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Create Post</span>
+              <span className="inline sm:hidden">New</span>
+            </Button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={fetchPosts}>
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh
-          </Button>
-          <Button onClick={() => {
-            const role = user?.role === 'nutritionist' ? 'nutritionist' : 'admin';
-            console.log('Create Post clicked, navigating to:', `/app/${role}/blog/new`);
-            navigate(`/app/${role}/blog/new`);
-          }}>
-            <Plus className="w-4 h-4 mr-2" />
-            Create Post
-          </Button>
-        </div>
-      </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="posts">
-            Posts ({analytics.totalPosts})
-          </TabsTrigger>
-          <TabsTrigger value="analytics">
-            <BarChart3 className="w-4 h-4 mr-1" />
-            Analytics
-          </TabsTrigger>
-          <TabsTrigger value="categories">
-            Categories ({categories.length})
-          </TabsTrigger>
-          <TabsTrigger value="comments">
-            Comments ({analytics.pendingComments} pending)
-          </TabsTrigger>
-        </TabsList>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          {/* Centered, scrollable tabs for mobile */}
+          <div className="flex justify-center mb-6">
+            <TabsList className="w-full max-w-full overflow-x-auto flex-nowrap scrollbar-hide h-auto justify-start sm:justify-center px-1">
+              <TabsTrigger value="posts" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3 py-2">
+                <FileText className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                <span className="hidden sm:inline">Posts</span>
+                <span className="inline sm:hidden">Posts</span>
+                <span className="ml-1">({analytics.totalPosts})</span>
+              </TabsTrigger>
+              <TabsTrigger value="analytics" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3 py-2">
+                <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                <span className="hidden sm:inline">Analytics</span>
+                <span className="inline sm:hidden">Stats</span>
+              </TabsTrigger>
+              <TabsTrigger value="categories" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3 py-2">
+                <Target className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                <span className="hidden sm:inline">Categories</span>
+                <span className="inline sm:hidden">Cat</span>
+                <span className="ml-1">({categories.length})</span>
+              </TabsTrigger>
+              <TabsTrigger value="comments" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3 py-2">
+                <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                <span className="hidden sm:inline">Comments</span>
+                <span className="inline sm:hidden">Msgs</span>
+                <span className="ml-1">({analytics.pendingComments})</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
         {/* Posts Tab */}
         <TabsContent value="posts" className="space-y-4">
@@ -549,26 +561,26 @@ const EnhancedBlogManager = ({ user }) => {
 
                 {/* Bulk Actions */}
                 {selectedPosts.length > 0 && (
-                  <div className="flex items-center gap-2 p-3 bg-primary/10 rounded-lg">
-                    <span className="text-sm font-medium">
-                      {selectedPosts.length} posts selected
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 p-3 bg-primary/10 rounded-lg">
+                    <span className="text-xs sm:text-sm font-medium">
+                      {selectedPosts.length} selected
                     </span>
-                    <div className="flex gap-2 ml-auto">
-                      <Button size="sm" variant="outline" onClick={() => handleBulkAction('publish')}>
-                        <CheckCircle2 className="w-4 h-4 mr-1" />
-                        Publish
+                    <div className="flex flex-wrap gap-2 w-full sm:w-auto sm:ml-auto">
+                      <Button size="sm" variant="outline" onClick={() => handleBulkAction('publish')} className="h-8 px-2 text-xs">
+                        <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                        <span className="hidden sm:inline">Publish</span>
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => handleBulkAction('draft')}>
-                        <FileText className="w-4 h-4 mr-1" />
-                        Draft
+                      <Button size="sm" variant="outline" onClick={() => handleBulkAction('draft')} className="h-8 px-2 text-xs">
+                        <FileText className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                        <span className="hidden sm:inline">Draft</span>
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => handleBulkAction('archive')}>
-                        <Archive className="w-4 h-4 mr-1" />
-                        Archive
+                      <Button size="sm" variant="outline" onClick={() => handleBulkAction('archive')} className="h-8 px-2 text-xs">
+                        <Archive className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                        <span className="hidden sm:inline">Archive</span>
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => handleBulkAction('delete')} className="text-destructive">
-                        <Trash2 className="w-4 h-4 mr-1" />
-                        Delete
+                      <Button size="sm" variant="outline" onClick={() => handleBulkAction('delete')} className="h-8 px-2 text-xs text-destructive">
+                        <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                        <span className="hidden sm:inline">Delete</span>
                       </Button>
                     </div>
                   </div>
@@ -589,7 +601,7 @@ const EnhancedBlogManager = ({ user }) => {
 
           {/* Posts Grid */}
           {filteredPosts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
               {filteredPosts.map(post => (
                 <PostCard key={post.id} post={post} />
               ))}
@@ -609,7 +621,7 @@ const EnhancedBlogManager = ({ user }) => {
 
         {/* Analytics Tab */}
         <TabsContent value="analytics" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
               icon={FileText}
               title="Total Posts"
@@ -632,7 +644,7 @@ const EnhancedBlogManager = ({ user }) => {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
               icon={FileText}
               title="Drafts"
@@ -695,7 +707,7 @@ const EnhancedBlogManager = ({ user }) => {
               <CardDescription>Manage content categories</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                 {categories.map(category => (
                   <div key={category.id} className="p-4 bg-card border border-border rounded-lg">
                     <h3 className="font-semibold mb-1">{category.name}</h3>
@@ -783,6 +795,7 @@ const EnhancedBlogManager = ({ user }) => {
           </Card>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowRight, Loader2, Calendar, User, ArrowLeft } from 'lucide-react';
 import SiteLayout from '@/components/SiteLayout';
 import { toast } from '@/components/ui/use-toast';
+import FloatingFruits from '@/components/ui/FloatingFruits';
 
 const BlogPage = ({ logoUrl }) => {
   const { postId } = useParams();
@@ -75,12 +76,12 @@ const BlogPage = ({ logoUrl }) => {
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.3 } },
+    visible: { opacity: 1, transition: { duration: 0.5 } },
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { type: 'spring', stiffness: 100 } },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.6 } },
   };
 
   const truncateText = (text, length) => {
@@ -105,11 +106,14 @@ const BlogPage = ({ logoUrl }) => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
     >
       {posts.map((post) => (
         <motion.div variants={itemVariants} key={post.id}>
-          <Card className="h-full flex flex-col glass-effect overflow-hidden group">
+          <Card className="h-full flex flex-col glass-effect overflow-hidden group rounded-2xl" style={{
+            backdropFilter: 'blur(20px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          }}>
             <div className="aspect-video overflow-hidden cursor-pointer" onClick={() => navigate(`/blog/${post.id}`)}>
               <img
                 alt={post.title}
@@ -153,10 +157,13 @@ const BlogPage = ({ logoUrl }) => {
     const featuredPost = posts[0];
     const otherPosts = posts.slice(1);
 
-    return (<motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-12">
+    return (<motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-12 max-w-7xl mx-auto">
       {featuredPost && (
         <motion.div variants={itemVariants} className="group">
-          <div className="grid lg:grid-cols-2 gap-8 items-center glass-effect p-8 rounded-2xl">
+          <div className="grid lg:grid-cols-2 gap-8 items-center glass-effect p-8 rounded-2xl" style={{
+            backdropFilter: 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          }}>
             <div className="aspect-video overflow-hidden rounded-lg cursor-pointer" onClick={() => navigate(`/blog/${featuredPost.id}`)}>
               <img
                 alt={featuredPost.title}
@@ -186,7 +193,10 @@ const BlogPage = ({ logoUrl }) => {
       {otherPosts.length > 0 && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {otherPosts.map((post) => (
-            <motion.div variants={itemVariants} key={post.id} className="glass-effect p-6 rounded-2xl group flex flex-col">
+            <motion.div variants={itemVariants} key={post.id} className="glass-effect p-6 rounded-2xl group flex flex-col" style={{
+              backdropFilter: 'blur(20px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            }}>
               <div className="aspect-video overflow-hidden rounded-lg mb-4 cursor-pointer" onClick={() => navigate(`/blog/${post.id}`)}>
                 <img
                   alt={post.title}
@@ -230,6 +240,7 @@ const BlogPage = ({ logoUrl }) => {
           <title>{post.title} - GreenoFig Blog</title>
           <meta name="description" content={post.content.substring(0, 160)} />
         </Helmet>
+        <FloatingFruits />
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -300,19 +311,40 @@ const BlogPage = ({ logoUrl }) => {
         <meta property="og:url" content="https://greenofig.com/blog" />
         <meta property="og:type" content="website" />
       </Helmet>
-      <div className="container mx-auto px-4 py-16 sm:py-24">
+      <FloatingFruits />
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        {/* Green Fruit Banner - FULL WIDTH */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          transition={{ duration: 0.6 }}
+          className="relative mb-8 rounded-3xl overflow-hidden mx-auto max-w-7xl"
+          style={{
+            background: 'linear-gradient(135deg, rgba(34, 139, 34, 0.12), rgba(16, 185, 129, 0.12))',
+            backdropFilter: 'blur(60px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(60px) saturate(180%)',
+            border: '1px solid rgba(16, 185, 129, 0.15)',
+            boxShadow: '0 8px 32px 0 rgba(16, 185, 129, 0.1)',
+          }}
         >
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-            The <span className="gradient-text">GreenoFig</span> Blog
-          </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-text-secondary">
-            Insights, tips, and stories on your journey to a healthier life.
-          </p>
+          {/* Static fruit decorations */}
+          <div className="absolute inset-0 opacity-15 pointer-events-none">
+            <div className="absolute top-4 left-6 text-4xl">🍏</div>
+            <div className="absolute top-6 right-10 text-5xl">🥦</div>
+            <div className="absolute bottom-4 left-16 text-4xl">🥝</div>
+            <div className="absolute bottom-6 right-8 text-5xl">🥒</div>
+            <div className="absolute top-12 left-1/3 text-3xl">🥑</div>
+            <div className="absolute bottom-10 right-1/3 text-4xl">🍊</div>
+          </div>
+
+          <div className="relative z-10 text-center py-16 px-4">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-3">
+              The <span className="gradient-text">GreenoFig</span> Blog
+            </h1>
+            <p className="max-w-2xl mx-auto text-base md:text-lg text-text-secondary">
+              Insights, tips, and stories on your journey to a healthier life.
+            </p>
+          </div>
         </motion.div>
 
         {posts.length === 0 ? (
@@ -322,10 +354,20 @@ const BlogPage = ({ logoUrl }) => {
           </div>
         ) : (
           <Tabs defaultValue="all" className="w-full">
-            <div className="flex justify-center mb-8">
-              <TabsList className="glass-effect">
-                <TabsTrigger value="all">All Posts</TabsTrigger>
-                <TabsTrigger value="featured">Featured Articles</TabsTrigger>
+            <div className="flex justify-center mb-12">
+              <TabsList className="glass-effect bg-transparent border border-primary/20 p-1">
+                <TabsTrigger
+                  value="all"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-white rounded-full px-6"
+                >
+                  All Posts
+                </TabsTrigger>
+                <TabsTrigger
+                  value="featured"
+                  className="data-[state=active]:bg-transparent data-[state=active]:text-text-primary rounded-full px-6"
+                >
+                  Featured Articles
+                </TabsTrigger>
               </TabsList>
             </div>
 

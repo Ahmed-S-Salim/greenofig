@@ -1,7 +1,7 @@
 
     import React, { useState, useEffect } from 'react';
     import { motion } from 'framer-motion';
-    import { Mail, Lock, User, Info, Loader2 } from 'lucide-react';
+    import { Mail, Lock, User, Loader2, ArrowLeft } from 'lucide-react';
     import { Button } from '@/components/ui/button';
     import { toast } from '@/components/ui/use-toast';
     import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -39,30 +39,8 @@
         setIsLogin(location.pathname === '/login');
       }, [location.pathname]);
 
-      useEffect(() => {
-        console.log('AuthPage useEffect - user:', user, 'userProfile:', userProfile);
-        if(user && userProfile) {
-            console.log('Navigating based on role:', userProfile.role);
-            // Force full page navigation to ensure clean state
-            const isGitHubPages = window.location.hostname.includes('github.io');
-            const basePath = isGitHubPages ? '/greenofig' : '';
-
-            let destination = `${basePath}/app/user`;
-            switch (userProfile.role) {
-                case 'admin':
-                case 'super_admin':
-                    destination = `${basePath}/app/admin`;
-                    break;
-                case 'nutritionist':
-                    destination = `${basePath}/app/nutritionist`;
-                    break;
-                default:
-                    destination = `${basePath}/app/user`;
-                    break;
-            }
-            window.location.href = destination;
-        }
-      }, [user, userProfile])
+      // Note: Navigation is handled directly in handleEmailSubmit and handleGoogleSignIn
+      // No useEffect navigation needed - causes race condition on mobile
 
       const handleEmailSubmit = async (e) => {
         e.preventDefault();
@@ -80,26 +58,46 @@
         setLoading(true);
 
         if (isLogin) {
-          const { error } = await signIn({email, password});
-          if (error) {
-            // Error toast is handled in useAuth
-          } else {
-            // Success navigation is handled by useEffect
-          }
-        } else {
-          const { user, error } = await signUp({ email, password, full_name: name });
+          const { error, profile } = await signIn({email, password});
+          if (!error && profile) {
+            // Determine destination based on role
+            const role = profile.role;
+            let destination = '/app/user';
+            if (role === 'admin' || role === 'super_admin') {
+              destination = '/app/admin';
+            } else if (role === 'nutritionist') {
+              destination = '/app/nutritionist';
+            }
 
-          if (error) {
-            // Error toast is handled in useAuth
-          } else if (user) {
+            // Use navigate with state to avoid reload
+            navigate(destination, { replace: true, state: { skipLoading: true } });
+            return;
+          }
+          setLoading(false);
+        } else {
+          const { user, error, profile } = await signUp({ email, password, full_name: name });
+
+          if (!error && user && profile) {
              toast({
               title: "Account created! 🚀",
               description: "Welcome! Let's get you set up.",
             });
-            // Success navigation is handled by useEffect
+
+            // Determine destination based on role
+            const role = profile.role;
+            let destination = '/app/user';
+            if (role === 'admin' || role === 'super_admin') {
+              destination = '/app/admin';
+            } else if (role === 'nutritionist') {
+              destination = '/app/nutritionist';
+            }
+
+            // Use navigate with state to avoid reload
+            navigate(destination, { replace: true, state: { skipLoading: true } });
+            return;
           }
+          setLoading(false);
         }
-        setLoading(false);
       };
 
       const handleGoogleSignIn = async () => {
@@ -129,6 +127,14 @@
             className="w-full max-w-md"
           >
             <div className="glass-effect rounded-2xl p-4 sm:p-8 shadow-2xl">
+              <button
+                onClick={() => navigate(-1)}
+                className="flex items-center gap-2 text-text-secondary hover:text-primary transition-colors mb-4 group"
+              >
+                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                <span className="text-sm font-medium">Back</span>
+              </button>
+
               <div className="text-center mb-8">
                 <Link to="/home" className="inline-block mb-4">
                   <motion.div
@@ -182,6 +188,7 @@
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="w-full pl-10 pr-4 py-3 min-h-[44px] bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring touch-manipulation"
+                        style={{ fontSize: '16px' }}
                         placeholder="John Doe"
                         disabled={loading || googleLoading}
                         required
@@ -202,6 +209,7 @@
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full pl-10 pr-4 py-3 min-h-[44px] bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring touch-manipulation"
+                      style={{ fontSize: '16px' }}
                       placeholder="you@example.com"
                       disabled={loading || googleLoading}
                       required
@@ -222,6 +230,7 @@
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="w-full pl-10 pr-4 py-3 min-h-[44px] bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring touch-manipulation"
+                      style={{ fontSize: '16px' }}
                       placeholder="••••••••"
                       disabled={loading || googleLoading}
                       required
@@ -249,20 +258,6 @@
                 >
                   {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Login'}
                 </button>
-              </div>
-              
-              <div className="mt-6 p-4 bg-primary/10 rounded-lg border border-primary/20 flex items-start gap-3">
-                <Info className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-semibold text-primary">Special Account Sign Up:</p>
-                  <ul className="text-xs text-primary/80 list-disc pl-4 mt-1 space-y-1">
-                    <li>To create a regular user account, use any valid email.</li>
-                    <li>For a <span className="font-bold">Nutritionist</span> account, sign up with: <br/><span className="font-bold">`nutritionist@greenofig.com`</span></li>
-                    <li>For an <span className="font-bold">Admin</span> account, sign up with: <br/><span className="font-bold">`admin@greenofig.com`</span></li>
-                    <li>For a <span className="font-bold">Super Admin</span> account, sign up with: <br/><span className="font-bold">`superadmin@greenofig.com`</span></li>
-                     <li>Your account is auto-verified. No need to check your email!</li>
-                  </ul>
-                </div>
               </div>
             </div>
           </motion.div>

@@ -297,18 +297,17 @@ const UserManagement = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-bold flex items-center gap-2">
-            <Users className="w-8 h-8 text-primary" />
-            User Management
-          </h2>
-          <p className="text-text-secondary mt-1">Manage platform users and roles</p>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">User Management</h2>
+          <p className="text-xs sm:text-sm text-text-secondary mt-1">Manage platform users and roles</p>
         </div>
-        <Button onClick={() => setCreateDialogOpen(true)} className="gap-2">
-          <Plus className="w-4 h-4" />
-          Create User
-        </Button>
+        <div className="flex gap-2 ml-auto">
+          <Button onClick={() => setCreateDialogOpen(true)} size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm">
+            <Plus className="w-4 h-4 mr-2" />
+            Create User
+          </Button>
+        </div>
       </div>
 
       {/* Search */}
@@ -405,7 +404,7 @@ const UserManagement = () => {
 
       {/* Create User Dialog */}
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-        <DialogContent>
+        <DialogContent className="glass-effect max-w-md lg:max-w-lg xl:max-w-xl">
           <DialogHeader>
             <DialogTitle>Create New User</DialogTitle>
             <DialogDescription>
@@ -432,10 +431,10 @@ const UserManagement = () => {
             <div>
               <label className="text-sm font-medium mb-2 block">Role</label>
               <Select value={newUser.role} onValueChange={(value) => setNewUser({ ...newUser, role: value })}>
-                <SelectTrigger>
+                <SelectTrigger className="glass-effect">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="glass-effect">
                   <SelectItem value="user">User</SelectItem>
                   <SelectItem value="nutritionist">Nutritionist</SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>
@@ -458,7 +457,7 @@ const UserManagement = () => {
 
       {/* Edit User Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent>
+        <DialogContent className="glass-effect max-w-md lg:max-w-lg xl:max-w-xl">
           <DialogHeader>
             <DialogTitle>Edit User</DialogTitle>
             <DialogDescription>
@@ -485,10 +484,10 @@ const UserManagement = () => {
             <div>
               <label className="text-sm font-medium mb-2 block">Role</label>
               <Select value={editForm.role} onValueChange={(value) => setEditForm({ ...editForm, role: value })}>
-                <SelectTrigger>
+                <SelectTrigger className="glass-effect">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="glass-effect">
                   <SelectItem value="user">User</SelectItem>
                   <SelectItem value="nutritionist">Nutritionist</SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>
@@ -510,7 +509,7 @@ const UserManagement = () => {
 
       {/* Invite Instructions Dialog */}
       <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
-        <DialogContent>
+        <DialogContent className="glass-effect max-w-md lg:max-w-lg xl:max-w-xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-green-500" />

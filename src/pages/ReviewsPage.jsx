@@ -54,41 +54,124 @@ import React, { useState, useEffect } from 'react';
     };
     
     const ReviewForm = ({ setOpen }) => {
-      const handleUnimplementedSubmit = (e) => {
+      const [formData, setFormData] = useState({
+        name: '',
+        title: '',
+        review: '',
+        rating: 0
+      });
+      const [submitting, setSubmitting] = useState(false);
+
+      const handleSubmit = async (e) => {
         e.preventDefault();
-        toast({
-          title: '🚀 Submission Received!',
-          description: "Just kidding! This form isn't wired up yet, but you can ask me to implement it next!",
-        });
-        setOpen(false);
+
+        if (formData.rating === 0) {
+          toast({
+            title: 'Rating Required',
+            description: 'Please select a star rating before submitting.',
+            variant: 'destructive'
+          });
+          return;
+        }
+
+        setSubmitting(true);
+
+        try {
+          const { error } = await supabase
+            .from('testimonials')
+            .insert([{
+              customer_name: formData.name,
+              customer_title: formData.title,
+              quote: formData.review,
+              rating: formData.rating,
+              is_featured: false,
+              is_approved: true,
+              display_order: 9999,
+              created_at: new Date().toISOString()
+            }]);
+
+          if (error) throw error;
+
+          toast({
+            title: 'Review Submitted!',
+            description: 'Thank you for sharing your experience with us.',
+          });
+
+          setOpen(false);
+          window.location.reload();
+        } catch (error) {
+          console.error('Error submitting review:', error);
+          toast({
+            title: 'Submission Failed',
+            description: error.message || 'Please try again later.',
+            variant: 'destructive'
+          });
+        } finally {
+          setSubmitting(false);
+        }
       };
 
       return (
-        <form onSubmit={handleUnimplementedSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Your Name</Label>
-            <Input id="name" placeholder="John Doe" required />
+            <Input
+              id="name"
+              placeholder="John Doe"
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              required
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="review-title">Review Title</Label>
-            <Input id="review-title" placeholder="An amazing experience!" required />
+            <Input
+              id="review-title"
+              placeholder="An amazing experience!"
+              value={formData.title}
+              onChange={(e) => setFormData({...formData, title: e.target.value})}
+              required
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="review">Your Review</Label>
-            <Textarea id="review" placeholder="Tell us what you think..." required />
+            <Textarea
+              id="review"
+              placeholder="Tell us what you think..."
+              value={formData.review}
+              onChange={(e) => setFormData({...formData, review: e.target.value})}
+              required
+            />
           </div>
           <div className="space-y-2">
-            <Label>Rating</Label>
+            <Label>Rating *</Label>
             <div className="flex items-center space-x-1">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-6 h-6 text-gray-300 cursor-pointer hover:text-yellow-400" />
+                <Star
+                  key={i}
+                  className={`w-6 h-6 cursor-pointer transition-colors ${
+                    i < formData.rating
+                      ? 'text-yellow-400 fill-yellow-400'
+                      : 'text-gray-300 hover:text-yellow-400'
+                  }`}
+                  onClick={() => setFormData({...formData, rating: i + 1})}
+                />
               ))}
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">
-              <Send className="mr-2 h-4 w-4" />
-              Submit Review
+            <Button type="submit" disabled={submitting}>
+              {submitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                <>
+                  <Send className="mr-2 h-4 w-4" />
+                  Submit Review
+                </>
+              )}
             </Button>
           </DialogFooter>
         </form>
@@ -106,8 +189,8 @@ import React, { useState, useEffect } from 'react';
           const { data, error } = await supabase
             .from('testimonials')
             .select('*')
-            .eq('is_featured', true)
-            .order('display_order', { ascending: true });
+            .eq('is_approved', true)
+            .order('created_at', { ascending: false });
 
           if (error) {
             console.error('Error fetching testimonials:', error);
@@ -142,7 +225,7 @@ import React, { useState, useEffect } from 'react';
             <div className="text-center mb-12">
               <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                 <DialogTrigger asChild>
-                  <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg animate-pulse">
+                  <Button size="lg" className="bg-primary hover:bg-primary/90 hover:shadow-xl transition-all text-primary-foreground shadow-lg">
                     <MessageSquarePlus className="mr-2 h-5 w-5" />
                     Write a Review
                   </Button>

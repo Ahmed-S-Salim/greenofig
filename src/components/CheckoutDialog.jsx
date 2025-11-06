@@ -92,16 +92,16 @@ const CheckoutDialog = ({ open, onOpenChange, plan, billingCycle = 'monthly' }) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+      <DialogContent className="glass-effect custom-scrollbar max-w-[95vw] sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <CreditCard className="w-5 h-5" aria-hidden="true" />
+          <DialogTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
             Checkout
           </DialogTitle>
-          <DialogDescription>Complete your subscription purchase</DialogDescription>
+          <DialogDescription className="text-sm">Complete your subscription purchase</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-6 min-w-0 max-w-full">
           {/* Plan Summary */}
           <div className="p-4 rounded-lg border border-border bg-background/50" role="region" aria-label="Plan summary">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-4">
@@ -166,12 +166,11 @@ const CheckoutDialog = ({ open, onOpenChange, plan, billingCycle = 'monthly' }) 
           </div>
 
           {/* Actions */}
-          <div className="space-y-3">
+          <div className="space-y-3 min-w-0">
             <Button
               onClick={handleCheckout}
               disabled={processing}
-              className="w-full"
-              size="lg"
+              className="w-full min-w-0 h-11 sm:h-12 text-base"
               aria-label={processing ? 'Processing payment' : 'Complete purchase'}
             >
               {processing ? (
@@ -190,7 +189,7 @@ const CheckoutDialog = ({ open, onOpenChange, plan, billingCycle = 'monthly' }) 
               onClick={() => onOpenChange(false)}
               disabled={processing}
               variant="outline"
-              className="w-full"
+              className="w-full min-w-0 h-11 sm:h-12 text-base"
               aria-label="Cancel checkout"
             >
               Cancel

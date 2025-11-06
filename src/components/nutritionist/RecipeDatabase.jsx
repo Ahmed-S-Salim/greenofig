@@ -413,7 +413,7 @@ const RecipeDatabase = ({ onSelectRecipe }) => {
 
       {/* Recipe Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="glass-effect custom-scrollbar max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingRecipe ? 'Edit Recipe' : 'Create New Recipe'}</DialogTitle>
           </DialogHeader>

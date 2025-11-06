@@ -142,7 +142,7 @@ Please provide detailed meal suggestions with ingredients, portions, and nutriti
           Generate AI Meal Plan
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="glass-effect custom-scrollbar max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <ChefHat className="w-6 h-6 text-primary" />

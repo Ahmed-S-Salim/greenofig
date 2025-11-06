@@ -58,12 +58,11 @@ const TestimonialsManager = () => {
       customer_title: '',
       customer_company: '',
       quote: '',
-      full_review: '',
       rating: 5,
       category: 'general',
       is_featured: false,
-      is_active: true,
-      verified: false,
+      is_approved: true,
+      is_verified: false,
     });
     setIsDialogOpen(true);
   };
@@ -91,12 +90,11 @@ const TestimonialsManager = () => {
             customer_title: editingTestimonial.customer_title,
             customer_company: editingTestimonial.customer_company,
             quote: editingTestimonial.quote,
-            full_review: editingTestimonial.full_review,
             rating: editingTestimonial.rating,
             category: editingTestimonial.category,
             is_featured: editingTestimonial.is_featured,
-            is_active: editingTestimonial.is_active,
-            verified: editingTestimonial.verified,
+            is_approved: editingTestimonial.is_approved,
+            is_verified: editingTestimonial.is_verified,
           })
           .eq('id', editingTestimonial.id);
 
@@ -159,15 +157,17 @@ const TestimonialsManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-bold">Testimonials Manager</h2>
-          <p className="text-text-secondary mt-1">Manage customer reviews and testimonials</p>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">Testimonials Manager</h2>
+          <p className="text-xs sm:text-sm text-text-secondary mt-1">Manage customer reviews and testimonials</p>
         </div>
-        <Button onClick={handleCreate}>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Testimonial
-        </Button>
+        <div className="flex gap-2 ml-auto">
+          <Button onClick={handleCreate} size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm">
+            <Plus className="w-4 h-4 mr-2" />
+            Add Testimonial
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-4">
@@ -179,7 +179,7 @@ const TestimonialsManager = () => {
           </Card>
         ) : (
           testimonials.map((testimonial) => (
-            <Card key={testimonial.id} className={!testimonial.is_active ? 'opacity-60' : ''}>
+            <Card key={testimonial.id} className={!testimonial.is_approved ? 'opacity-60' : ''}>
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
@@ -190,12 +190,12 @@ const TestimonialsManager = () => {
                           Featured
                         </span>
                       )}
-                      {testimonial.verified && (
+                      {testimonial.is_verified && (
                         <span className="text-xs font-normal px-2 py-1 bg-green-500/10 text-green-600 rounded">
                           Verified
                         </span>
                       )}
-                      {!testimonial.is_active && (
+                      {!testimonial.is_approved && (
                         <span className="text-xs font-normal px-2 py-1 bg-gray-500/10 text-gray-600 rounded">
                           Hidden
                         </span>
@@ -221,15 +221,16 @@ const TestimonialsManager = () => {
                   <div className="flex gap-2">
                     <Button
                       size="sm"
+                      className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
                       variant={testimonial.is_featured ? 'default' : 'outline'}
                       onClick={() => handleToggleFeatured(testimonial)}
                     >
                       {testimonial.is_featured ? 'Unfeature' : 'Feature'}
                     </Button>
-                    <Button size="sm" variant="outline" onClick={() => handleEdit(testimonial)}>
+                    <Button size="icon" className="h-8 w-8 sm:h-9 sm:w-9" variant="outline" onClick={() => handleEdit(testimonial)}>
                       <Edit2 className="w-4 h-4" />
                     </Button>
-                    <Button size="sm" variant="destructive" onClick={() => handleDelete(testimonial.id)}>
+                    <Button size="icon" className="h-8 w-8 sm:h-9 sm:w-9" variant="destructive" onClick={() => handleDelete(testimonial.id)}>
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
@@ -248,84 +249,81 @@ const TestimonialsManager = () => {
 
       {/* Edit/Create Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="glass-effect custom-scrollbar max-w-[95vw] sm:max-w-2xl lg:max-w-4xl xl:max-w-5xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingTestimonial?.id ? 'Edit Testimonial' : 'Create New Testimonial'}</DialogTitle>
+            <DialogTitle className="text-base sm:text-lg lg:text-xl">{editingTestimonial?.id ? 'Edit Testimonial' : 'Create New Testimonial'}</DialogTitle>
           </DialogHeader>
 
           {editingTestimonial && (
-            <div className="space-y-4">
-              <div>
-                <Label>Customer Name *</Label>
+            <div className="space-y-4 min-w-0 max-w-full">
+              <div className="space-y-2 min-w-0">
+                <Label className="text-sm">Customer Name *</Label>
                 <Input
                   value={editingTestimonial.customer_name}
                   onChange={(e) =>
                     setEditingTestimonial({ ...editingTestimonial, customer_name: e.target.value })
                   }
                   placeholder="John Doe"
+                  className="w-full min-w-0 text-base"
+                  style={{ fontSize: '16px' }}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Title/Role</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0">
+                <div className="space-y-2 min-w-0">
+                  <Label className="text-sm">Title/Role</Label>
                   <Input
                     value={editingTestimonial.customer_title || ''}
                     onChange={(e) =>
                       setEditingTestimonial({ ...editingTestimonial, customer_title: e.target.value })
                     }
                     placeholder="CEO, Fitness Enthusiast, etc."
+                    className="w-full min-w-0 text-base"
+                    style={{ fontSize: '16px' }}
                   />
                 </div>
-                <div>
-                  <Label>Company</Label>
+                <div className="space-y-2 min-w-0">
+                  <Label className="text-sm">Company</Label>
                   <Input
                     value={editingTestimonial.customer_company || ''}
                     onChange={(e) =>
                       setEditingTestimonial({ ...editingTestimonial, customer_company: e.target.value })
                     }
                     placeholder="Company Name"
+                    className="w-full min-w-0 text-base"
+                    style={{ fontSize: '16px' }}
                   />
                 </div>
               </div>
 
-              <div>
-                <Label>Quote *</Label>
+              <div className="space-y-2 min-w-0">
+                <Label className="text-sm">Quote *</Label>
                 <Textarea
                   value={editingTestimonial.quote}
                   onChange={(e) =>
                     setEditingTestimonial({ ...editingTestimonial, quote: e.target.value })
                   }
                   placeholder="Short testimonial quote..."
+                  className="w-full min-w-0 resize-none text-base"
+                  style={{ fontSize: '16px' }}
                   rows={3}
                 />
               </div>
 
-              <div>
-                <Label>Full Review (Optional)</Label>
-                <Textarea
-                  value={editingTestimonial.full_review || ''}
-                  onChange={(e) =>
-                    setEditingTestimonial({ ...editingTestimonial, full_review: e.target.value })
-                  }
-                  placeholder="Full detailed review..."
-                  rows={4}
-                />
-              </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Rating</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0">
+                <div className="space-y-2 min-w-0">
+                  <Label className="text-sm">Rating</Label>
                   <Select
                     value={editingTestimonial.rating?.toString() || '5'}
                     onValueChange={(value) =>
                       setEditingTestimonial({ ...editingTestimonial, rating: parseInt(value) })
                     }
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="glass-effect w-full min-w-0 text-base">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="glass-effect max-w-[90vw]">
                       <SelectItem value="5">5 Stars</SelectItem>
                       <SelectItem value="4">4 Stars</SelectItem>
                       <SelectItem value="3">3 Stars</SelectItem>
@@ -334,28 +332,30 @@ const TestimonialsManager = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div>
-                  <Label>Category</Label>
+                <div className="space-y-2 min-w-0">
+                  <Label className="text-sm">Category</Label>
                   <Select
                     value={editingTestimonial.category}
                     onValueChange={(value) =>
                       setEditingTestimonial({ ...editingTestimonial, category: value })
                     }
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="glass-effect w-full min-w-0 text-base">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="glass-effect max-w-[90vw]">
                       <SelectItem value="general">General</SelectItem>
-                      <SelectItem value="nutrition">Nutrition</SelectItem>
+                      <SelectItem value="weight_loss">Weight Loss</SelectItem>
+                      <SelectItem value="muscle_gain">Muscle Gain</SelectItem>
+                      <SelectItem value="health">Health</SelectItem>
                       <SelectItem value="fitness">Fitness</SelectItem>
-                      <SelectItem value="wellness">Wellness</SelectItem>
+                      <SelectItem value="nutrition">Nutrition</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 min-w-0">
                 <div className="flex items-center gap-2">
                   <Switch
                     checked={editingTestimonial.is_featured}
@@ -363,36 +363,36 @@ const TestimonialsManager = () => {
                       setEditingTestimonial({ ...editingTestimonial, is_featured: checked })
                     }
                   />
-                  <Label>Featured (show on homepage)</Label>
+                  <Label className="text-sm">Featured (show on homepage)</Label>
                 </div>
                 <div className="flex items-center gap-2">
                   <Switch
-                    checked={editingTestimonial.verified}
+                    checked={editingTestimonial.is_verified}
                     onCheckedChange={(checked) =>
-                      setEditingTestimonial({ ...editingTestimonial, verified: checked })
+                      setEditingTestimonial({ ...editingTestimonial, is_verified: checked })
                     }
                   />
-                  <Label>Verified</Label>
+                  <Label className="text-sm">Verified</Label>
                 </div>
                 <div className="flex items-center gap-2">
                   <Switch
-                    checked={editingTestimonial.is_active}
+                    checked={editingTestimonial.is_approved}
                     onCheckedChange={(checked) =>
-                      setEditingTestimonial({ ...editingTestimonial, is_active: checked })
+                      setEditingTestimonial({ ...editingTestimonial, is_approved: checked })
                     }
                   />
-                  <Label>Active (visible on website)</Label>
+                  <Label className="text-sm">Approved (visible on website)</Label>
                 </div>
               </div>
             </div>
           )}
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+          <DialogFooter className="flex flex-wrap gap-2 sm:gap-3">
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)} size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm">
               <X className="w-4 h-4 mr-2" />
               Cancel
             </Button>
-            <Button onClick={handleSave}>
+            <Button onClick={handleSave} size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm">
               <Save className="w-4 h-4 mr-2" />
               Save Testimonial
             </Button>

@@ -31,12 +31,14 @@ import {
   CheckCircle2,
   AlertCircle,
   Copy,
-  ExternalLink
+  ExternalLink,
+  Bot
 } from 'lucide-react';
 import { format } from 'date-fns';
+import AutoBlogScheduler from '@/components/admin/AutoBlogScheduler';
 
 const BlogManagement = () => {
-  const { user } = useAuth();
+  const { user, userProfile } = useAuth();
   const [posts, setPosts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
@@ -521,7 +523,21 @@ const BlogManagement = () => {
         </Button>
       </div>
 
-      {/* Search and Filters */}
+      {/* Main Tabs */}
+      <Tabs defaultValue="posts" className="w-full">
+        <TabsList className="glass-effect">
+          <TabsTrigger value="posts">
+            <FileText className="w-4 h-4 mr-2" />
+            My Posts
+          </TabsTrigger>
+          <TabsTrigger value="auto-scheduler">
+            <Bot className="w-4 h-4 mr-2" />
+            Auto Scheduler
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="posts" className="space-y-6">
+          {/* Search and Filters */}
       <Card className="glass-effect">
         <CardContent className="p-4">
           <div className="flex flex-col md:flex-row gap-4">
@@ -590,10 +606,17 @@ const BlogManagement = () => {
           </CardContent>
         </Card>
       )}
+        </TabsContent>
+
+        {/* Auto Scheduler Tab */}
+        <TabsContent value="auto-scheduler">
+          <AutoBlogScheduler user={userProfile} />
+        </TabsContent>
+      </Tabs>
 
       {/* Post Editor Dialog */}
       <Dialog open={showEditor} onOpenChange={setShowEditor}>
-        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="glass-effect custom-scrollbar max-w-6xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingPost ? 'Edit Post' : 'Create New Post'}</DialogTitle>
           </DialogHeader>
@@ -812,12 +835,13 @@ const BlogManagement = () => {
               </div>
 
               {postForm.status === 'scheduled' && (
-                <div>
+                <div className="min-w-0">
                   <label className="text-sm font-medium mb-2 block">Schedule For</label>
                   <Input
                     type="datetime-local"
                     value={postForm.scheduled_for}
                     onChange={(e) => setPostForm({ ...postForm, scheduled_for: e.target.value })}
+                    className="w-full min-w-0"
                   />
                 </div>
               )}
@@ -940,7 +964,7 @@ const BlogManagement = () => {
 
       {/* SEO Analysis Dialog */}
       <Dialog open={showSEOAnalysis} onOpenChange={setShowSEOAnalysis}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="glass-effect custom-scrollbar max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>SEO Analysis</DialogTitle>
           </DialogHeader>

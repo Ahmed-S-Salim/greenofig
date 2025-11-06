@@ -453,7 +453,7 @@ const AppointmentSchedule = () => {
 
       {/* Appointment Dialog */}
       <Dialog open={showAppointmentDialog} onOpenChange={setShowAppointmentDialog}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="glass-effect custom-scrollbar max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingAppointment ? 'Edit Appointment' : 'New Appointment'}</DialogTitle>
           </DialogHeader>
@@ -494,21 +494,23 @@ const AppointmentSchedule = () => {
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label className="text-sm font-medium mb-2 block">Date *</label>
                 <Input
                   type="date"
                   value={appointmentForm.appointment_date}
                   onChange={(e) => setAppointmentForm({ ...appointmentForm, appointment_date: e.target.value })}
+                  className="w-full min-w-0"
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label className="text-sm font-medium mb-2 block">Time *</label>
                 <Input
                   type="time"
                   value={appointmentForm.appointment_time}
                   onChange={(e) => setAppointmentForm({ ...appointmentForm, appointment_time: e.target.value })}
+                  className="w-full min-w-0"
                 />
               </div>
 

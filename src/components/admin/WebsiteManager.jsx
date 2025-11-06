@@ -76,17 +76,17 @@ const WebsiteManager = () => {
                         <motion.div variants={itemVariants}>
                             <div className="flex items-center justify-between mb-4">
                                 <div>
-                                    <h2 className="text-3xl font-bold">Website Content Management</h2>
-                                    <p className="text-text-secondary mt-1">Update content across your public-facing website pages.</p>
+                                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">Website Content Management</h2>
+                                    <p className="text-xs sm:text-sm text-text-secondary mt-1">Update content across your public-facing website pages.</p>
                                 </div>
-                                <Button variant="ghost" onClick={() => navigate('/app/admin?tab=dashboard')}>
-                                    <ArrowLeft className="mr-2 h-4 w-4" />
+                                <Button size="sm" className="h-9 px-3 text-sm" variant="ghost" onClick={() => navigate('/app/admin?tab=dashboard')}>
+                                    <ArrowLeft className="w-4 h-4 mr-2" />
                                     Back to Dashboard
                                 </Button>
                             </div>
                         </motion.div>
 
-                        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                             <Card className="glass-effect hover:border-primary/50 transition-colors">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-3">
@@ -94,9 +94,9 @@ const WebsiteManager = () => {
                                         <span>Homepage</span>
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent>
-                                    <p className="text-text-secondary mb-4">Manage homepage sections, hero, CTAs, and content blocks.</p>
-                                    <Button onClick={() => setActiveView('homepage')}>Manage Homepage</Button>
+                                <CardContent className="p-4 sm:p-6">
+                                    <p className="text-xs sm:text-sm text-text-secondary mb-4">Manage homepage sections, hero, CTAs, and content blocks.</p>
+                                    <Button size="sm" className="h-9 px-3 text-sm" onClick={() => setActiveView('homepage')}>Manage Homepage</Button>
                                 </CardContent>
                             </Card>
 
@@ -107,9 +107,9 @@ const WebsiteManager = () => {
                                         <span>Features Page</span>
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent>
-                                    <p className="text-text-secondary mb-4">Manage the list of features displayed on the features page.</p>
-                                    <Button onClick={() => setActiveView('features')}>Manage Features</Button>
+                                <CardContent className="p-4 sm:p-6">
+                                    <p className="text-xs sm:text-sm text-text-secondary mb-4">Manage the list of features displayed on the features page.</p>
+                                    <Button size="sm" className="h-9 px-3 text-sm" onClick={() => setActiveView('features')}>Manage Features</Button>
                                 </CardContent>
                             </Card>
 
@@ -120,9 +120,9 @@ const WebsiteManager = () => {
                                         <span>Pricing Page</span>
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent>
-                                    <p className="text-text-secondary mb-4">Update pricing plans, features, and popular status.</p>
-                                    <Button onClick={() => setActiveView('pricing')}>Manage Pricing</Button>
+                                <CardContent className="p-4 sm:p-6">
+                                    <p className="text-xs sm:text-sm text-text-secondary mb-4">Update pricing plans, features, and popular status.</p>
+                                    <Button size="sm" className="h-9 px-3 text-sm" onClick={() => setActiveView('pricing')}>Manage Pricing</Button>
                                 </CardContent>
                             </Card>
 
@@ -133,9 +133,9 @@ const WebsiteManager = () => {
                                         <span>Testimonials</span>
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent>
-                                    <p className="text-text-secondary mb-4">Manage customer reviews, ratings, and testimonials.</p>
-                                    <Button onClick={() => setActiveView('testimonials')}>Manage Testimonials</Button>
+                                <CardContent className="p-4 sm:p-6">
+                                    <p className="text-xs sm:text-sm text-text-secondary mb-4">Manage customer reviews, ratings, and testimonials.</p>
+                                    <Button size="sm" className="h-9 px-3 text-sm" onClick={() => setActiveView('testimonials')}>Manage Testimonials</Button>
                                 </CardContent>
                             </Card>
 
@@ -146,9 +146,9 @@ const WebsiteManager = () => {
                                         <span>Contact Info</span>
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent>
-                                    <p className="text-text-secondary mb-4">Update contact details, social links, and business hours.</p>
-                                    <Button onClick={() => setActiveView('contact')}>Manage Contact</Button>
+                                <CardContent className="p-4 sm:p-6">
+                                    <p className="text-xs sm:text-sm text-text-secondary mb-4">Update contact details, social links, and business hours.</p>
+                                    <Button size="sm" className="h-9 px-3 text-sm" onClick={() => setActiveView('contact')}>Manage Contact</Button>
                                 </CardContent>
                             </Card>
 
@@ -159,9 +159,9 @@ const WebsiteManager = () => {
                                         <span>SEO Settings</span>
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent>
-                                    <p className="text-text-secondary mb-4">Manage meta tags, Open Graph, and SEO for all pages.</p>
-                                    <Button onClick={() => setActiveView('seo')}>Manage SEO</Button>
+                                <CardContent className="p-4 sm:p-6">
+                                    <p className="text-xs sm:text-sm text-text-secondary mb-4">Manage meta tags, Open Graph, and SEO for all pages.</p>
+                                    <Button size="sm" className="h-9 px-3 text-sm" onClick={() => setActiveView('seo')}>Manage SEO</Button>
                                 </CardContent>
                             </Card>
 
@@ -172,9 +172,9 @@ const WebsiteManager = () => {
                                         <span>About Page</span>
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent>
-                                    <p className="text-text-secondary mb-4">Edit the content of the About Us page.</p>
-                                    <Button onClick={() => handleManagePage('about_page')}>Manage About Page</Button>
+                                <CardContent className="p-4 sm:p-6">
+                                    <p className="text-xs sm:text-sm text-text-secondary mb-4">Edit the content of the About Us page.</p>
+                                    <Button size="sm" className="h-9 px-3 text-sm" onClick={() => handleManagePage('about_page')}>Manage About Page</Button>
                                 </CardContent>
                             </Card>
 
@@ -185,9 +185,9 @@ const WebsiteManager = () => {
                                         <span>FAQ Page</span>
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent>
-                                    <p className="text-text-secondary mb-4">Add, edit, or remove FAQ items.</p>
-                                    <Button onClick={() => handleManagePage('faq_page')}>Manage FAQs</Button>
+                                <CardContent className="p-4 sm:p-6">
+                                    <p className="text-xs sm:text-sm text-text-secondary mb-4">Add, edit, or remove FAQ items.</p>
+                                    <Button size="sm" className="h-9 px-3 text-sm" onClick={() => handleManagePage('faq_page')}>Manage FAQs</Button>
                                 </CardContent>
                             </Card>
 
@@ -198,9 +198,9 @@ const WebsiteManager = () => {
                                         <span>Privacy Policy</span>
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent>
-                                    <p className="text-text-secondary mb-4">Edit Privacy Policy content and sections.</p>
-                                    <Button onClick={() => handleManagePage('privacy_policy')}>Manage Privacy Policy</Button>
+                                <CardContent className="p-4 sm:p-6">
+                                    <p className="text-xs sm:text-sm text-text-secondary mb-4">Edit Privacy Policy content and sections.</p>
+                                    <Button size="sm" className="h-9 px-3 text-sm" onClick={() => handleManagePage('privacy_policy')}>Manage Privacy Policy</Button>
                                 </CardContent>
                             </Card>
 
@@ -211,9 +211,9 @@ const WebsiteManager = () => {
                                         <span>Terms of Service</span>
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent>
-                                    <p className="text-text-secondary mb-4">Edit Terms of Service content and sections.</p>
-                                    <Button onClick={() => handleManagePage('terms_of_service')}>Manage Terms of Service</Button>
+                                <CardContent className="p-4 sm:p-6">
+                                    <p className="text-xs sm:text-sm text-text-secondary mb-4">Edit Terms of Service content and sections.</p>
+                                    <Button size="sm" className="h-9 px-3 text-sm" onClick={() => handleManagePage('terms_of_service')}>Manage Terms of Service</Button>
                                 </CardContent>
                             </Card>
                         </motion.div>
@@ -230,8 +230,8 @@ const WebsiteManager = () => {
             transition={{ duration: 0.3 }}
         >
             {activeView !== 'main' && (
-                 <Button variant="ghost" onClick={() => setActiveView('main')} className="mb-6">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
+                 <Button size="sm" className="h-9 px-3 text-sm" variant="ghost" onClick={() => setActiveView('main')} className="mb-6">
+                    <ArrowLeft className="w-4 h-4 mr-2" />
                     Back to Website Management
                 </Button>
             )}

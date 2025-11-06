@@ -132,7 +132,7 @@ Provide detailed exercises with sets, reps, and instructions.`;
           Generate AI Workout
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="glass-effect custom-scrollbar max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Dumbbell className="w-6 h-6 text-primary" />

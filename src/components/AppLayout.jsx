@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-    import { Link, NavLink, useNavigate } from 'react-router-dom';
+    import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
     import { motion, AnimatePresence } from 'framer-motion';
     import { useAuth } from '@/contexts/SupabaseAuthContext';
     import { supabase } from '@/lib/customSupabaseClient';
@@ -29,13 +29,21 @@ import React, { useState, useEffect } from 'react';
       MessageSquare,
       Calendar,
       Mail,
+      DollarSign,
+      Bug,
+      Wallet,
+      Ticket,
+      Gift,
     } from 'lucide-react';
     import { Outlet } from 'react-router-dom';
     import FloatingAiChat from '@/components/FloatingAiChat';
+    import BackToTopButton from '@/components/ui/BackToTopButton';
+    import NotificationBell from '@/components/NotificationBell';
 
     const AppLayout = ({ logoUrl }) => {
       const { userProfile, signOut } = useAuth();
       const navigate = useNavigate();
+      const location = useLocation();
       const [isSidebarOpen, setIsSidebarOpen] = useState(false);
       const [unreadCount, setUnreadCount] = useState(0);
 
@@ -45,27 +53,43 @@ import React, { useState, useEffect } from 'react';
           fetchUnreadCount();
 
           // Set up real-time subscription for conversation updates
-          const channel = supabase
-            .channel('conversations-changes')
-            .on(
-              'postgres_changes',
-              {
-                event: '*',
-                schema: 'public',
-                table: 'conversations',
-                filter: userProfile.role === 'user'
-                  ? `user_id=eq.${userProfile.id}`
-                  : `nutritionist_id=eq.${userProfile.id}`
-              },
-              () => {
-                fetchUnreadCount();
-              }
-            )
-            .subscribe();
+          // Wrapped in try-catch to prevent WebSocket errors on mobile from breaking the app
+          try {
+            const channel = supabase
+              .channel('conversations-changes')
+              .on(
+                'postgres_changes',
+                {
+                  event: '*',
+                  schema: 'public',
+                  table: 'conversations',
+                  filter: userProfile.role === 'user'
+                    ? `user_id=eq.${userProfile.id}`
+                    : `nutritionist_id=eq.${userProfile.id}`
+                },
+                () => {
+                  fetchUnreadCount();
+                }
+              )
+              .subscribe((status) => {
+                if (status === 'CHANNEL_ERROR') {
+                  console.warn('Realtime subscription error - will use polling instead');
+                }
+              });
 
-          return () => {
-            supabase.removeChannel(channel);
-          };
+            return () => {
+              try {
+                supabase.removeChannel(channel);
+              } catch (e) {
+                // Silently handle cleanup errors
+              }
+            };
+          } catch (error) {
+            console.warn('Realtime not available, using polling only:', error.message);
+            // Fallback: poll for updates every 30 seconds if realtime fails
+            const pollInterval = setInterval(fetchUnreadCount, 30000);
+            return () => clearInterval(pollInterval);
+          }
         }
       }, [userProfile?.id]);
 
@@ -110,7 +134,7 @@ import React, { useState, useEffect } from 'react';
       ];
 
       const nutritionistNavLinks = [
-        { icon: LayoutDashboard, label: 'Dashboard', path: '/app/nutritionist' },
+        { icon: LayoutDashboard, label: 'Dashboard', path: '/app/nutritionist?tab=dashboard' },
         { icon: Users, label: 'Clients', path: '/app/nutritionist?tab=clients' },
         { icon: Carrot, label: 'Meal Plans', path: '/app/nutritionist?tab=meals' },
         { icon: Calendar, label: 'Schedule', path: '/app/nutritionist?tab=schedule' },
@@ -123,15 +147,20 @@ import React, { useState, useEffect } from 'react';
 
       const adminNavLinks = [
         { icon: LayoutDashboard, label: 'Dashboard', path: '/app/admin' },
-        { icon: TrendingUp, label: 'Analytics', path: '/app/admin?tab=analytics' },
-        { icon: Database, label: 'DB Studio', path: '/app/admin?tab=studio' },
-        { icon: Users, label: 'Customers', path: '/app/admin?tab=customers' },
+        { icon: BarChart3, label: 'Analytics', path: '/app/admin?tab=analytics' },
+        { icon: DollarSign, label: 'Revenue', path: '/app/admin?tab=revenue' },
+        { icon: Bug, label: 'AI Errors', path: '/app/admin?tab=errors' },
+        { icon: Users, label: 'User Management', path: '/app/admin?tab=customers' },
         { icon: CreditCard, label: 'Subscriptions', path: '/app/admin?tab=subscriptions' },
-        { icon: CreditCard, label: 'Payments', path: '/app/admin?tab=payments' },
-        { icon: ShieldQuestion, label: 'Issues', path: '/app/admin?tab=issues' },
+        { icon: Wallet, label: 'Payments', path: '/app/admin?tab=payments' },
+        { icon: Ticket, label: 'Coupons', path: '/app/admin?tab=coupons' },
+        { icon: Gift, label: 'Referrals', path: '/app/admin?tab=referrals' },
+        { icon: ShieldQuestion, label: 'Support', path: '/app/admin?tab=issues' },
+        { icon: MessageSquare, label: 'Messaging', path: '/app/admin?tab=messaging' },
         { icon: FileText, label: 'Blog', path: '/app/admin?tab=blog' },
         { icon: Globe, label: 'Website', path: '/app/admin?tab=website' },
         { icon: Bot, label: 'AI Coach', path: '/app/admin?tab=ai-coach' },
+        { icon: Database, label: 'Database', path: '/app/admin?tab=studio' },
       ];
 
       const getNavLinks = () => {
@@ -163,17 +192,17 @@ import React, { useState, useEffect } from 'react';
             end
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 text-sm font-medium border ${
+            className={`flex items-center gap-2 px-2 py-2 sm:py-1.5 rounded-md transition-all duration-200 text-sm sm:text-xs font-medium border min-h-[44px] sm:min-h-0 ${
               isActive || isHovered
                 ? 'bg-gradient-to-r from-primary to-green-400 text-primary-foreground border-primary/30'
                 : 'bg-transparent text-muted-foreground border-transparent hover:border-primary/30'
             } ${isHovered ? 'translate-x-1' : 'translate-x-0'}`}
             onClick={() => isSidebarOpen && setIsSidebarOpen(false)}
           >
-            <link.icon className="w-4 h-4" />
-            <span className="flex-1">{link.label}</span>
+            <link.icon className="w-4 h-4 sm:w-3.5 sm:h-3.5 flex-shrink-0" />
+            <span className="flex-1 truncate">{link.label}</span>
             {showBadge && (
-              <Badge className="bg-red-500 text-white text-xs px-1.5 py-0.5 min-w-[20px] h-5 flex items-center justify-center">
+              <Badge className="bg-red-500 text-white text-xs px-1.5 py-0.5 min-w-[20px] h-5 sm:h-4 flex items-center justify-center">
                 {unreadCount > 99 ? '99+' : unreadCount}
               </Badge>
             )}
@@ -183,25 +212,25 @@ import React, { useState, useEffect } from 'react';
 
       const SidebarContent = () => (
         <div className="flex flex-col h-full">
-          <div className="p-4 border-b border-border flex items-center gap-3">
-            <Link to="/home" className="flex items-center gap-2">
-              <img src={logoUrl} alt="GreenoFig Logo" className="w-8 h-8" />
-              <span className="text-lg font-bold gradient-text">GreenoFig</span>
+          <div className="p-3 sm:p-2.5 border-b border-border flex items-center gap-2">
+            <Link to="/home" className="flex items-center gap-1.5">
+              <img src={logoUrl} alt="GreenoFig Logo" className="w-7 h-7 sm:w-6 sm:h-6" />
+              <span className="text-base sm:text-sm font-bold gradient-text">GreenoFig</span>
             </Link>
           </div>
-          <nav className="flex-1 p-3 space-y-1">
+          <nav className="flex-1 p-2 space-y-0.5 overflow-y-auto">
             {navLinks.map(link => {
               let isActive = false;
 
               if (link.path.includes('?')) {
-                // For links with query params (like Analytics, DB Studio, etc.)
-                isActive = window.location.pathname + window.location.search === link.path;
+                // For links with query params
+                isActive = location.pathname + location.search === link.path;
               } else {
-                // For Dashboard link - only active if no query params
+                // For links without query params (like /app/admin)
                 if (link.path === '/app/admin') {
-                  isActive = window.location.pathname === '/app/admin' && !window.location.search;
+                  isActive = location.pathname === link.path && !location.search;
                 } else {
-                  isActive = window.location.pathname === link.path;
+                  isActive = location.pathname === link.path;
                 }
               }
 
@@ -210,20 +239,20 @@ import React, { useState, useEffect } from 'react';
           </nav>
           <div className="p-3 border-t border-border">
             <div className="flex items-center gap-2 mb-3">
-              <Avatar className="w-8 h-8">
+              <Avatar className="w-9 h-9 sm:w-8 sm:h-8">
                 <AvatarImage src={userProfile?.profile_picture_url} />
-                <AvatarFallback className="text-xs">{getInitials(userProfile?.full_name)}</AvatarFallback>
+                <AvatarFallback className="text-xs sm:text-[10px]">{getInitials(userProfile?.full_name)}</AvatarFallback>
               </Avatar>
               <div className="flex-1 overflow-hidden">
-                <p className="text-xs font-semibold truncate">{userProfile?.full_name}</p>
-                <p className="text-xs text-text-secondary truncate">{userProfile?.email}</p>
+                <p className="text-sm sm:text-xs font-semibold truncate">{userProfile?.full_name}</p>
+                <p className="text-xs sm:text-[10px] text-text-secondary truncate">{userProfile?.email}</p>
               </div>
             </div>
             <div className="space-y-1">
               <NavLink
                 to="/app/profile"
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium ${
+                  `flex items-center gap-3 px-3 py-2.5 sm:py-2 rounded-lg transition-colors text-sm font-medium min-h-[44px] sm:min-h-0 ${
                     isActive
                       ? 'bg-muted text-foreground'
                       : 'text-text-secondary hover:bg-muted hover:text-foreground'
@@ -236,7 +265,7 @@ import React, { useState, useEffect } from 'react';
               </NavLink>
               <button
                 onClick={handleSignOut}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium text-text-secondary hover:bg-muted hover:text-foreground"
+                className="w-full flex items-center gap-3 px-3 py-2.5 sm:py-2 rounded-lg transition-colors text-sm font-medium text-text-secondary hover:bg-muted hover:text-foreground min-h-[44px] sm:min-h-0"
               >
                 <LogOut className="w-4 h-4" />
                 Sign Out
@@ -247,8 +276,8 @@ import React, { useState, useEffect } from 'react';
       );
 
       return (
-        <div className="flex h-screen bg-background text-foreground">
-          <aside className="hidden lg:block w-64 bg-card border-r border-border">
+        <div className="flex h-screen bg-background text-foreground overflow-hidden">
+          <aside className="hidden lg:block w-64 bg-card border-r border-border flex-shrink-0">
             <SidebarContent />
           </aside>
 
@@ -267,7 +296,7 @@ import React, { useState, useEffect } from 'react';
                   initial="closed"
                   animate="open"
                   exit="closed"
-                  className="fixed top-0 left-0 h-full w-64 bg-card z-50 lg:hidden"
+                  className="fixed top-0 left-0 h-full w-72 sm:w-64 bg-card z-50 lg:hidden shadow-2xl"
                 >
                   <SidebarContent />
                 </motion.aside>
@@ -275,32 +304,37 @@ import React, { useState, useEffect } from 'react';
             )}
           </AnimatePresence>
 
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <header className="flex items-center justify-between lg:justify-end h-16 px-4 border-b border-border bg-card">
+          <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+            <header className="sticky top-0 z-30 flex items-center justify-between lg:justify-end h-14 sm:h-16 px-4 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 flex-shrink-0">
               <Button
                 variant="ghost"
                 size="icon"
-                className="lg:hidden"
+                className="lg:hidden min-h-[44px] min-w-[44px]"
                 onClick={() => setIsSidebarOpen(true)}
               >
                 <Menu className="w-6 h-6" />
               </Button>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-4">
+                <NotificationBell user={userProfile} />
                 {userProfile?.role === 'admin' || userProfile?.role === 'super_admin' ? (
-                  <div className="flex items-center gap-2 text-sm font-semibold text-primary">
-                    <Shield className="w-5 h-5" />
-                    Admin Mode
+                  <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold text-primary">
+                    <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden sm:inline">Admin Mode</span>
+                    <span className="sm:hidden">Admin</span>
                   </div>
                 ) : null}
               </div>
             </header>
-            <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+            <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8" id="main-content">
               <Outlet />
             </main>
           </div>
 
-          {/* Floating AI Chat Widget */}
+          {/* Floating AI Chat Widget - Show for all logged-in users */}
           <FloatingAiChat />
+
+          {/* Back to Top Button */}
+          <BackToTopButton targetId="main-content" />
         </div>
       );
     };

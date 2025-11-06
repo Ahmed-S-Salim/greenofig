@@ -159,7 +159,7 @@ const HomepageManager = () => {
           <h2 className="text-3xl font-bold">Homepage Manager</h2>
           <p className="text-text-secondary mt-1">Manage hero sections, CTAs, and content blocks</p>
         </div>
-        <Button onClick={handleCreate}>
+        <Button size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm" onClick={handleCreate}>
           <Plus className="w-4 h-4 mr-2" />
           Add Section
         </Button>
@@ -196,15 +196,16 @@ const HomepageManager = () => {
                   <div className="flex gap-2">
                     <Button
                       size="sm"
+                      className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm"
                       variant={section.is_active ? 'outline' : 'default'}
                       onClick={() => handleToggleActive(section)}
                     >
                       {section.is_active ? 'Hide' : 'Show'}
                     </Button>
-                    <Button size="sm" variant="outline" onClick={() => handleEdit(section)}>
+                    <Button size="icon" className="h-8 w-8 sm:h-9 sm:w-9 p-0" variant="outline" onClick={() => handleEdit(section)}>
                       <Edit2 className="w-4 h-4" />
                     </Button>
-                    <Button size="sm" variant="destructive" onClick={() => handleDelete(section.id)}>
+                    <Button size="icon" className="h-8 w-8 sm:h-9 sm:w-9 p-0" variant="destructive" onClick={() => handleDelete(section.id)}>
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
@@ -231,7 +232,7 @@ const HomepageManager = () => {
 
       {/* Edit/Create Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="glass-effect max-w-2xl lg:max-w-4xl xl:max-w-5xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingSection?.id ? 'Edit Section' : 'Create New Section'}</DialogTitle>
           </DialogHeader>
@@ -246,10 +247,10 @@ const HomepageManager = () => {
                     setEditingSection({ ...editingSection, section_type: value })
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="glass-effect">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="glass-effect">
                     <SelectItem value="hero">Hero</SelectItem>
                     <SelectItem value="features">Features</SelectItem>
                     <SelectItem value="cta">Call to Action</SelectItem>
@@ -329,11 +330,11 @@ const HomepageManager = () => {
           )}
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+            <Button size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm" variant="outline" onClick={() => setIsDialogOpen(false)}>
               <X className="w-4 h-4 mr-2" />
               Cancel
             </Button>
-            <Button onClick={handleSave}>
+            <Button size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm" onClick={handleSave}>
               <Save className="w-4 h-4 mr-2" />
               Save Section
             </Button>
