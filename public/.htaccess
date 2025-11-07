@@ -9,11 +9,17 @@
 <IfModule mod_headers.c>
   Header set X-Powered-By "Hostinger Horizons"
 
-  # Cache everything on CDN by default
-  Header set Cache-Control "public, s-maxage=604800, max-age=0"
-  
-  # Cache in browser all assets
-  <If "%{REQUEST_URI} =~ m#^/assets/.*$#">
-    Header set Cache-Control "public, max-age=604800"
+  # FIX: Short cache to allow updates (1 hour instead of 7 days)
+  # HTML files should not be cached aggressively
+  Header set Cache-Control "public, max-age=0, must-revalidate"
+
+  # JS/CSS assets: 1 hour cache with must-revalidate (allows updates)
+  <If "%{REQUEST_URI} =~ m#^/assets/.*\.(js|css)$#">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
+  </If>
+
+  # Images: 1 day cache (safe to cache longer)
+  <If "%{REQUEST_URI} =~ m#^/assets/.*\.(png|jpg|jpeg|gif|svg|webp|ico)$#">
+    Header set Cache-Control "public, max-age=86400"
   </If>
 </IfModule>
