@@ -233,7 +233,7 @@ logger.error = (msg, options) => {
 }
 
 export default defineConfig({
-	base: '/greenofig/',
+	base: '/',
 	customLogger: logger,
 	plugins: [
 		...(isDev ? [inlineEditPlugin(), editModeDevPlugin(), iframeRouteRestorationPlugin()] : []),
