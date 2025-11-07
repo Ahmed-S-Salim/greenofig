@@ -12,7 +12,6 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import DOMPurify from 'dompurify';
 import {
   Select,
   SelectContent,
@@ -513,12 +512,7 @@ const EnhancedBlogPostEditor = () => {
                   </div>
                   <div
                     className="prose prose-invert max-w-none"
-                    dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(content || '<p>Your content will appear here...</p>', {
-                        ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'blockquote', 'code', 'pre', 'img'],
-                        ALLOWED_ATTR: ['href', 'target', 'rel', 'src', 'alt', 'title']
-                      })
-                    }}
+                    dangerouslySetInnerHTML={{ __html: content || '<p>Your content will appear here...</p>' }}
                   />
                 </CardContent>
               </Card>

@@ -23,13 +23,32 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 // Start monitoring Web Vitals
 reportWebVitals(logWebVitals);
 
-// EMERGENCY FIX: Unregister old service worker that was causing caching issues
-// The service worker created on Nov 3 was preventing updates from showing
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then((registrations) => {
-    registrations.forEach((registration) => {
-      registration.unregister();
-      console.log('Service Worker unregistered:', registration.scope);
-    });
+// Register Service Worker for offline support and faster loading
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((registration) => {
+        console.log('Service Worker registered:', registration.scope);
+
+        // Check for updates every 30 seconds
+        setInterval(() => {
+          registration.update();
+        }, 30000);
+      })
+      .catch((error) => {
+        console.log('Service Worker registration failed:', error);
+      });
+  });
+
+  // Listen for cache update messages
+  navigator.serviceWorker.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'CACHE_UPDATED') {
+      console.log('Cache updated, reloading page for fresh content...');
+      // Reload the page to get the latest content
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
   });
 }
