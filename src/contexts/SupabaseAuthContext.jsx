@@ -172,12 +172,30 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
         const signUp = useCallback(async (credentials) => {
                 const { email, password, full_name } = credentials;
 
-                let role = 'user';
-                if (email.endsWith('@greenofig.com')) {
-                    if (email.startsWith('nutritionist@')) role = 'nutritionist';
-                    else if (email.startsWith('admin@')) role = 'admin';
-                    else if (email.startsWith('superadmin@')) role = 'super_admin';
-                }
+                // SECURITY FIX: All new users default to 'user' role
+                // Admin/Nutritionist roles must be assigned server-side via database triggers
+                // or manually by super_admin users to prevent privilege escalation attacks
+                const role = 'user';
+
+                /* DISABLED - SECURITY VULNERABILITY: Client-side role assignment
+                 * This allowed anyone to register as admin by using admin@greenofig.com
+                 *
+                 * SECURE ALTERNATIVE: Implement database trigger or Edge Function:
+                 *
+                 * CREATE OR REPLACE FUNCTION assign_role_on_signup()
+                 * RETURNS TRIGGER AS $$
+                 * BEGIN
+                 *   -- Only allow greenofig.com emails for elevated roles
+                 *   -- AND require manual verification/approval
+                 *   IF NEW.email LIKE '%@greenofig.com' THEN
+                 *     -- Insert into pending_role_requests table for admin approval
+                 *     INSERT INTO pending_role_requests (user_id, email, requested_role)
+                 *     VALUES (NEW.id, NEW.email, 'pending_review');
+                 *   END IF;
+                 *   RETURN NEW;
+                 * END;
+                 * $$ LANGUAGE plpgsql SECURITY DEFINER;
+                 */
 
                 const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
                     email,
@@ -214,13 +232,8 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
                 // Wait for the user profile to be created by database trigger
                 await new Promise(resolve => setTimeout(resolve, 1500));
 
-                // Update the profile with the correct role if it's a special account
-                if (role !== 'user') {
-                    await supabase
-                        .from('user_profiles')
-                        .update({ role })
-                        .eq('id', signInData.user.id);
-                }
+                // SECURITY FIX: Removed client-side role update
+                // All users start as 'user' role - elevated roles must be granted by admins
 
                 const profile = await fetchUserProfile(signInData.user);
 

@@ -14,6 +14,7 @@ import { Table } from '@tiptap/extension-table';
 import { TableRow } from '@tiptap/extension-table-row';
 import { TableCell } from '@tiptap/extension-table-cell';
 import { TableHeader } from '@tiptap/extension-table-header';
+import { evaluate } from 'mathjs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -169,8 +170,8 @@ const MenuBar = ({ editor }) => {
 
   const calculateMath = () => {
     try {
-      // Simple math evaluation (safe eval alternative)
-      const result = Function('"use strict"; return (' + mathExpression + ')')();
+      // SECURE: Using mathjs for safe math evaluation (no code injection)
+      const result = evaluate(mathExpression);
       editor.chain().focus().insertContent(String(result)).run();
       setMathExpression('');
       setShowMathDialog(false);

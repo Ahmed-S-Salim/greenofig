@@ -131,10 +131,22 @@ const DatabaseStudio = ({ user }) => {
   }, [selectedTable, loadTableData]);
 
   const handleRunQuery = async () => {
+    // SECURITY FIX: Custom SQL execution has been DISABLED due to critical SQL injection vulnerability
+    // Client-side SQL execution is fundamentally insecure and cannot be safely filtered
+    // To re-enable: Move to Supabase Edge Function with prepared statements and strict validation
+
+    toast({
+      title: "Feature Disabled",
+      description: "Custom SQL queries have been disabled for security. Please use table selection instead.",
+      variant: "destructive",
+    });
+    return;
+
+    /* DISABLED CODE - DO NOT RE-ENABLE WITHOUT PROPER SECURITY
     if (user?.role !== 'super_admin' && customQuery.trim()) {
       const dangerousKeywords = ['DROP', 'DELETE', 'ALTER', 'TRUNCATE', 'UPDATE'];
       const upperQuery = customQuery.toUpperCase();
-      
+
       if (dangerousKeywords.some(keyword => upperQuery.includes(keyword))) {
         toast({
           title: "Permission Denied",
@@ -166,7 +178,8 @@ const DatabaseStudio = ({ user }) => {
         await loadTableData();
         toast({ title: 'Query ran!', description: `Found ${queryResults.length} results.` });
     }
-    
+    */
+
     const activity = {
       id: Date.now().toString(),
       userId: user.id,

@@ -6,9 +6,10 @@ import { supabase } from '@/lib/customSupabaseClient';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowRight, Loader2, Calendar, User, ArrowLeft } from 'lucide-react';
+import { ArrowRight, Loader2, Calendar, User, ArrowLeft, Clock } from 'lucide-react';
 import SiteLayout from '@/components/SiteLayout';
 import { toast } from '@/components/ui/use-toast';
+import DOMPurify from 'dompurify';
 
 const BlogPage = ({ logoUrl }) => {
   const { postId } = useParams();
@@ -289,7 +290,12 @@ const BlogPage = ({ logoUrl }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
               className="prose prose-invert max-w-none text-lg leading-relaxed text-text-secondary prose-h2:text-text-primary prose-h3:text-text-primary prose-strong:text-text-primary"
-              dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }}
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(post.content.replace(/\n/g, '<br />'), {
+                  ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'blockquote', 'code', 'pre'],
+                  ALLOWED_ATTR: ['href', 'target', 'rel']
+                })
+              }}
             />
           </article>
         </motion.div>
