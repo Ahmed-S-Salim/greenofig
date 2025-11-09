@@ -1,0 +1,7 @@
+option batch abort
+option confirm off
+open sftp://u492735793:Ahmed93@93@157.173.209.161:65002
+cd domains/greenofig.com/public_html
+put public/.htaccess .htaccess
+chmod 644 .htaccess
+exit

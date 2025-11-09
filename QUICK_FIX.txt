@@ -1,0 +1,85 @@
+==========================================
+  QUICK FIX FOR DARK PAGE ON HOSTINGER
+==========================================
+
+WHY IS IT DARK?
+---------------
+Your site has a dark theme. Black page = React app not starting.
+Files are probably in wrong location.
+
+QUICK FIX (5 STEPS):
+-------------------
+
+1. LOGIN TO HOSTINGER
+   → https://hpanel.hostinger.com
+
+2. DELETE EVERYTHING
+   → File Manager → public_html
+   → Select all → Delete
+
+3. UPLOAD TEST FILE
+   → Upload this file: test.html
+   → Visit: greenofig.com/test.html
+   → Should see GREEN text saying "Hostinger is Working!"
+
+4. UPLOAD ALL FILES FROM DIST FOLDER
+   → Location: C:\Users\ADMIN\OneDrive\Desktop\GreeonFig Rocet code\greenofigwebsite\dist
+
+   Upload these files:
+   ✓ index.html
+   ✓ 404.html
+   ✓ favicon.png
+   ✓ logo.png
+   ✓ robots.txt
+   ✓ sitemap.xml
+   ✓ assets (ENTIRE FOLDER - has 50+ files inside)
+
+5. CREATE .htaccess FILE
+   → In public_html, create new file: .htaccess
+   → Copy content from HOSTINGER_FIX_GUIDE.md (Step 5)
+
+6. CLEAR BROWSER CACHE
+   → Ctrl + Shift + Delete
+   → Select "Cached images and files"
+   → Click "Clear data"
+   → OR use Incognito mode
+
+7. TEST
+   → Visit: https://greenofig.com
+   → Should see FULL website (not dark!)
+
+==========================================
+
+STILL DARK? CHECK THIS:
+----------------------
+→ Press F12, go to Console tab
+→ Look for red errors
+→ Go to Network tab, refresh page
+→ Check if "/assets/index-decb2b81.js" shows 404
+
+IF FILES SHOW 404:
+-----------------
+→ Delete everything again
+→ Make sure you upload from "dist" folder
+→ Make sure "assets" folder uploaded with files inside
+
+==========================================
+
+READ FULL GUIDE:
+---------------
+Open: HOSTINGER_FIX_GUIDE.md
+(Has screenshots, troubleshooting, everything!)
+
+==========================================
+
+HOSTINGER REQUIREMENTS:
+----------------------
+✓ Supports: HTML, CSS, JavaScript (static files)
+✓ Works with: React, Vite, any static site
+✓ Needs: .htaccess for React routing
+✓ Needs: Files in public_html folder
+✓ Needs: Correct file structure (index.html at root)
+
+Your build is CORRECT. Just needs proper upload!
+
+==========================================

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GreenoFig Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .success {
+            color: #10b981;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="success">✅ Hostinger is Working!</h1>
+        <p>If you can see this page with colors and styling, your Hostinger hosting is working correctly.</p>
+
+        <div class="info">
+            <h3>What this means:</h3>
+            <ul>
+                <li>✅ Files are uploaded correctly</li>
+                <li>✅ HTML is being served</li>
+                <li>✅ CSS is working</li>
+                <li>✅ Your domain is properly connected</li>
+            </ul>
+        </div>
+
+        <div class="info" style="background: #fff3cd; border-color: #ffc107;">
+            <h3>Next Step:</h3>
+            <p>If you see this page but greenofig.com shows black, the issue is with the React app files.</p>
+            <p><strong>Solution:</strong> Delete all files and re-upload from the correct 'dist' folder.</p>
+        </div>
+
+        <hr style="margin: 30px 0;">
+
+        <h2>File Check:</h2>
+        <p>After seeing this test page works, check if these files exist in public_html:</p>
+        <ul>
+            <li>index.html</li>
+            <li>assets/ (folder)</li>
+            <li>favicon.png</li>
+            <li>logo.png</li>
+        </ul>
+
+        <p style="margin-top: 30px; color: #666;">
+            Test page created: Oct 30, 2025<br>
+            If you see this, Hostinger is working fine!
+        </p>
+    </div>
+
+    <script>
+        // Test JavaScript
+        console.log('✅ JavaScript is working!');
+        document.querySelector('.container').innerHTML += '<p style="color: #10b981; font-weight: bold; margin-top: 20px;">✅ JavaScript is also working!</p>';
+    </script>
+</body>
+</html>

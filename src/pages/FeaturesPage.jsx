@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
     import { supabase } from '@/lib/customSupabaseClient';
     import { toast } from '@/components/ui/use-toast';
     import * as LucideIcons from 'lucide-react';
+    import FloatingFruits from '@/components/ui/FloatingFruits';
 
     const getIcon = (name) => {
         const Icon = LucideIcons[name];
@@ -55,11 +56,13 @@ import React, { useState, useEffect } from 'react';
       }
 
       return (
-        <SiteLayout
-          logoUrl={logoUrl}
-          pageTitle={<>A Symphony of <span className="gradient-text">Intelligent Features</span></>}
-          pageDescription="Explore the tools designed to make your health journey effective, enjoyable, and uniquely yours."
-        >
+        <>
+          <FloatingFruits />
+          <SiteLayout
+            logoUrl={logoUrl}
+            pageTitle={<>A Symphony of <span className="gradient-text">Intelligent Features</span></>}
+            pageDescription="Explore the tools designed to make your health journey effective, enjoyable, and uniquely yours."
+          >
           <Helmet>
             <title>Features - GreenoFig</title>
             <meta name="description" content="Discover GreenoFig's powerful AI-driven features for personalized health, nutrition, and fitness coaching." />
@@ -130,6 +133,7 @@ import React, { useState, useEffect } from 'react';
              </div>
            )}
         </SiteLayout>
+        </>
       );
     };
 

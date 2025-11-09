@@ -1,0 +1,43 @@
+# Enable Gzip Compression for faster loading
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# Content Security Policy
+<IfModule mod_headers.c>
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://images.unsplash.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.typekit.net; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com https://use.typekit.net; connect-src 'self' https://xdzoikocriuvgkoenjqk.supabase.co wss://xdzoikocriuvgkoenjqk.supabase.co https://images.unsplash.com; frame-src 'self'; worker-src 'self' blob:;"
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-Powered-By "GreenoFig"
+
+  # Force no-cache for HTML files
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  # Longer cache for versioned JS/CSS (1 year since they have hashes)
+  <FilesMatch "\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Long cache for images and fonts
+  <FilesMatch "\.(png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+AddType application/javascript .js
+AddType text/html .html

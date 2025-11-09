@@ -9,6 +9,7 @@ import { ArrowRight, Loader2, Calendar, User, ArrowLeft, Clock } from 'lucide-re
 import SiteLayout from '@/components/SiteLayout';
 import { toast } from '@/components/ui/use-toast';
 import DOMPurify from 'dompurify';
+import FloatingFruits from '@/components/ui/FloatingFruits';
 
 const BlogPage = ({ logoUrl }) => {
   const { postId } = useParams();
@@ -43,7 +44,7 @@ const BlogPage = ({ logoUrl }) => {
           setPost(data);
         }
       } else {
-        // Fetch all posts - simplified query without user_profiles join to avoid RLS issues
+        // Fetch recent posts - optimized with limit for faster loading
         const { data, error } = await supabase
           .from('blog_posts')
           .select(`
@@ -56,7 +57,8 @@ const BlogPage = ({ logoUrl }) => {
           `)
           .eq('status', 'published')
           .not('published_at', 'is', null)
-          .order('published_at', { ascending: false });
+          .order('published_at', { ascending: false })
+          .limit(30);
 
         if (error) {
           console.error('Blog fetch error:', error);
@@ -190,7 +192,9 @@ const BlogPage = ({ logoUrl }) => {
   // Single Post View
   if (postId && post) {
     return (
-      <SiteLayout logoUrl={logoUrl}>
+      <>
+        <FloatingFruits />
+        <SiteLayout logoUrl={logoUrl}>
         <Helmet>
           <title>{post.title} - GreenoFig Blog</title>
           <meta name="description" content={post.content.substring(0, 160)} />
@@ -231,12 +235,15 @@ const BlogPage = ({ logoUrl }) => {
           </article>
         </div>
       </SiteLayout>
+      </>
     );
   }
 
   // Blog List View
   return (
-    <SiteLayout logoUrl={logoUrl}>
+    <>
+      <FloatingFruits />
+      <SiteLayout logoUrl={logoUrl}>
       <Helmet>
         <title>Blog - GreenoFig</title>
         <meta name="description" content="Latest articles, tips, and insights on health, wellness, and nutrition from the GreenoFig team." />
@@ -317,6 +324,7 @@ const BlogPage = ({ logoUrl }) => {
         </div>
       </div>
     </SiteLayout>
+    </>
   );
 };
 

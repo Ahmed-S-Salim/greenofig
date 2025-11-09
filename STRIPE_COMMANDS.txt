@@ -1,0 +1,23 @@
+# =====================================================
+# COPY THESE COMMANDS ONE BY ONE INTO POWERSHELL
+# =====================================================
+
+# 1. Navigate to project directory
+cd "C:\Users\ADMIN\OneDrive\Desktop\GreeonFig Rocet code\greenofigwebsite"
+
+# 2. Login to Supabase (will open browser)
+npx supabase login
+
+# 3. Link to your Supabase project
+npx supabase link --project-ref xdzoikocriuvgkoenjqk
+
+# 4. Set Stripe secret key (COPY THE ENTIRE LINE BELOW)
+npx supabase secrets set STRIPE_SECRET_KEY=sk_test_51SHrlbPPAckGFnuThXJQldkGspIwv1pcsisOFUxtUxkxEoouu1cUz9na5G09LdcE55XdkGmbJlSbTnGgJaitSN1m00MUoe01Pr
+
+# 5. Deploy create-checkout-session Edge Function
+npx supabase functions deploy create-checkout-session
+
+# 6. Deploy stripe-webhook Edge Function
+npx supabase functions deploy stripe-webhook
+
+# DONE! Now go to Supabase SQL Editor and run the SQL file

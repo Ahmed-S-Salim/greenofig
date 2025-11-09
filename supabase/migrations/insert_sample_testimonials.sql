@@ -1,0 +1,12 @@
+-- Insert 10 sample testimonials
+INSERT INTO testimonials (customer_name, customer_title, quote, rating, is_approved, is_featured, display_order, created_at) VALUES
+('Sarah Johnson', 'Fitness Enthusiast', 'GreenoFig has completely transformed my approach to health and wellness. The personalized meal plans and AI coaching have helped me lose 20 pounds in just 3 months!', 5, true, true, 1, NOW() - INTERVAL '30 days'),
+('Michael Chen', 'Busy Professional', 'As someone with a hectic schedule, I love how GreenoFig adapts to my lifestyle. The AI coach understands my needs and provides realistic, achievable goals.', 5, true, true, 2, NOW() - INTERVAL '25 days'),
+('Emily Rodriguez', 'Marathon Runner', 'The nutrition tracking and personalized recommendations are spot on. I''ve improved my race times and feel more energized than ever before.', 5, true, true, 3, NOW() - INTERVAL '20 days'),
+('David Thompson', 'Weight Loss Journey', 'Lost 35 pounds with GreenoFig! The combination of meal planning, fitness tracking, and AI support kept me motivated every step of the way.', 5, true, true, 4, NOW() - INTERVAL '18 days'),
+('Lisa Anderson', 'Health Coach', 'Even as a professional health coach, I find GreenoFig''s insights valuable. The AI provides data-driven recommendations that complement my practice.', 5, true, true, 5, NOW() - INTERVAL '15 days'),
+('James Wilson', 'Former Athlete', 'Getting back in shape after years away from sports was tough, but GreenoFig made it manageable. The progress tracking keeps me accountable.', 4, true, false, 6, NOW() - INTERVAL '12 days'),
+('Maria Garcia', 'Nutritionist', 'I recommend GreenoFig to all my clients. The app''s ability to create personalized meal plans based on individual needs is impressive.', 5, true, false, 7, NOW() - INTERVAL '10 days'),
+('Robert Taylor', 'Tech Executive', 'The AI integration is seamless and intelligent. It feels like having a personal nutritionist and trainer in my pocket 24/7.', 5, true, false, 8, NOW() - INTERVAL '8 days'),
+('Jennifer Lee', 'Yoga Instructor', 'GreenoFig helped me understand my body better. The detailed analytics and personalized insights have improved both my practice and teaching.', 4, true, false, 9, NOW() - INTERVAL '5 days'),
+('Kevin Brown', 'Student', 'Affordable, effective, and easy to use. GreenoFig fits perfectly into my student budget and busy schedule. Highly recommended!', 5, true, false, 10, NOW() - INTERVAL '2 days');
