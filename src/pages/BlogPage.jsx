@@ -179,15 +179,6 @@ const BlogPage = ({ logoUrl }) => {
     </div>);
   };
 
-  // Loading state
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      </div>
-    );
-  }
-
   // Single Post View
   if (postId && post) {
     return (
@@ -274,7 +265,7 @@ const BlogPage = ({ logoUrl }) => {
         </div>
 
         {/* Featured Post Behind Banner */}
-        {posts.length > 0 && (
+        {!loading && posts.length > 0 && (
           <div className="w-full relative px-4 sm:px-6 lg:px-8">
             <div className="section-content w-full mx-auto -mt-4 relative z-0">
               <div className="card card-scale grid lg:grid-cols-2 gap-0 glass-effect rounded-2xl border border-green-500/30 overflow-hidden" style={{ minHeight: '210px' }}>
@@ -312,7 +303,11 @@ const BlogPage = ({ logoUrl }) => {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold mb-8 text-center">More Articles</h2>
 
-          {posts.length === 0 ? (
+          {loading ? (
+            <div className="text-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
+            </div>
+          ) : posts.length === 0 ? (
             <div className="text-center py-20">
               <h2 className="text-2xl font-semibold">No Posts Yet!</h2>
               <p className="text-text-secondary mt-2">Check back soon for exciting articles on health and wellness.</p>
