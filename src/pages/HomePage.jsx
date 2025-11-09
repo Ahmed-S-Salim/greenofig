@@ -9,7 +9,7 @@ import React from 'react';
 
       return (
         <SiteLayout logoUrl={logoUrl}>
-          <section className="hero-section py-8 md:py-12 text-center">
+          <section className="hero-section py-8 sm:py-12 lg:py-16 text-center">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="hero-content">
                       <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
