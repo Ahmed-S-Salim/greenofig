@@ -29,7 +29,7 @@ const FloatingFruits = () => {
       {fruits.map((fruit, index) => (
         <div
           key={index}
-          className="absolute text-4xl opacity-30 animate-float"
+          className="absolute text-6xl opacity-40 animate-float"
           style={{
             left: `${fruit.startX}%`,
             bottom: '-50px',
