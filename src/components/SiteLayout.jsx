@@ -257,13 +257,27 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
 
           <footer className="mt-auto border-t border-border/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-              <div className="grid md:grid-cols-4 gap-8">
+              <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
                 <div>
                   <Link to="/home" className="flex items-center gap-2 mb-4">
                     <img src={logoUrl} alt="GreenoFig Logo" className="w-8 h-8" />
                     <span className="text-xl font-extrabold tracking-tight gradient-text">GreenoFig</span>
                   </Link>
                   <p className="text-sm text-text-secondary">&copy; {new Date().getFullYear()} GreenoFig. All rights reserved.</p>
+                </div>
+                <div>
+                  <p className="font-semibold mb-4">Contact Us</p>
+                  <ul className="space-y-2 text-sm">
+                    <li>
+                      <a href="mailto:health@greenofig.com" className="text-text-secondary hover:text-primary transition-colors">health@greenofig.com</a>
+                    </li>
+                    <li>
+                      <a href="mailto:support@greenofig.com" className="text-text-secondary hover:text-primary transition-colors">support@greenofig.com</a>
+                    </li>
+                    <li>
+                      <a href="mailto:nutritionist@greenofig.com" className="text-text-secondary hover:text-primary transition-colors">nutritionist@greenofig.com</a>
+                    </li>
+                  </ul>
                 </div>
                 <div>
                   <p className="font-semibold mb-4">Platform</p>
