@@ -1,6 +1,5 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Apple, Download, Smartphone, Star, CheckCircle, Carrot, Dumbbell, BrainCircuit, Camera, TrendingUp, Clock } from 'lucide-react';
 import SiteLayout from '@/components/SiteLayout';
@@ -40,13 +39,8 @@ const DownloadPage = ({ logoUrl }) => {
 
       <div className="space-y-20">
         {/* Download Buttons Section */}
-        <section className="text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="glass-effect p-12 rounded-2xl max-w-4xl mx-auto"
-          >
+        <section className="page-section text-center">
+          <div className="section-content glass-effect p-12 rounded-2xl max-w-4xl mx-auto">
             <div className="mb-8">
               <img src={logoUrl} alt="GreenoFig Logo" className="w-24 h-24 mx-auto mb-4 rounded-3xl shadow-2xl" />
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Get GreenoFig Today</h2>
@@ -57,14 +51,10 @@ const DownloadPage = ({ logoUrl }) => {
 
             <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
               {/* iOS Download */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
+              <div className="animate-item">
                 <Button
                   size="lg"
-                  className="w-full h-20 text-lg bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 text-white shadow-xl"
+                  className="btn-primary w-full h-20 text-lg bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 text-white shadow-xl"
                   onClick={() => window.open('https://testflight.apple.com', '_blank')}
                 >
                   <Apple className="w-8 h-8 mr-3" />
@@ -74,17 +64,13 @@ const DownloadPage = ({ logoUrl }) => {
                   </div>
                 </Button>
                 <p className="text-xs text-text-secondary mt-2">iOS 14.0 or later</p>
-              </motion.div>
+              </div>
 
               {/* Android Download */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
+              <div className="animate-item">
                 <Button
                   size="lg"
-                  className="w-full h-20 text-lg bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white shadow-xl"
+                  className="btn-primary w-full h-20 text-lg bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white shadow-xl"
                   onClick={() => window.open('https://play.google.com', '_blank')}
                 >
                   <Smartphone className="w-8 h-8 mr-3" />
@@ -94,7 +80,7 @@ const DownloadPage = ({ logoUrl }) => {
                   </div>
                 </Button>
                 <p className="text-xs text-text-secondary mt-2">Android 8.0 or later</p>
-              </motion.div>
+              </div>
             </div>
 
             {/* Beta Testing Notice */}
@@ -108,33 +94,23 @@ const DownloadPage = ({ logoUrl }) => {
                 <button className="text-primary hover:underline ml-1">Contact us for invite</button>
               </p>
             </div>
-          </motion.div>
+          </div>
         </section>
 
         {/* App Preview Section */}
-        <section>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
+        <section className="page-section">
+          <div className="section-content text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">See It In Action</h2>
             <p className="text-text-secondary text-lg max-w-2xl mx-auto">
               A sneak peek at what awaits you inside the app
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {screenshots.map((screenshot, index) => (
-              <motion.div
+              <div
                 key={screenshot.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6 }}
-                className="glass-effect rounded-2xl overflow-hidden group cursor-pointer hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
+                className="card card-scale glass-effect rounded-2xl overflow-hidden group cursor-pointer animate-item"
               >
                 {/* Mock Screenshot */}
                 <div className={`h-96 bg-gradient-to-br ${screenshot.color} relative flex items-center justify-center`}>
@@ -147,55 +123,39 @@ const DownloadPage = ({ logoUrl }) => {
                     <p className="text-sm opacity-90">{screenshot.description}</p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </section>
 
         {/* Features Grid */}
-        <section>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
+        <section className="page-section">
+          <div className="section-content text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Powerful Features</h2>
             <p className="text-text-secondary text-lg max-w-2xl mx-auto">
               Everything you need to achieve your health goals in one app
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
-              <motion.div
+              <div
                 key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6 }}
-                className="glass-effect p-6 rounded-2xl hover:shadow-xl hover:shadow-primary/10 transition-all duration-200"
+                className="card card-scale glass-effect p-6 rounded-2xl animate-item"
               >
                 <div className="inline-block p-4 bg-primary/10 rounded-xl mb-4">
                   <feature.icon className="w-8 h-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
                 <p className="text-text-secondary">{feature.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </section>
 
         {/* Reviews Section */}
-        <section>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
+        <section className="page-section">
+          <div className="section-content text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Loved by Thousands</h2>
             <div className="flex items-center justify-center gap-2 mb-4">
               {[...Array(5)].map((_, i) => (
@@ -204,7 +164,7 @@ const DownloadPage = ({ logoUrl }) => {
               <span className="text-2xl font-bold ml-2">4.9</span>
             </div>
             <p className="text-text-secondary text-lg">Based on 10,000+ reviews</p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
@@ -212,13 +172,9 @@ const DownloadPage = ({ logoUrl }) => {
               { name: "Mike T.", review: "Best health app I've ever used. The AI coach is incredible!", rating: 5 },
               { name: "Jessica P.", review: "So easy to use and the results speak for themselves!", rating: 5 }
             ].map((review, index) => (
-              <motion.div
+              <div
                 key={review.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="glass-effect p-6 rounded-2xl"
+                className="card card-scale glass-effect p-6 rounded-2xl animate-item"
               >
                 <div className="flex items-center mb-4">
                   {[...Array(review.rating)].map((_, i) => (
@@ -227,29 +183,23 @@ const DownloadPage = ({ logoUrl }) => {
                 </div>
                 <p className="text-text-secondary mb-4">"{review.review}"</p>
                 <p className="font-bold">- {review.name}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6 }}
-            className="glass-effect p-12 rounded-2xl"
-          >
+        <section className="page-section text-center">
+          <div className="section-content glass-effect p-12 rounded-2xl">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Health?</h2>
             <p className="text-text-secondary text-lg max-w-2xl mx-auto mb-8">
               Join thousands of users who have already started their journey to a healthier life
             </p>
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg text-lg h-14 px-8">
+            <Button size="lg" className="btn-primary">
               <Download className="w-6 h-6 mr-2" />
               Download Now
             </Button>
-          </motion.div>
+          </div>
         </section>
       </div>
     </SiteLayout>
