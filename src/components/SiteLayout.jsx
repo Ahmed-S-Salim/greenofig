@@ -70,7 +70,7 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: '100%' }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="fixed right-0 top-0 h-[50vh] w-[40vw] min-w-[200px] rounded-bl-3xl overflow-hidden"
+                className="fixed right-0 top-0 h-[80vh] w-[60vw] min-w-[250px] rounded-bl-3xl overflow-hidden"
                 style={{
                   background: 'rgba(22, 163, 74, 0.05)',
                   backdropFilter: 'blur(60px) saturate(180%)',
@@ -79,28 +79,28 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                   boxShadow: '0 8px 32px 0 rgba(16, 185, 129, 0.15)'
                 }}
               >
-              <div className="p-1.5 h-full flex flex-col">
-                <div className="flex items-center justify-between mb-1">
-                  <Link to="/home" className="flex items-center gap-1" onClick={() => setIsMobileMenuOpen(false)}>
-                    <img src={logoUrl} alt="GreenoFig Logo" className="w-5 h-5" />
-                    <span className="text-xs font-bold gradient-text">GreenoFig</span>
+              <div className="p-4 h-full flex flex-col">
+                <div className="flex items-center justify-between mb-4">
+                  <Link to="/home" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
+                    <img src={logoUrl} alt="GreenoFig Logo" className="w-8 h-8" />
+                    <span className="text-lg font-bold gradient-text">GreenoFig</span>
                   </Link>
-                  <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => setIsMobileMenuOpen(false)}>
-                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <Button size="icon" variant="ghost" className="h-10 w-10" onClick={() => setIsMobileMenuOpen(false)}>
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </Button>
                 </div>
 
-                <nav className="space-y-0 flex-shrink-0">
+                <nav className="space-y-1 flex-shrink-0">
                   {navLinks.map((link, index) => {
                     const isActive = location.pathname === link.path;
                     return (
                       <motion.button
                         key={link.name}
-                        initial={{ opacity: 0, x: 20 }}
+                        initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
                         onClick={() => {
                           if (isActive) return;
                           if (link.unimplemented) {
@@ -110,7 +110,7 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                           }
                           setIsMobileMenuOpen(false);
                         }}
-                        className={`w-full text-left px-1.5 py-0.5 text-[9px] font-medium rounded-md transition-all duration-300 ${
+                        className={`w-full text-left px-4 py-2.5 text-base font-medium rounded-md transition-all duration-300 ${
                           isActive
                             ? 'text-primary bg-white/10 cursor-default'
                             : 'text-text-secondary hover:text-primary hover:bg-white/5 cursor-pointer'
@@ -123,29 +123,29 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                   })}
                 </nav>
 
-                <div className="mt-1 pt-1 border-t border-white/10 space-y-0.5 flex-shrink-0">
+                <div className="mt-4 pt-4 border-t border-white/10 space-y-2 flex-shrink-0">
                   {user && userProfile ? (
                     <>
                       <Button
                         variant="outline"
-                        className="w-full justify-start gap-1 h-5 text-[9px] backdrop-blur-sm border-white/10 hover:bg-white/5"
+                        className="w-full justify-start gap-2 h-10 text-sm backdrop-blur-sm border-white/10 hover:bg-white/5"
                         onClick={() => {
                           navigate(getDashboardPath());
                           setIsMobileMenuOpen(false);
                         }}
                       >
-                        <User className="w-2.5 h-2.5" />
+                        <User className="w-4 h-4" />
                         <span className="truncate">{userProfile.full_name || 'Dashboard'}</span>
                       </Button>
                       <Button
                         variant="outline"
-                        className="w-full justify-start gap-1 h-5 text-[9px] backdrop-blur-sm border-white/10 hover:bg-white/5"
+                        className="w-full justify-start gap-2 h-10 text-sm backdrop-blur-sm border-white/10 hover:bg-white/5"
                         onClick={async () => {
                           await signOut();
                           setIsMobileMenuOpen(false);
                         }}
                       >
-                        <LogOut className="w-2.5 h-2.5" />
+                        <LogOut className="w-4 h-4" />
                         Logout
                       </Button>
                     </>
@@ -153,7 +153,7 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                     <>
                       <Button
                         variant="outline"
-                        className="w-full h-5 text-[9px] backdrop-blur-sm border-white/10 hover:bg-white/5"
+                        className="w-full h-10 text-sm backdrop-blur-sm border-white/10 hover:bg-white/5"
                         onClick={() => {
                           navigate('/login');
                           setIsMobileMenuOpen(false);
@@ -162,7 +162,7 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                         Login
                       </Button>
                       <Button
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-5 text-[9px]"
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-10 text-sm"
                         onClick={() => {
                           navigate('/signup');
                           setIsMobileMenuOpen(false);
