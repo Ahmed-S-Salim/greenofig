@@ -9,7 +9,7 @@ import React from 'react';
 
       return (
         <SiteLayout logoUrl={logoUrl}>
-          <section className="hero-section py-16 md:py-20 text-center">
+          <section className="hero-section py-8 md:py-12 text-center">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="hero-content">
                       <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
@@ -37,7 +37,7 @@ import React from 'react';
                   </div>
                 </section>
 
-                <section className="page-section py-12">
+                <section className="page-section py-8">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-8 section-content">
                       <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Transform Your Health Journey</h2>
@@ -63,8 +63,8 @@ import React from 'react';
                     </div>
                   </div>
                 </section>
-                
-                <section className="page-section py-12">
+
+                <section className="page-section py-8">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-8 section-content">
                       <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Choose Your Perfect Plan</h2>
@@ -96,7 +96,7 @@ import React from 'react';
                   </div>
                 </section>
 
-                <section className="page-section py-12">
+                <section className="page-section py-8">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-8 section-content">
                       <h2 className="text-3xl md:text-4xl font-bold tracking-tight">How It Works</h2>
@@ -121,7 +121,7 @@ import React from 'react';
                   </div>
                 </section>
 
-                <section className="page-section py-12">
+                <section className="page-section py-8">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-8 section-content">
                       <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Loved by users worldwide</h2>
@@ -147,7 +147,7 @@ import React from 'react';
                   </div>
                 </section>
 
-                <section className="page-section py-12 text-center">
+                <section className="page-section py-8 text-center">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8 glass-effect p-12 rounded-2xl section-content">
                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Ready to Transform Your Health?</h2>
                      <p className="max-w-xl mx-auto mt-4 text-text-secondary mb-8">Join thousands of users who are already on their journey to a healthier, happier life.</p>
