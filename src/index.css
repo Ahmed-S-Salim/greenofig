@@ -598,6 +598,29 @@
     }
   }
 
+  /* Floating Fruits Animation */
+  @keyframes float {
+    0% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.3;
+    }
+    90% {
+      opacity: 0.3;
+    }
+    100% {
+      transform: translateY(-100vh) translateX(var(--end-x, 0)) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .animate-float {
+    animation: float linear infinite;
+    will-change: transform, opacity;
+  }
+
   /* Respect user's motion preferences */
   @media (prefers-reduced-motion: reduce) {
     .hero-section,
@@ -614,7 +637,8 @@
     .img-blur img,
     .text-underline,
     .text-color,
-    .scroll-animate {
+    .scroll-animate,
+    .animate-float {
       animation: none !important;
       transition: none !important;
     }

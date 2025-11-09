@@ -44,13 +44,12 @@ const BlogPage = ({ logoUrl }) => {
           setPost(data);
         }
       } else {
-        // Fetch recent posts - optimized with limit for faster loading
+        // Fetch recent posts - optimized query without content for faster loading
         const { data, error } = await supabase
           .from('blog_posts')
           .select(`
             id,
             title,
-            content,
             featured_image_url,
             published_at,
             author_id
@@ -58,7 +57,7 @@ const BlogPage = ({ logoUrl }) => {
           .eq('status', 'published')
           .not('published_at', 'is', null)
           .order('published_at', { ascending: false })
-          .limit(30);
+          .limit(12);
 
         if (error) {
           console.error('Blog fetch error:', error);
@@ -116,7 +115,7 @@ const BlogPage = ({ logoUrl }) => {
               </div>
             </CardHeader>
             <CardContent className="flex-grow">
-              <p className="text-text-secondary">{truncateText(post.content, 100)}</p>
+              <p className="text-text-secondary">Click to read this article about health and wellness.</p>
             </CardContent>
             <CardFooter>
               <Button onClick={() => navigate(`/blog/${post.id}`)} variant="link" className="p-0 text-primary">
@@ -158,7 +157,7 @@ const BlogPage = ({ logoUrl }) => {
                 />
               </div>
               <h3 className="text-xl font-bold mb-2 flex-grow group-hover:text-primary transition-colors cursor-pointer" onClick={() => navigate(`/blog/${post.id}`)}>{post.title}</h3>
-              <p className="text-text-secondary text-sm mb-4">{truncateText(post.content, 80)}</p>
+              <p className="text-text-secondary text-sm mb-4">Explore this article on health and wellness.</p>
               <div className="flex items-center justify-between text-xs text-text-secondary mt-auto">
                 <div className="flex items-center gap-2">
                   <User className="w-3 h-3" />
@@ -289,7 +288,7 @@ const BlogPage = ({ logoUrl }) => {
                 <div className="p-8 flex flex-col justify-center">
                   <p className="text-sm text-primary font-semibold mb-3">Latest Article</p>
                   <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white hover:text-primary transition-colors cursor-pointer leading-tight" onClick={() => navigate(`/blog/${posts[0].id}`)}>{posts[0].title}</h2>
-                  <p className="text-text-secondary text-sm md:text-base mb-6 leading-relaxed">{truncateText(posts[0].content, 250)}</p>
+                  <p className="text-text-secondary text-sm md:text-base mb-6 leading-relaxed">Discover the latest insights on health, wellness, and nutrition from the GreenoFig team.</p>
                   <div className="flex items-center gap-4 text-sm text-text-secondary mb-6">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
