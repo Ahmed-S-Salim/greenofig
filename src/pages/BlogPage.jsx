@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/lib/customSupabaseClient';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -74,16 +73,6 @@ const BlogPage = ({ logoUrl }) => {
     fetchData();
   }, [postId, navigate]);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.5 } },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.6 } },
-  };
-
   const truncateText = (text, length) => {
     if (!text) return '';
     const strippedText = text.replace(/<\/?[^>]+(>|$)/g, "");
@@ -102,19 +91,14 @@ const BlogPage = ({ logoUrl }) => {
       );
     }
 
-    return (<motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
-    >
-      {posts.map((post) => (
-        <motion.div variants={itemVariants} key={post.id}>
-          <Card className="h-full flex flex-col glass-effect overflow-hidden group rounded-2xl" style={{
+    return (<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+      {posts.map((post, index) => (
+        <div key={post.id} className="animate-item">
+          <Card className="card card-scale h-full flex flex-col glass-effect overflow-hidden group rounded-2xl" style={{
             backdropFilter: 'blur(20px) saturate(180%)',
             WebkitBackdropFilter: 'blur(20px) saturate(180%)',
           }}>
-            <div className="aspect-video overflow-hidden cursor-pointer" onClick={() => navigate(`/blog/${post.id}`)}>
+            <div className="aspect-video overflow-hidden cursor-pointer img-zoom" onClick={() => navigate(`/blog/${post.id}`)}>
               <img
                 alt={post.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -138,9 +122,9 @@ const BlogPage = ({ logoUrl }) => {
               </Button>
             </CardFooter>
           </Card>
-        </motion.div>
+        </div>
       ))}
-    </motion.div>);
+    </div>);
   };
 
   // Featured View Component - Shows additional articles
@@ -156,15 +140,15 @@ const BlogPage = ({ logoUrl }) => {
 
     const otherPosts = posts.slice(1); // Skip first post as it's shown above
 
-    return (<motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-12 max-w-7xl mx-auto">
+    return (<div className="space-y-12 max-w-7xl mx-auto">
       {otherPosts.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {otherPosts.map((post) => (
-            <motion.div variants={itemVariants} key={post.id} className="glass-effect p-6 rounded-2xl group flex flex-col" style={{
+          {otherPosts.map((post, index) => (
+            <div key={post.id} className="card card-scale glass-effect p-6 rounded-2xl group flex flex-col animate-item" style={{
               backdropFilter: 'blur(20px) saturate(180%)',
               WebkitBackdropFilter: 'blur(20px) saturate(180%)',
             }}>
-              <div className="aspect-video overflow-hidden rounded-lg mb-4 cursor-pointer" onClick={() => navigate(`/blog/${post.id}`)}>
+              <div className="aspect-video overflow-hidden rounded-lg mb-4 cursor-pointer img-zoom" onClick={() => navigate(`/blog/${post.id}`)}>
                 <img
                   alt={post.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -183,7 +167,7 @@ const BlogPage = ({ logoUrl }) => {
                   <span>{new Date(post.published_at).toLocaleDateString()}</span>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       ) : (
@@ -191,7 +175,7 @@ const BlogPage = ({ logoUrl }) => {
           <p className="text-text-secondary">Check back soon for more articles!</p>
         </div>
       )}
-    </motion.div>);
+    </div>);
   };
 
   // Loading state
@@ -211,32 +195,18 @@ const BlogPage = ({ logoUrl }) => {
           <title>{post.title} - GreenoFig Blog</title>
           <meta name="description" content={post.content.substring(0, 160)} />
         </Helmet>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="max-w-4xl mx-auto px-4 py-8"
-        >
+        <div className="page-section max-w-4xl mx-auto px-4 py-8">
           <Button variant="ghost" onClick={() => navigate('/blog')} className="mb-8">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Blog
           </Button>
 
           <article>
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight"
-            >
+            <h1 className="hero-content text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight">
               {post.title}
-            </motion.h1>
+            </h1>
 
-            <motion.div
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: 0.2 }}
-              className="flex items-center gap-6 text-text-secondary mb-8"
-            >
+            <div className="section-content flex items-center gap-6 text-text-secondary mb-8">
               <div className="flex items-center gap-2">
                 <User className="w-4 h-4" />
                 <span>GreenoFig Team</span>
@@ -249,26 +219,17 @@ const BlogPage = ({ logoUrl }) => {
                 <Clock className="w-4 h-4" />
                 <span>4 min read</span>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 }}
-              className="aspect-video rounded-xl overflow-hidden mb-8 glass-effect"
-            >
+            <div className="animate-item aspect-video rounded-xl overflow-hidden mb-8 glass-effect img-zoom">
               <img src={post.featured_image_url || 'https://images.unsplash.com/photo-1504983875-d3b163aba9e6'} alt={post.title} className="w-full h-full object-cover" />
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="prose prose-invert max-w-none text-lg leading-relaxed text-text-secondary prose-h2:text-text-primary prose-h3:text-text-primary prose-strong:text-text-primary"
+            <div className="section-content prose prose-invert max-w-none text-lg leading-relaxed text-text-secondary prose-h2:text-text-primary prose-h3:text-text-primary prose-strong:text-text-primary"
               dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }}
             />
           </article>
-        </motion.div>
+        </div>
       </SiteLayout>
     );
   }
@@ -287,11 +248,7 @@ const BlogPage = ({ logoUrl }) => {
       </Helmet>
       <div className="w-full">
         {/* Green Fruit Banner - FULL WIDTH RECTANGULAR with Glass Morphism */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative overflow-hidden w-full pb-6 z-20"
+        <div className="hero-section relative overflow-hidden w-full pb-6 z-20"
           style={{
             background: 'rgba(125, 230, 75, 0.2)',
             backdropFilter: 'blur(20px) saturate(180%)',
@@ -308,18 +265,13 @@ const BlogPage = ({ logoUrl }) => {
               Insights, tips, and stories on your journey to a healthier life.
             </p>
           </div>
-        </motion.div>
+        </div>
 
         {/* Featured Post Behind Banner */}
         {posts.length > 0 && (
           <div className="w-full relative px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="w-full mx-auto -mt-4 relative z-0"
-            >
-              <div className="grid lg:grid-cols-2 gap-0 glass-effect rounded-2xl border border-green-500/30 overflow-hidden" style={{ minHeight: '210px' }}>
+            <div className="section-content w-full mx-auto -mt-4 relative z-0">
+              <div className="card card-scale grid lg:grid-cols-2 gap-0 glass-effect rounded-2xl border border-green-500/30 overflow-hidden" style={{ minHeight: '210px' }}>
                 <div className="cursor-pointer h-full" onClick={() => navigate(`/blog/${posts[0].id}`)}>
                   <img
                     alt={posts[0].title}
@@ -340,12 +292,12 @@ const BlogPage = ({ logoUrl }) => {
                       <span>4 min read</span>
                     </div>
                   </div>
-                  <Button onClick={() => navigate(`/blog/${posts[0].id}`)} className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                  <Button onClick={() => navigate(`/blog/${posts[0].id}`)} className="btn-primary">
                     Read Full Article <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         )}
       </div>

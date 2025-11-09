@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-    import { motion } from 'framer-motion';
     import { useNavigate, useLocation } from 'react-router-dom';
     import { Button } from '@/components/ui/button';
     import { CheckCircle, Loader2 } from 'lucide-react';
@@ -144,12 +143,9 @@ import React, { useState, useEffect } from 'react';
                 {plans.filter(p => p.price_monthly === 0).map((plan) => {
                   const isRecommended = recommendedPlan === plan.name;
                   return (
-                    <motion.div
+                    <div
                       key={plan.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6 }}
-                      className={cn("glass-effect p-6 rounded-xl border-2 relative max-w-2xl mx-auto",
+                      className={cn("card card-scale glass-effect p-6 rounded-xl border-2 relative max-w-2xl mx-auto animate-item",
                         isRecommended ? "border-primary ring-4 ring-primary/50" : "border-primary/50"
                       )}
                       style={{
@@ -179,7 +175,7 @@ import React, { useState, useEffect } from 'react';
                           </div>
                         ))}
                       </div>
-                    </motion.div>
+                    </div>
                   )
                 })}
 
@@ -188,13 +184,9 @@ import React, { useState, useEffect } from 'react';
                 {plans.filter(p => p.price_monthly > 0).map((plan, i) => {
                   const isRecommended = recommendedPlan === plan.name;
                   return (
-                    <motion.div
+                    <div
                       key={plan.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.5 }}
-                      transition={{ duration: 0.6 }}
-                      className={cn("glass-effect p-5 rounded-xl flex flex-col border-2 relative hover:shadow-xl hover:shadow-primary/10 transition-all duration-300",
+                      className={cn("card card-scale glass-effect p-5 rounded-xl flex flex-col border-2 relative animate-item",
                         isRecommended ? "border-primary ring-4 ring-primary/50" : plan.is_popular ? "border-primary" : "border-border"
                       )}
                       style={{
@@ -230,10 +222,10 @@ import React, { useState, useEffect } from 'react';
                           </ul>
                       </div>
 
-                      <Button onClick={() => handleChoosePlan(plan)} className="w-full mt-5" variant={isRecommended || plan.is_popular ? 'default' : 'outline'}>
+                      <Button onClick={() => handleChoosePlan(plan)} className={`w-full mt-5 ${isRecommended || plan.is_popular ? 'btn-primary' : 'btn-secondary'}`} variant={isRecommended || plan.is_popular ? 'default' : 'outline'}>
                           Choose Plan
                       </Button>
-                    </motion.div>
+                    </div>
                   )
                 })}
                 </div>

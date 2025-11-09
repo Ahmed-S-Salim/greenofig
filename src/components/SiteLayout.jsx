@@ -238,19 +238,14 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
 
           <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 flex-grow">
             {pageTitle && pageDescription && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                className="text-center mb-8 sm:mb-12 lg:mb-16"
-              >
+              <div className="hero-content text-center mb-8 sm:mb-12 lg:mb-16">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-3 sm:mb-4 leading-tight">
                   {pageTitle}
                 </h1>
                 <p className="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-text-secondary px-4">
                   {pageDescription}
                 </p>
-              </motion.div>
+              </div>
             )}
             {React.isValidElement(children) ? React.cloneElement(children, { openSurvey }) : children}
           </main>

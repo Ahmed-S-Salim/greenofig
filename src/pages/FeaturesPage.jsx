@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
     import { Helmet } from 'react-helmet';
-    import { motion } from 'framer-motion';
     import { useNavigate } from 'react-router-dom';
     import { Button } from '@/components/ui/button';
     import { ArrowRight, CheckCircle, Carrot, Dumbbell, BrainCircuit, Heart, Moon, Users, BarChart3, Camera, Watch, Loader2 } from 'lucide-react';
@@ -79,27 +78,20 @@ import React, { useState, useEffect } from 'react';
              </div>
            ) : (
              <div className="space-y-20">
-               {featureCategories.map((category) => (
-                 <motion.div
+               {featureCategories.map((category, catIndex) => (
+                 <div
                    key={category.category}
-                   initial={{ opacity: 0, y: 50 }}
-                   whileInView={{ opacity: 1, y: 0 }}
-                   viewport={{ once: true, amount: 0.3 }}
-                   transition={{ duration: 0.6, ease: "easeOut" }}
+                   className="page-section"
                  >
-                   <div className="flex items-center gap-4 mb-8">
+                   <div className="flex items-center gap-4 mb-8 section-content">
                      {getCategoryIcon(category.icon)}
                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{category.category}</h2>
                    </div>
                    <div className="grid md:grid-cols-2 gap-8">
                      {category.features.map((feature, featIndex) => (
-                       <motion.div
+                       <div
                          key={feature.name}
-                         initial={{ opacity: 0, y: 20 }}
-                         whileInView={{ opacity: 1, y: 0 }}
-                         viewport={{ once: true, amount: 0.5 }}
-                         transition={{ duration: 0.6, ease: "easeOut" }}
-                         className="glass-effect p-6 rounded-2xl flex flex-col hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
+                         className="card card-scale glass-effect p-6 rounded-2xl flex flex-col animate-item"
                          role="article"
                          aria-label={`${feature.name} feature`}
                        >
@@ -111,10 +103,10 @@ import React, { useState, useEffect } from 'react';
                            {getPlanTag(feature.plan_tier)}
                          </div>
                          <p className="text-text-secondary flex-grow">{feature.description}</p>
-                       </motion.div>
+                       </div>
                      ))}
                    </div>
-                 </motion.div>
+                 </div>
                ))}
                {featureCategories.length === 0 && (
                 <div className="text-center py-20 glass-effect rounded-2xl p-12" role="status">
@@ -126,11 +118,11 @@ import React, { useState, useEffect } from 'react';
                 </div>
                )}
 
-               <section className="py-24 text-center">
-                   <div className="container mx-auto px-4 sm:px-6 lg:px-8 glass-effect p-12 rounded-2xl">
+               <section className="page-section py-24 text-center">
+                   <div className="container mx-auto px-4 sm:px-6 lg:px-8 glass-effect p-12 rounded-2xl section-content">
                       <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Ready to Experience the Future of Health?</h2>
                       <p className="max-w-xl mx-auto mt-4 text-text-secondary mb-8">Choose a plan that fits your life and start your journey to a better you.</p>
-                      <Button size="lg" onClick={() => navigate('/pricing')} className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg" aria-label="Navigate to pricing page">
+                      <Button size="lg" onClick={() => navigate('/pricing')} className="btn-primary" aria-label="Navigate to pricing page">
                          View Plans & Pricing <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
                       </Button>
                    </div>
