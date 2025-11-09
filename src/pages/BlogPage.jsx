@@ -143,7 +143,7 @@ const BlogPage = ({ logoUrl }) => {
     </motion.div>);
   };
 
-  // Featured View Component (Original ArticlesPage style)
+  // Featured View Component - Shows additional articles
   const FeaturedView = () => {
     if (!posts || posts.length === 0) {
       return (
@@ -154,43 +154,10 @@ const BlogPage = ({ logoUrl }) => {
       );
     }
 
-    const featuredPost = posts[0];
-    const otherPosts = posts.slice(1);
+    const otherPosts = posts.slice(1); // Skip first post as it's shown above
 
     return (<motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-12 max-w-7xl mx-auto">
-      {featuredPost && (
-        <motion.div variants={itemVariants} className="group">
-          <div className="grid lg:grid-cols-2 gap-8 items-center glass-effect p-8 rounded-2xl" style={{
-            backdropFilter: 'blur(24px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-          }}>
-            <div className="aspect-video overflow-hidden rounded-lg cursor-pointer" onClick={() => navigate(`/blog/${featuredPost.id}`)}>
-              <img
-                alt={featuredPost.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                src={featuredPost.featured_image_url || "https://images.unsplash.com/photo-1543362906-acfc16c67564"}
-              />
-            </div>
-            <div>
-              <p className="text-sm text-primary font-semibold mb-2">Featured Article</p>
-              <h2 className="text-3xl font-bold mb-4 group-hover:text-primary transition-colors cursor-pointer" onClick={() => navigate(`/blog/${featuredPost.id}`)}>{featuredPost.title}</h2>
-              <p className="text-text-secondary mb-4">{truncateText(featuredPost.content, 150)}</p>
-              <div className="flex items-center gap-4 text-sm text-text-secondary">
-                <div className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  <span>GreenoFig Team</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  <span>{new Date(featuredPost.published_at).toLocaleDateString()}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-      {otherPosts.length > 0 && (
+      {otherPosts.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {otherPosts.map((post) => (
             <motion.div variants={itemVariants} key={post.id} className="glass-effect p-6 rounded-2xl group flex flex-col" style={{
@@ -219,6 +186,10 @@ const BlogPage = ({ logoUrl }) => {
             </motion.div>
           ))}
         </div>
+      ) : (
+        <div className="text-center py-10">
+          <p className="text-text-secondary">Check back soon for more articles!</p>
+        </div>
       )}
     </motion.div>);
   };
@@ -240,7 +211,6 @@ const BlogPage = ({ logoUrl }) => {
           <title>{post.title} - GreenoFig Blog</title>
           <meta name="description" content={post.content.substring(0, 160)} />
         </Helmet>
-        <FloatingFruits />
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -275,6 +245,10 @@ const BlogPage = ({ logoUrl }) => {
                 <Calendar className="w-4 h-4" />
                 <span>{new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
               </div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                <span>4 min read</span>
+              </div>
             </motion.div>
 
             <motion.div
@@ -291,12 +265,7 @@ const BlogPage = ({ logoUrl }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
               className="prose prose-invert max-w-none text-lg leading-relaxed text-text-secondary prose-h2:text-text-primary prose-h3:text-text-primary prose-strong:text-text-primary"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(post.content.replace(/\n/g, '<br />'), {
-                  ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'blockquote', 'code', 'pre'],
-                  ALLOWED_ATTR: ['href', 'target', 'rel']
-                })
-              }}
+              dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }}
             />
           </article>
         </motion.div>
@@ -316,75 +285,84 @@ const BlogPage = ({ logoUrl }) => {
         <meta property="og:url" content="https://greenofig.com/blog" />
         <meta property="og:type" content="website" />
       </Helmet>
-      <FloatingFruits />
-      <div className="w-full px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        {/* Green Fruit Banner - FULL WIDTH */}
+      <div className="w-full">
+        {/* Green Fruit Banner - FULL WIDTH RECTANGULAR with Glass Morphism */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="relative mb-8 rounded-3xl overflow-hidden mx-auto max-w-7xl"
+          className="relative overflow-hidden w-full pb-6 z-20"
           style={{
-            background: 'linear-gradient(135deg, rgba(34, 139, 34, 0.12), rgba(16, 185, 129, 0.12))',
-            backdropFilter: 'blur(60px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(60px) saturate(180%)',
-            border: '1px solid rgba(16, 185, 129, 0.15)',
-            boxShadow: '0 8px 32px 0 rgba(16, 185, 129, 0.1)',
+            background: 'rgba(125, 230, 75, 0.2)',
+            backdropFilter: 'blur(20px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            boxShadow: '0 8px 32px 0 rgba(125, 230, 75, 0.2)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
           }}
         >
-          {/* Static fruit decorations */}
-          <div className="absolute inset-0 opacity-15 pointer-events-none">
-            <div className="absolute top-4 left-6 text-4xl">🍏</div>
-            <div className="absolute top-6 right-10 text-5xl">🥦</div>
-            <div className="absolute bottom-4 left-16 text-4xl">🥝</div>
-            <div className="absolute bottom-6 right-8 text-5xl">🥒</div>
-            <div className="absolute top-12 left-1/3 text-3xl">🥑</div>
-            <div className="absolute bottom-10 right-1/3 text-4xl">🍊</div>
-          </div>
-
-          <div className="relative z-10 text-center py-16 px-4">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-3">
-              The <span className="gradient-text">GreenoFig</span> Blog
+          <div className="relative z-10 text-center py-10 px-4 flex flex-col justify-center min-h-[200px]">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-3 text-white">
+              The <span style={{ color: 'rgb(113, 221, 60)' }}>GreenoFig</span> Blog
             </h1>
-            <p className="max-w-2xl mx-auto text-base md:text-lg text-text-secondary">
+            <p className="max-w-2xl mx-auto text-base md:text-lg text-gray-200">
               Insights, tips, and stories on your journey to a healthier life.
             </p>
           </div>
         </motion.div>
 
-        {posts.length === 0 ? (
-          <div className="text-center py-20">
-            <h2 className="text-2xl font-semibold">No Posts Yet!</h2>
-            <p className="text-text-secondary mt-2">Check back soon for exciting articles on health and wellness.</p>
+        {/* Featured Post Behind Banner */}
+        {posts.length > 0 && (
+          <div className="w-full relative px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="w-full mx-auto -mt-4 relative z-0"
+            >
+              <div className="grid lg:grid-cols-2 gap-0 glass-effect rounded-2xl border border-green-500/30 overflow-hidden" style={{ minHeight: '210px' }}>
+                <div className="cursor-pointer h-full" onClick={() => navigate(`/blog/${posts[0].id}`)}>
+                  <img
+                    alt={posts[0].title}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    src={posts[0].featured_image_url || "https://images.unsplash.com/photo-1543362906-acfc16c67564"}
+                  />
+                </div>
+                <div className="p-8 flex flex-col justify-center">
+                  <p className="text-sm text-primary font-semibold mb-3">Latest Article</p>
+                  <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white hover:text-primary transition-colors cursor-pointer leading-tight" onClick={() => navigate(`/blog/${posts[0].id}`)}>{posts[0].title}</h2>
+                  <p className="text-text-secondary text-sm md:text-base mb-6 leading-relaxed">{truncateText(posts[0].content, 250)}</p>
+                  <div className="flex items-center gap-4 text-sm text-text-secondary mb-6">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4" />
+                      <span>{new Date(posts[0].published_at).toLocaleDateString()}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span>4 min read</span>
+                    </div>
+                  </div>
+                  <Button onClick={() => navigate(`/blog/${posts[0].id}`)} className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                    Read Full Article <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
           </div>
-        ) : (
-          <Tabs defaultValue="all" className="w-full">
-            <div className="flex justify-center mb-12">
-              <TabsList className="glass-effect bg-transparent border border-primary/20 p-1">
-                <TabsTrigger
-                  value="all"
-                  className="data-[state=active]:bg-primary data-[state=active]:text-white rounded-full px-6"
-                >
-                  All Posts
-                </TabsTrigger>
-                <TabsTrigger
-                  value="featured"
-                  className="data-[state=active]:bg-transparent data-[state=active]:text-text-primary rounded-full px-6"
-                >
-                  Featured Articles
-                </TabsTrigger>
-              </TabsList>
-            </div>
-
-            <TabsContent value="all">
-              <GridView />
-            </TabsContent>
-
-            <TabsContent value="featured">
-              <FeaturedView />
-            </TabsContent>
-          </Tabs>
         )}
+      </div>
+
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold mb-8 text-center">More Articles</h2>
+
+          {posts.length === 0 ? (
+            <div className="text-center py-20">
+              <h2 className="text-2xl font-semibold">No Posts Yet!</h2>
+              <p className="text-text-secondary mt-2">Check back soon for exciting articles on health and wellness.</p>
+            </div>
+          ) : (
+            <GridView />
+          )}
+        </div>
       </div>
     </SiteLayout>
   );

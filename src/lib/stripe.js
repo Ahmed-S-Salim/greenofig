@@ -1,24 +1,30 @@
 import { loadStripe } from '@stripe/stripe-js';
 import { supabase } from './customSupabaseClient';
 
-// This will be loaded from payment_settings in the database
+// Use Stripe publishable key directly for faster loading
+const STRIPE_PUBLISHABLE_KEY = 'pk_test_51SHrlbPPAckGFnuTvYujWq9sz4oO2cpWTlSRURA62g3MDIcqSx8wBV65fL5hP7hmaWylbAlY8CjZl5yirP27JzKg00OkbSgYy8';
 let stripePromise = null;
 
 export const getStripe = async () => {
   if (!stripePromise) {
-    // Fetch the publishable key from the database
-    const { data: settings } = await supabase
-      .from('payment_settings')
-      .select('public_key, is_active')
-      .eq('provider', 'stripe')
-      .eq('is_active', true)
-      .single();
-
-    if (settings && settings.public_key) {
-      stripePromise = loadStripe(settings.public_key);
+    // Use hardcoded key for faster loading
+    if (STRIPE_PUBLISHABLE_KEY) {
+      stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
     } else {
-      console.error('Stripe is not configured or not active');
-      return null;
+      // Fallback to database
+      const { data: settings } = await supabase
+        .from('payment_settings')
+        .select('public_key, is_active')
+        .eq('provider', 'stripe')
+        .eq('is_active', true)
+        .single();
+
+      if (settings && settings.public_key) {
+        stripePromise = loadStripe(settings.public_key);
+      } else {
+        console.error('Stripe is not configured or not active');
+        return null;
+      }
     }
   }
   return stripePromise;

@@ -9,7 +9,6 @@ import { toast } from '@/components/ui/use-toast';
 import { Loader2, ArrowLeft, ArrowRight, CheckCircle, Scale, Dumbbell, HeartPulse, Zap, X } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import FloatingFruits from '@/components/ui/FloatingFruits';
 
 const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
   const { user, userProfile, refreshUserProfile } = useAuth();
@@ -325,7 +324,6 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
 
     return (
       <div className="w-full max-w-4xl mx-auto relative">
-        <FloatingFruits />
         <div className="glass-effect rounded-lg p-4 shadow-lg border border-border">
           <div className="flex items-center gap-3 mb-3">
             <img src={logoUrl} alt="GreenoFig Logo" className="w-8 h-8" />
@@ -403,7 +401,6 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
   if (isOpen !== undefined && setIsOpen) {
     return (
       <>
-        <FloatingFruits />
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogContent className="glass-effect custom-scrollbar max-w-md max-h-[90vh] overflow-y-auto p-0">
           <div className="p-4">

@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/components/ui/use-toast';
 import { CreditCard, Check, Loader2, Lock } from 'lucide-react';
-import { createCheckoutSession, createPaymentTransaction, updateSubscription } from '@/lib/stripe';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { supabase } from '@/lib/customSupabaseClient';
 
 const CheckoutDialog = ({ open, onOpenChange, plan, billingCycle = 'monthly' }) => {
   const { user } = useAuth();
@@ -30,62 +30,51 @@ const CheckoutDialog = ({ open, onOpenChange, plan, billingCycle = 'monthly' }) 
     setProcessing(true);
 
     try {
-      // Create a payment transaction record
-      const transaction = await createPaymentTransaction({
-        userId: user.id,
-        subscriptionPlanId: plan.id,
-        amount,
-        billingCycle,
-        paymentIntentId: `mock_pi_${Date.now()}`,
-        status: 'pending',
-      });
+      // Get the current session
+      const { data: { session } } = await supabase.auth.getSession();
 
-      // Simulate payment processing (in real app, this would redirect to Stripe)
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Update transaction to succeeded
-      await createPaymentTransaction({
-        userId: user.id,
-        subscriptionPlanId: plan.id,
-        amount,
-        billingCycle,
-        paymentIntentId: transaction.payment_intent_id,
-        status: 'succeeded',
-      });
-
-      // Update user subscription
-      const now = new Date();
-      const periodEnd = new Date(now);
-      if (billingCycle === 'yearly') {
-        periodEnd.setFullYear(periodEnd.getFullYear() + 1);
-      } else {
-        periodEnd.setMonth(periodEnd.getMonth() + 1);
+      if (!session) {
+        throw new Error('Authentication session not found');
       }
 
-      await updateSubscription({
-        userId: user.id,
-        subscriptionPlanId: plan.id,
-        stripeSubscriptionId: `sub_${Date.now()}`,
-        status: 'active',
-        billingCycle,
-        currentPeriodStart: now.toISOString(),
-        currentPeriodEnd: periodEnd.toISOString(),
+      // Call Supabase Edge Function to create Stripe checkout session
+      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+        body: {
+          planId: plan.id,
+          billingCycle,
+          successUrl: `${window.location.origin}/app/user?payment=success`,
+          cancelUrl: `${window.location.origin}/pricing?payment=cancelled`,
+        },
       });
 
-      toast({
-        title: 'Payment Successful!',
-        description: `You've successfully subscribed to ${plan.name}`,
-      });
+      if (error) {
+        throw error;
+      }
 
-      onOpenChange(false);
+      if (!data?.url) {
+        throw new Error('No checkout URL returned');
+      }
+
+      // Redirect to Stripe Checkout
+      window.location.href = data.url;
     } catch (error) {
       console.error('Checkout error:', error);
+
+      let errorMessage = 'An error occurred during checkout';
+
+      // Check if Stripe is not configured
+      if (error.message?.includes('not configured') || error.message?.includes('STRIPE_SECRET_KEY')) {
+        errorMessage = 'Payment system is not configured yet. Please contact support.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       toast({
         title: 'Payment Failed',
-        description: error.message || 'An error occurred during checkout',
+        description: errorMessage,
         variant: 'destructive',
       });
-    } finally {
+
       setProcessing(false);
     }
   };

@@ -85,7 +85,7 @@ import React, { useState, useEffect } from 'react';
                    initial={{ opacity: 0, y: 50 }}
                    whileInView={{ opacity: 1, y: 0 }}
                    viewport={{ once: true, amount: 0.3 }}
-                   transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+                   transition={{ duration: 0.6, ease: "easeOut" }}
                  >
                    <div className="flex items-center gap-4 mb-8">
                      {getCategoryIcon(category.icon)}
@@ -98,7 +98,7 @@ import React, { useState, useEffect } from 'react';
                          initial={{ opacity: 0, y: 20 }}
                          whileInView={{ opacity: 1, y: 0 }}
                          viewport={{ once: true, amount: 0.5 }}
-                         transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+                         transition={{ duration: 0.6, ease: "easeOut" }}
                          className="glass-effect p-6 rounded-2xl flex flex-col hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
                          role="article"
                          aria-label={`${feature.name} feature`}

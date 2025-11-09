@@ -16,14 +16,19 @@ import ProgressCharts from '@/components/user/ProgressCharts';
 import AiMealPlanGenerator from '@/components/user/AiMealPlanGenerator';
 import AiWorkoutPlanner from '@/components/user/AiWorkoutPlanner';
 import PersonalizedInsights from '@/components/user/PersonalizedInsights';
+import SubscriptionManager from '@/components/user/SubscriptionManager';
+import AdBanner from '@/components/AdBanner';
+import { useFeatureAccess } from '@/hooks/useFeatureAccess';
 
 const UserDashboard = memo(({ logoUrl }) => {
   const { userProfile } = useAuth();
+  const { hasAds, planName } = useFeatureAccess();
   const [todayMetrics, setTodayMetrics] = useState(null);
   const [recentActivity, setRecentActivity] = useState([]);
   const [streaks, setStreaks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [showAd, setShowAd] = useState(true);
 
   useEffect(() => {
     if (userProfile?.id) {
@@ -140,8 +145,18 @@ const UserDashboard = memo(({ logoUrl }) => {
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
             Welcome back, <span className="gradient-text">{(userProfile?.full_name || 'User').split(' ')[0]}!</span>
           </h1>
-          <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-text-secondary mt-2">Here's your wellness snapshot for today. Let's make it a great one!</p>
+          <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-text-secondary mt-2">
+            Here's your wellness snapshot for today. Let's make it a great one!
+            {planName && <span className="ml-2 text-xs font-semibold text-primary">({planName} Plan)</span>}
+          </p>
         </motion.div>
+
+        {/* Ad Banner for Free Users */}
+        {hasAds && showAd && (
+          <motion.div variants={itemVariants}>
+            <AdBanner onDismiss={() => setShowAd(false)} />
+          </motion.div>
+        )}
 
         {/* Quick Actions */}
         <motion.div variants={containerVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
@@ -374,6 +389,11 @@ const UserDashboard = memo(({ logoUrl }) => {
               </CardContent>
             </Card>
           </motion.div>
+        </motion.div>
+
+        {/* Subscription Management */}
+        <motion.div variants={itemVariants}>
+          <SubscriptionManager />
         </motion.div>
       </motion.div>
     </>
