@@ -1,13 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
     import { useNavigate } from 'react-router-dom';
     import { Button } from '@/components/ui/button';
-    import { ArrowRight, Star, ShieldCheck, Dumbbell, Carrot, BrainCircuit } from 'lucide-react';
+    import { ArrowRight, Star, ShieldCheck, Dumbbell, Carrot, BrainCircuit, CheckCircle, Loader2 } from 'lucide-react';
     import SiteLayout from '@/components/SiteLayout';
+    import { supabase } from '@/lib/customSupabaseClient';
+    import { useAuth } from '@/contexts/SupabaseAuthContext';
+    import CheckoutDialog from '@/components/CheckoutDialog';
+    import { cn } from '@/lib/utils';
 
     const HomePage = ({ logoUrl }) => {
       const navigate = useNavigate();
+      const { user } = useAuth();
+      const [plans, setPlans] = useState([]);
+      const [loadingPlans, setLoadingPlans] = useState(true);
+      const [checkoutPlan, setCheckoutPlan] = useState(null);
+      const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+
+      // Plan-specific features matching the PricingPage
+      const planFeatures = {
+        'Premium': [
+          '✨ Ad-free experience',
+          'Unlimited AI meal plans',
+          'Unlimited AI workout plans',
+          'Advanced progress analytics'
+        ],
+        'Ultimate': [
+          '✨ Everything in Premium',
+          'AI Coach Chat',
+          'Wearable device sync',
+          'Video consultations'
+        ],
+        'Elite': [
+          '✨ Everything in Ultimate',
+          '📸 Photo food recognition',
+          'Doctor consultations',
+          'Priority 24/7 support'
+        ]
+      };
+
+      useEffect(() => {
+        const fetchPlans = async () => {
+          setLoadingPlans(true);
+          const { data, error } = await supabase
+            .from('subscription_plans')
+            .select('*')
+            .eq('is_active', true)
+            .gt('price_monthly', 0)
+            .order('price_monthly', { ascending: true });
+          if (!error && data) {
+            setPlans(data);
+          }
+          setLoadingPlans(false);
+        };
+        fetchPlans();
+      }, []);
+
+      const handleChoosePlan = (plan) => {
+        if (!user) {
+          navigate('/signup', { state: { selectedPlan: plan.name } });
+          return;
+        }
+        setCheckoutPlan(plan);
+        setIsCheckoutOpen(true);
+      };
 
       return (
+        <>
         <SiteLayout logoUrl={logoUrl}>
           <section className="hero-section text-center">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,31 +126,59 @@ import React from 'react';
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-8 section-content">
                       <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Choose Your Perfect Plan</h2>
-                      <p className="max-w-xl mx-auto mt-4 text-text-secondary">Simple, transparent pricing. Save 17% with any yearly plan!</p>
+                      <p className="max-w-xl mx-auto mt-4 text-text-secondary">Simple, transparent pricing. Save 25% with any yearly plan!</p>
                     </div>
-                    <div className="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                      {[
-                        { name: "Premium", price: 9.99, popular: true, features: ["Ad-Free Experience", "Unlimited Meal Plans", "Advanced Analytics"] },
-                        { name: "Pro", price: 19.99, popular: false, features: ["Everything in Premium", "AI Coach Chat", "Wearable Integration"] },
-                        { name: "Elite", price: 29.99, popular: false, features: ["Everything in Pro", "Photo Food Recognition", "Doctor Consultations"] },
-                      ].map((plan, i) => (
-                         <div
-                            key={plan.name}
-                            className={`card card-scale relative glass-effect p-8 rounded-2xl border-2 animate-item ${plan.popular ? 'border-primary' : 'border-border'}`}
-                          >
-                          {plan.popular && <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-4 py-1 text-sm font-semibold text-primary-foreground bg-primary rounded-full">Most Popular</div>}
-                          <h3 className="text-2xl font-bold text-center mb-2">{plan.name}</h3>
-                          <p className="text-center text-4xl font-extrabold mb-4">${plan.price}<span className="text-lg font-medium text-text-secondary">/mo</span></p>
-                          <ul className="space-y-3 mb-8">
-                            {plan.features.map(f => <li key={f} className="flex items-center gap-3"><ShieldCheck className="w-5 h-5 text-primary" /><span>{f}</span></li>)}
-                          </ul>
-                          <Button className={`w-full ${plan.popular ? 'btn-primary' : 'btn-secondary'}`} variant={plan.popular ? 'default' : 'outline'} onClick={() => navigate('/pricing')}>Choose {plan.name}</Button>
-                         </div>
-                      ))}
-                    </div>
-                    <div className="text-center mt-8">
-                      <Button variant="link" onClick={() => navigate('/pricing')}>View All Plans & Features</Button>
-                    </div>
+                    {loadingPlans ? (
+                      <div className="flex justify-center items-center py-12">
+                        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                      </div>
+                    ) : (
+                      <>
+                        <div className="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                          {plans.map((plan, i) => (
+                            <div
+                              key={plan.id}
+                              className={cn("card card-scale relative glass-effect p-8 rounded-2xl border-2 animate-item",
+                                plan.is_popular ? 'border-primary' : 'border-border'
+                              )}
+                              style={{
+                                backdropFilter: 'blur(20px) saturate(180%)',
+                                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                              }}
+                            >
+                              {plan.is_popular && (
+                                <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-4 py-1 text-sm font-semibold text-primary-foreground bg-primary rounded-full">
+                                  Most Popular
+                                </div>
+                              )}
+                              <h3 className="text-2xl font-bold text-center mb-2">{plan.name}</h3>
+                              <p className="text-center text-4xl font-extrabold mb-4">
+                                ${plan.price_monthly}
+                                <span className="text-lg font-medium text-text-secondary">/mo</span>
+                              </p>
+                              <ul className="space-y-3 mb-8">
+                                {(planFeatures[plan.name] || []).map((feature, idx) => (
+                                  <li key={idx} className="flex items-center gap-3">
+                                    <CheckCircle className="w-5 h-5 text-primary" />
+                                    <span className="text-sm">{feature}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                              <Button
+                                className={`w-full ${plan.is_popular ? 'btn-primary' : 'btn-secondary'}`}
+                                variant={plan.is_popular ? 'default' : 'outline'}
+                                onClick={() => handleChoosePlan(plan)}
+                              >
+                                Choose {plan.name}
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="text-center mt-8">
+                          <Button variant="link" onClick={() => navigate('/pricing')}>View All Plans & Features</Button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </section>
 
@@ -157,6 +243,15 @@ import React from 'react';
                   </div>
                 </section>
         </SiteLayout>
+
+        {/* Checkout Dialog */}
+        <CheckoutDialog
+          open={isCheckoutOpen}
+          onOpenChange={setIsCheckoutOpen}
+          plan={checkoutPlan}
+          billingCycle="monthly"
+        />
+      </>
       );
     };
 
