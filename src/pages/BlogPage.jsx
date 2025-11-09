@@ -257,7 +257,7 @@ const BlogPage = ({ logoUrl }) => {
             border: '1px solid rgba(255, 255, 255, 0.18)',
           }}
         >
-          <div className="relative z-10 text-center py-10 px-4 flex flex-col justify-center min-h-[200px]">
+          <div className="hero-content relative z-10 text-center py-10 px-4 flex flex-col justify-center min-h-[200px]">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-3 text-white">
               The <span style={{ color: 'rgb(113, 221, 60)' }}>GreenoFig</span> Blog
             </h1>

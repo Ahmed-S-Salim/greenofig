@@ -66,11 +66,11 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                 onClick={() => setIsMobileMenuOpen(false)}
               />
               <motion.div
-                initial={{ opacity: 0, x: 50 }}
+                initial={{ opacity: 0, x: '100%' }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 50 }}
+                exit={{ opacity: 0, x: '100%' }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="fixed right-0 top-0 h-screen w-[35%] min-w-[200px] max-w-[280px] rounded-bl-3xl overflow-hidden"
+                className="fixed right-0 top-0 h-[50vh] w-[40vw] min-w-[200px] rounded-bl-3xl overflow-hidden"
                 style={{
                   background: 'rgba(22, 163, 74, 0.05)',
                   backdropFilter: 'blur(60px) saturate(180%)',
