@@ -346,4 +346,277 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* ========================================
+     COMPLETE ANIMATION SYSTEM
+     Applied to all pages - mobile, tablet, desktop
+     ======================================== */
+
+  /* Animation Variables */
+  :root {
+    /* Transitions */
+    --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.2s ease;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+    --shadow-glow: 0 4px 20px rgba(163, 230, 53, 0.3);
+
+    /* Animation Colors (matched to theme) */
+    --accent-color: #a3e635;
+    --accent-light: rgba(163, 230, 53, 0.1);
+    --gradient: linear-gradient(135deg, #a3e635, hsl(100, 70%, 65%));
+  }
+
+  /* Page Load Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Apply to Sections */
+  .hero-section,
+  .page-section {
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .hero-content,
+  .section-content {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  /* Staggered animation for multiple items */
+  .animate-item:nth-child(1) { animation: fadeInUp 0.6s ease-out 0.1s backwards; }
+  .animate-item:nth-child(2) { animation: fadeInUp 0.6s ease-out 0.2s backwards; }
+  .animate-item:nth-child(3) { animation: fadeInUp 0.6s ease-out 0.3s backwards; }
+  .animate-item:nth-child(4) { animation: fadeInUp 0.6s ease-out 0.4s backwards; }
+  .animate-item:nth-child(5) { animation: fadeInUp 0.6s ease-out 0.5s backwards; }
+  .animate-item:nth-child(6) { animation: fadeInUp 0.6s ease-out 0.6s backwards; }
+  .animate-item:nth-child(7) { animation: fadeInUp 0.6s ease-out 0.7s backwards; }
+  .animate-item:nth-child(8) { animation: fadeInUp 0.6s ease-out 0.8s backwards; }
+
+  /* Card Hover Animations */
+  .card {
+    transition: var(--transition-base);
+    border: 1px solid rgba(163, 230, 53, 0.1);
+  }
+
+  .card:hover {
+    border-color: var(--accent-color);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-4px);
+  }
+
+  .card-scale {
+    transition: var(--transition-base);
+  }
+
+  .card-scale:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .card-rotate {
+    transition: var(--transition-base);
+  }
+
+  .card-rotate:hover {
+    transform: rotate(1deg) translateY(-2px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Button Animations */
+  .btn-primary {
+    transition: var(--transition-base);
+    box-shadow: var(--shadow-md);
+    background: var(--gradient);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .btn-secondary {
+    transition: var(--transition-base);
+    background: transparent;
+    border: 2px solid var(--accent-color);
+  }
+
+  .btn-secondary:hover {
+    background: var(--accent-light);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .btn-pulse:hover {
+    animation: pulse 0.6s ease-out;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  /* Image/Media Animations */
+  .img-zoom {
+    overflow: hidden;
+  }
+
+  .img-zoom img {
+    transition: var(--transition-base);
+  }
+
+  .img-zoom:hover img {
+    transform: scale(1.1);
+  }
+
+  .img-blur img {
+    transition: var(--transition-base);
+    filter: blur(0px);
+  }
+
+  .img-blur:hover img {
+    filter: blur(0px) brightness(1.1);
+  }
+
+  /* Text Animations */
+  .text-underline {
+    position: relative;
+    transition: var(--transition-fast);
+  }
+
+  .text-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-color);
+    transition: width 0.3s ease;
+  }
+
+  .text-underline:hover::after {
+    width: 100%;
+  }
+
+  .text-color {
+    transition: color 0.3s ease;
+  }
+
+  .text-color:hover {
+    color: var(--accent-color);
+  }
+
+  /* Scroll Animations */
+  .scroll-animate {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .scroll-animate.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Responsive Animation Adjustments */
+  @media (max-width: 768px) {
+    /* Slightly faster animations on mobile */
+    .hero-section,
+    .page-section {
+      animation-duration: 0.6s;
+    }
+
+    .hero-content,
+    .section-content {
+      animation-duration: 0.5s;
+    }
+
+    /* Reduce transform distance on mobile */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Smaller lift on hover for mobile */
+    .card:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  /* Respect user's motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-section,
+    .page-section,
+    .hero-content,
+    .section-content,
+    .animate-item,
+    .card,
+    .card-scale,
+    .card-rotate,
+    .btn-primary,
+    .btn-secondary,
+    .img-zoom img,
+    .img-blur img,
+    .text-underline,
+    .text-color,
+    .scroll-animate {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
 }
