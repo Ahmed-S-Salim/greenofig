@@ -152,7 +152,9 @@ import React, { useState, useEffect } from 'react';
                 <section className="page-section py-16">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12 section-content">
-                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t('home.features.title')}</h2>
+                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+                        <span className="gradient-text">{t('home.features.title')}</span>
+                      </h2>
                       <p className="max-w-xl mx-auto mt-4 text-text-secondary">{t('home.features.subtitle')}</p>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -179,7 +181,9 @@ import React, { useState, useEffect } from 'react';
                 <section className="page-section py-16">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12 section-content">
-                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t('home.pricing.title')}</h2>
+                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+                        <span className="gradient-text">{t('home.pricing.title')}</span>
+                      </h2>
                       <p className="max-w-xl mx-auto mt-4 text-text-secondary">{t('home.pricing.subtitle')}</p>
                     </div>
                     {loadingPlans ? (
@@ -239,7 +243,9 @@ import React, { useState, useEffect } from 'react';
                 <section className="page-section py-16">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12 section-content">
-                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t('home.howItWorks.title')}</h2>
+                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+                        <span className="gradient-text">{t('home.howItWorks.title')}</span>
+                      </h2>
                       <p className="max-w-xl mx-auto mt-4 text-text-secondary">{t('home.howItWorks.subtitle')}</p>
                     </div>
                     <div className="grid md:grid-cols-3 gap-8 text-center">
@@ -264,7 +270,9 @@ import React, { useState, useEffect } from 'react';
                 <section className="page-section py-16">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12 section-content">
-                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t('home.reviews.title')}</h2>
+                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+                        <span className="gradient-text">{t('home.reviews.title')}</span>
+                      </h2>
                     </div>
                     <div className="grid lg:grid-cols-3 gap-8">
                       {[
@@ -289,7 +297,9 @@ import React, { useState, useEffect } from 'react';
 
                 <section className="page-section py-16 text-center">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8 glass-effect p-12 rounded-2xl section-content">
-                     <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t('home.cta.title')}</h2>
+                     <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+                       <span className="gradient-text">{t('home.cta.title')}</span>
+                     </h2>
                      <p className="max-w-xl mx-auto mt-4 text-text-secondary mb-8">{t('home.cta.subtitle')}</p>
                      <Button size="lg" onClick={() => navigate('/survey')} className="btn-primary">
                         {t('home.cta.button')} <ArrowRight className="ml-2 w-5 h-5" />

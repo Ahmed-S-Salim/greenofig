@@ -120,7 +120,9 @@ import React, { useState, useEffect } from 'react';
                  >
                    <div className="flex items-center gap-4 mb-8 section-content">
                      {getCategoryIcon(category.icon)}
-                     <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{getLocalizedContent(category, 'category')}</h2>
+                     <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+                       <span className="gradient-text">{getLocalizedContent(category, 'category')}</span>
+                     </h2>
                    </div>
                    <div className="grid md:grid-cols-2 gap-8">
                      {category.features.map((feature, featIndex) => (
@@ -155,7 +157,9 @@ import React, { useState, useEffect } from 'react';
 
                <section className="page-section py-24 text-center">
                    <div className="container mx-auto px-4 sm:px-6 lg:px-8 glass-effect p-12 rounded-2xl section-content">
-                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t('home.cta.title')}</h2>
+                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+                        <span className="gradient-text">{t('home.cta.title')}</span>
+                      </h2>
                       <p className="max-w-xl mx-auto mt-4 text-text-secondary mb-8">{t('home.cta.subtitle')}</p>
                       <Button size="lg" onClick={() => navigate('/pricing')} className="btn-primary" aria-label="Navigate to pricing page">
                          {t('pricing.viewAllPlans') || t('home.pricing.viewAllPlans')} <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
