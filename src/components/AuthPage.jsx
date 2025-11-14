@@ -1,5 +1,6 @@
 
     import React, { useState, useEffect } from 'react';
+    import { useTranslation } from 'react-i18next';
     import { motion } from 'framer-motion';
     import { Mail, Lock, User, Loader2, ArrowLeft } from 'lucide-react';
     import { Button } from '@/components/ui/button';
@@ -17,6 +18,7 @@
     );
 
     const AuthPage = ({ logoUrl, initialIsLogin = true }) => {
+      const { t } = useTranslation();
       const { signIn, signUp, signInWithGoogle, user, userProfile } = useAuth();
       const navigate = useNavigate();
       const location = useLocation();
@@ -48,8 +50,8 @@
 
         if (!email || !password || (!isLogin && !name)) {
           toast({
-            title: "Missing fields",
-            description: "Please fill in all required fields",
+            title: t('auth.missingFields'),
+            description: t('auth.fillAllFields'),
             variant: "destructive",
           });
           return;
@@ -79,8 +81,8 @@
 
           if (!error && user && profile) {
              toast({
-              title: "Account created! 🚀",
-              description: "Welcome! Let's get you set up.",
+              title: t('auth.accountCreated'),
+              description: t('auth.welcomeSetup'),
             });
 
             // Determine destination based on role
@@ -132,7 +134,7 @@
                 className="flex items-center gap-2 text-text-secondary hover:text-primary transition-colors mb-4 group"
               >
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                <span className="text-sm font-medium">Back</span>
+                <span className="text-sm font-medium">{t('auth.back')}</span>
               </button>
 
               <div className="text-center mb-8">
@@ -145,10 +147,10 @@
                   </motion.div>
                 </Link>
                 <h1 className="text-4xl font-bold gradient-text mb-2">GreenoFig</h1>
-                <p className="text-text-secondary">Your Personal Wellness Companion</p>
+                <p className="text-text-secondary">{t('auth.tagline')}</p>
                 {selectedPlan && !isLogin && (
                   <div className="mt-4 bg-primary/10 text-primary font-semibold p-2 rounded-lg">
-                    Signing up for the <span className="font-bold">{selectedPlan}</span> plan
+                    {t('auth.signUpForPlan')} <span className="font-bold">{selectedPlan}</span> {t('auth.plan')}
                   </div>
                 )}
               </div>
@@ -165,12 +167,12 @@
                 ) : (
                   <GoogleIcon className="w-5 h-5" />
                 )}
-                <span>Sign {isLogin ? 'in' : 'up'} with Google</span>
+                <span>{isLogin ? t('auth.signInWithGoogle') : t('auth.signUpWithGoogle')}</span>
               </Button>
 
               <div className="my-4 flex items-center">
                 <div className="flex-grow border-t border-border"></div>
-                <span className="flex-shrink mx-4 text-xs text-text-secondary uppercase">Or continue with</span>
+                <span className="flex-shrink mx-4 text-xs text-text-secondary uppercase">{t('auth.orContinueWith')}</span>
                 <div className="flex-grow border-t border-border"></div>
               </div>
 
@@ -179,7 +181,7 @@
                 {!isLogin && (
                   <div>
                     <label className="block text-sm font-medium text-text-secondary mb-2">
-                      Full Name
+                      {t('auth.fullName')}
                     </label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
@@ -200,7 +202,7 @@
 
                 <div>
                   <label className="block text-sm font-medium text-text-secondary mb-2">
-                    Email
+                    {t('auth.email')}
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
@@ -221,7 +223,7 @@
 
                 <div>
                   <label className="block text-sm font-medium text-text-secondary mb-2">
-                    Password
+                    {t('auth.password')}
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
@@ -245,7 +247,7 @@
                   disabled={loading || googleLoading}
                 >
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {loading ? "Processing..." : (isLogin ? 'Login' : 'Sign Up')}
+                  {loading ? t('auth.processing') : (isLogin ? t('auth.login') : t('auth.signup'))}
                 </Button>
               </form>
 
@@ -256,7 +258,7 @@
                   className="text-text-secondary hover:text-primary transition-colors disabled:opacity-50 min-h-[44px] py-2 px-4 touch-manipulation"
                   disabled={loading || googleLoading}
                 >
-                  {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Login'}
+                  {isLogin ? `${t('auth.dontHaveAccount')} ${t('auth.signup')}` : `${t('auth.alreadyHaveAccount')} ${t('auth.login')}`}
                 </button>
               </div>
             </div>
