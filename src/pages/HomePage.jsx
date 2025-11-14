@@ -134,11 +134,11 @@ import React, { useState, useEffect } from 'react';
                       </div>
                     ) : (
                       <>
-                        <div className="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                        <div className="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
                           {plans.map((plan, i) => (
                             <div
                               key={plan.id}
-                              className={cn("card card-scale relative glass-effect p-8 rounded-2xl border-2 animate-item",
+                              className={cn("card card-scale relative glass-effect p-8 rounded-2xl border-2 animate-item flex flex-col",
                                 plan.is_popular ? 'border-primary' : 'border-border'
                               )}
                               style={{
@@ -156,16 +156,16 @@ import React, { useState, useEffect } from 'react';
                                 ${plan.price_monthly}
                                 <span className="text-lg font-medium text-text-secondary">/mo</span>
                               </p>
-                              <ul className="space-y-3 mb-8">
+                              <ul className="space-y-3 mb-8 flex-grow">
                                 {(planFeatures[plan.name] || []).map((feature, idx) => (
                                   <li key={idx} className="flex items-center gap-3">
-                                    <CheckCircle className="w-5 h-5 text-primary" />
+                                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
                                     <span className="text-sm">{feature}</span>
                                   </li>
                                 ))}
                               </ul>
                               <Button
-                                className={`w-full ${plan.is_popular ? 'btn-primary' : 'btn-secondary'}`}
+                                className={`w-full mt-auto ${plan.is_popular ? 'btn-primary' : 'btn-secondary'}`}
                                 variant={plan.is_popular ? 'default' : 'outline'}
                                 onClick={() => handleChoosePlan(plan)}
                               >

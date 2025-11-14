@@ -6,6 +6,7 @@ import { AuthProvider } from '@/contexts/SupabaseAuthContext';
 import { BrowserRouter } from 'react-router-dom';
 import { reportWebVitals, logWebVitals } from '@/lib/webVitals';
 import { errorLogger } from '@/lib/errorLogger';
+import '@/i18n/config'; // Initialize i18next
 
 // Initialize global error logging
 errorLogger.init();

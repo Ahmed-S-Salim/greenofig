@@ -6,6 +6,7 @@ import { toast } from '@/components/ui/use-toast';
 import OnboardingSurvey from '@/components/OnboardingSurvey';
 import FloatingAiChat from '@/components/FloatingAiChat';
 import BackToTopButton from '@/components/ui/BackToTopButton';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { LogOut, User } from 'lucide-react';
 
@@ -124,6 +125,9 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                 </nav>
 
                 <div className="mt-4 pt-4 border-t border-white/10 space-y-2 flex-shrink-0">
+                  <div className="mb-3">
+                    <LanguageSwitcher />
+                  </div>
                   {user && userProfile ? (
                     <>
                       <Button
@@ -209,6 +213,7 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                 })}
               </nav>
               <div className="flex items-center gap-1 sm:gap-2">
+                <LanguageSwitcher />
                 {user && userProfile ? (
                   <>
                     <Button variant="ghost" onClick={() => navigate(getDashboardPath())} className="flex items-center gap-2 h-10 min-h-[44px] sm:min-h-0 px-2 sm:px-3">
