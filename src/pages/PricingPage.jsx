@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
     import { useNavigate, useLocation } from 'react-router-dom';
+    import { useTranslation } from 'react-i18next';
     import { Button } from '@/components/ui/button';
     import { CheckCircle, Loader2 } from 'lucide-react';
     import { cn } from '@/lib/utils';
@@ -13,6 +14,7 @@ import React, { useState, useEffect } from 'react';
     const PricingPage = ({ logoUrl }) => {
       const navigate = useNavigate();
       const location = useLocation();
+      const { t } = useTranslation();
       const { user } = useAuth();
       const [billingCycle, setBillingCycle] = useState('monthly');
       const [plans, setPlans] = useState([]);
@@ -21,51 +23,60 @@ import React, { useState, useEffect } from 'react';
       const [checkoutPlan, setCheckoutPlan] = useState(null);
       const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
-      // Plan-specific features matching the feature access control system
+      // Get translated plan description
+      const getPlanDescription = (planName) => {
+        const key = `pricing.planDescriptions.${planName}`;
+        const translated = t(key);
+        // If translation key doesn't exist, return empty string (fallback handled in JSX)
+        return translated !== key ? translated : '';
+      };
+
+      // Plan-specific features using translation keys
       const planFeatures = {
         'Base': [
-          '⚠️ Ad-supported experience',
-          '2 AI meal plans per month',
-          '2 AI workout plans per month',
-          '10 AI chat messages per month',
-          'Basic progress tracking',
-          'Community access',
-          'Mobile app access',
-          'Smart meal logging'
+          t('pricing.planFeatures.base.adSupported'),
+          t('pricing.planFeatures.base.mealPlans'),
+          t('pricing.planFeatures.base.workoutPlans'),
+          t('pricing.planFeatures.base.chatMessages'),
+          t('pricing.planFeatures.base.basicTracking'),
+          t('pricing.planFeatures.base.communityAccess'),
+          t('pricing.planFeatures.base.mobileAccess'),
+          t('pricing.planFeatures.base.smartLogging')
         ],
         'Premium': [
-          '✨ Ad-free experience',
-          'Unlimited AI meal plans',
-          'Unlimited AI workout plans',
-          'Unlimited AI chat support',
-          'Advanced progress analytics',
-          'Goal tracking & insights',
-          'Custom meal preferences',
-          'Wearable device sync',
-          'Weekly & monthly reports',
-          'Community access',
-          'Mobile app access'
+          t('pricing.planFeatures.premium.adFree'),
+          t('pricing.planFeatures.premium.unlimitedMeals'),
+          t('pricing.planFeatures.premium.unlimitedWorkouts'),
+          t('pricing.planFeatures.premium.unlimitedChat'),
+          t('pricing.planFeatures.premium.analytics'),
+          t('pricing.planFeatures.premium.goalTracking'),
+          t('pricing.planFeatures.premium.customPreferences'),
+          t('pricing.planFeatures.premium.wearableSync'),
+          t('pricing.planFeatures.premium.reports'),
+          t('pricing.planFeatures.premium.communityAccess'),
+          t('pricing.planFeatures.premium.mobileAccess')
         ],
         'Ultimate': [
-          '✨ Everything in Premium',
-          'Access to certified nutritionists',
-          'Priority customer support',
-          'Video consultations (2/month)',
-          'Advanced meal planning tools',
-          'Custom workout builder',
-          'Performance optimization',
-          'Body composition analysis',
-          'Exclusive challenges'
+          t('pricing.planFeatures.ultimate.everythingPremium'),
+          t('pricing.planFeatures.ultimate.nutritionists'),
+          t('pricing.planFeatures.ultimate.prioritySupport'),
+          t('pricing.planFeatures.ultimate.videoConsultations'),
+          t('pricing.planFeatures.ultimate.mealPlanningTools'),
+          t('pricing.planFeatures.ultimate.workoutBuilder'),
+          t('pricing.planFeatures.ultimate.performanceOptimization'),
+          t('pricing.planFeatures.ultimate.bodyAnalysis'),
+          t('pricing.planFeatures.ultimate.exclusiveChallenges')
         ],
         'Elite': [
-          '✨ Everything in Ultimate',
-          '📸 Photo food recognition & logging',
-          'Unlimited video coaching',
-          'Doctor consultations (2/month)',
-          'Priority 24/7 support',
-          'Personalized supplement plan',
-          'VIP community access',
-          'Concierge service'
+          t('pricing.planFeatures.elite.everythingUltimate'),
+          t('pricing.planFeatures.elite.photoRecognition'),
+          t('pricing.planFeatures.elite.unlimitedCoaching'),
+          t('pricing.planFeatures.elite.doctorConsultations'),
+          t('pricing.planFeatures.elite.appointmentScheduling'),
+          t('pricing.planFeatures.elite.priority247'),
+          t('pricing.planFeatures.elite.supplementPlan'),
+          t('pricing.planFeatures.elite.vipAccess'),
+          t('pricing.planFeatures.elite.concierge')
         ]
       };
 
@@ -109,15 +120,15 @@ import React, { useState, useEffect } from 'react';
       return (
         <SiteLayout
           logoUrl={logoUrl}
-          pageTitle={<>Simple, Transparent <span className="gradient-text">Pricing</span></>}
-          pageDescription="Choose the perfect plan to kickstart your health transformation. No hidden fees."
+          pageTitle={<>{t('pricing.title')}</>}
+          pageDescription={t('pricing.subtitle')}
         >
           <Helmet>
-            <title>Pricing - GreenoFig</title>
-            <meta name="description" content="Explore GreenoFig's flexible pricing plans and find the perfect fit for your health and wellness journey." />
+            <title>{t('pricing.title')} - GreenoFig</title>
+            <meta name="description" content={t('pricing.subtitle')} />
             <link rel="canonical" href="https://greenofig.com/pricing" />
-            <meta property="og:title" content="Pricing - GreenoFig" />
-            <meta property="og:description" content="Explore GreenoFig's flexible pricing plans and find the perfect fit for your health and wellness journey." />
+            <meta property="og:title" content={`${t('pricing.title')} - GreenoFig`} />
+            <meta property="og:description" content={t('pricing.subtitle')} />
             <meta property="og:url" content="https://greenofig.com/pricing" />
             <meta property="og:type" content="website" />
           </Helmet>
@@ -126,10 +137,10 @@ import React, { useState, useEffect } from 'react';
               backdropFilter: 'blur(16px) saturate(180%)',
               WebkitBackdropFilter: 'blur(16px) saturate(180%)',
             }}>
-              <Button onClick={() => setBillingCycle('monthly')} variant={billingCycle === 'monthly' ? 'default' : 'ghost'} className="rounded-full px-6">Monthly</Button>
+              <Button onClick={() => setBillingCycle('monthly')} variant={billingCycle === 'monthly' ? 'default' : 'ghost'} className="rounded-full px-6">{t('pricing.monthly')}</Button>
               <Button onClick={() => setBillingCycle('yearly')} variant={billingCycle === 'yearly' ? 'default' : 'ghost'} className="rounded-full px-6 relative">
-                Yearly
-                <span className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground text-xs font-bold px-2 py-0.5 rounded-full">Save {yearlySavePercent}%</span>
+                {t('pricing.yearly')}
+                <span className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground text-xs font-bold px-2 py-0.5 rounded-full">{t('pricing.save25')}</span>
               </Button>
             </div>
 
@@ -153,17 +164,17 @@ import React, { useState, useEffect } from 'react';
                         WebkitBackdropFilter: 'blur(24px) saturate(180%)',
                       }}
                     >
-                      {isRecommended && <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-3 py-1 text-xs font-semibold text-primary-foreground bg-green-500 rounded-full">Recommended</div>}
+                      {isRecommended && <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-3 py-1 text-xs font-semibold text-primary-foreground bg-green-500 rounded-full">{t('pricing.popularChoice')}</div>}
 
                       <div className="text-center mb-4">
                         <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                        <p className="text-text-secondary text-sm mb-4">{plan.description}</p>
+                        <p className="text-text-secondary text-sm mb-4">{getPlanDescription(plan.name) || plan.description}</p>
                         <div className="mb-4">
-                          <span className="text-4xl font-extrabold">Free</span>
-                          <p className="text-text-secondary text-sm mt-1">Forever</p>
+                          <span className="text-4xl font-extrabold">{t('pricing.freePlan')}</span>
+                          <p className="text-text-secondary text-sm mt-1">{t('common.comingSoon')}</p>
                         </div>
                         <Button onClick={() => handleChoosePlan(plan)} size="default" className="px-8">
-                          Get Started Free
+                          {t('common.getStarted')}
                         </Button>
                       </div>
 
@@ -194,11 +205,11 @@ import React, { useState, useEffect } from 'react';
                         WebkitBackdropFilter: 'blur(20px) saturate(180%)',
                       }}
                     >
-                      {isRecommended && <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-3 py-1 text-xs font-semibold text-primary-foreground bg-green-500 rounded-full">Recommended</div>}
-                      {!isRecommended && plan.is_popular && <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-3 py-1 text-xs font-semibold text-primary-foreground bg-primary rounded-full">Most Popular</div>}
+                      {isRecommended && <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-3 py-1 text-xs font-semibold text-primary-foreground bg-green-500 rounded-full">{t('pricing.popularChoice')}</div>}
+                      {!isRecommended && plan.is_popular && <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-3 py-1 text-xs font-semibold text-primary-foreground bg-primary rounded-full">{t('pricing.mostPopular')}</div>}
 
                       <h3 className="text-xl font-bold text-center mb-1">{plan.name}</h3>
-                      <p className="text-text-secondary text-center text-sm min-h-[35px] mb-4">{plan.description}</p>
+                      <p className="text-text-secondary text-center text-sm min-h-[35px] mb-4">{getPlanDescription(plan.name) || plan.description}</p>
 
                       <div className="text-center mb-4">
                           <span className="text-4xl font-extrabold">
@@ -207,8 +218,8 @@ import React, { useState, useEffect } from 'react';
                                   : `$${(plan.price_yearly / 12).toFixed(2)}`
                               }
                           </span>
-                          <span className="text-base font-medium text-text-secondary">/month</span>
-                          {billingCycle === 'yearly' && <p className="text-xs text-text-secondary mt-1">billed annually (${plan.price_yearly}/year)</p>}
+                          <span className="text-base font-medium text-text-secondary">{t('pricing.perMonth')}</span>
+                          {billingCycle === 'yearly' && <p className="text-xs text-text-secondary mt-1">{t('pricing.billedYearly')} (${plan.price_yearly}{t('pricing.perYear')})</p>}
                       </div>
 
                       <div className="flex-grow">
@@ -223,7 +234,7 @@ import React, { useState, useEffect } from 'react';
                       </div>
 
                       <Button onClick={() => handleChoosePlan(plan)} className={`w-full mt-5 ${isRecommended || plan.is_popular ? 'btn-primary' : 'btn-secondary'}`} variant={isRecommended || plan.is_popular ? 'default' : 'outline'}>
-                          Choose Plan
+                          {t('pricing.selectPlan')}
                       </Button>
                     </div>
                   )

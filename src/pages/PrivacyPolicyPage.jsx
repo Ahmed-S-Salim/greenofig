@@ -2,20 +2,23 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import SiteLayout from '@/components/SiteLayout';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const PrivacyPolicyPage = ({ logoUrl }) => {
+  const { t } = useTranslation();
+
   return (
     <SiteLayout
       logoUrl={logoUrl}
-      pageTitle={<>Privacy <span className="gradient-text">Policy</span></>}
-      pageDescription="Learn how GreenoFig collects, uses, and protects your personal information."
+      pageTitle={<>{t('privacy.title').split(' ')[0]} <span className="gradient-text">{t('privacy.title').split(' ')[1]}</span></>}
+      pageDescription={t('privacy.pageDescription')}
     >
       <Helmet>
-        <title>Privacy Policy - GreenoFig</title>
-        <meta name="description" content="GreenoFig's privacy policy explains how we collect, use, and protect your personal information." />
+        <title>{t('privacy.title')} - GreenoFig</title>
+        <meta name="description" content={t('privacy.metaDescription')} />
         <link rel="canonical" href="https://greenofig.com/privacy-policy" />
-        <meta property="og:title" content="Privacy Policy - GreenoFig" />
-        <meta property="og:description" content="GreenoFig's privacy policy explains how we collect, use, and protect your personal information." />
+        <meta property="og:title" content={`${t('privacy.title')} - GreenoFig`} />
+        <meta property="og:description" content={t('privacy.metaDescription')} />
         <meta property="og:url" content="https://greenofig.com/privacy-policy" />
         <meta property="og:type" content="website" />
         <meta name="robots" content="index, follow" />
@@ -27,209 +30,213 @@ const PrivacyPolicyPage = ({ logoUrl }) => {
         transition={{ duration: 0.5 }}
         className="max-w-4xl mx-auto space-y-8"
       >
+        {/* Introduction */}
         <div className="glass-effect p-8 rounded-2xl">
           <p className="text-text-secondary mb-4">
-            <strong>Last Updated:</strong> October 24, 2025
+            <strong>{t('privacy.lastUpdated')}</strong> {t('privacy.lastUpdatedDate')}
           </p>
           <p className="text-text-secondary mb-4">
-            At GreenoFig, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your data when you use our website and services.
+            {t('privacy.intro')}
           </p>
         </div>
 
+        {/* Section 1: Information We Collect */}
         <div className="glass-effect p-8 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4">1. Information We Collect</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('privacy.section1.title')}</h2>
           <p className="text-text-secondary mb-4">
-            We collect information that you provide directly to us, including:
+            {t('privacy.section1.intro')}
           </p>
           <ul className="list-disc list-inside text-text-secondary space-y-2 ml-4">
-            <li>Personal information (name, email address, phone number)</li>
-            <li>Health and wellness data (dietary preferences, fitness goals, health metrics)</li>
-            <li>Payment information (processed securely through third-party payment processors)</li>
-            <li>Usage data (how you interact with our platform)</li>
-            <li>Device information (IP address, browser type, operating system)</li>
+            {t('privacy.section1.items', { returnObjects: true }).map((item, idx) => (
+              <li key={idx}>{item}</li>
+            ))}
           </ul>
         </div>
 
+        {/* Section 2: How We Use Your Information */}
         <div className="glass-effect p-8 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4">2. How We Use Your Information</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('privacy.section2.title')}</h2>
           <p className="text-text-secondary mb-4">
-            We use your information to:
+            {t('privacy.section2.intro')}
           </p>
           <ul className="list-disc list-inside text-text-secondary space-y-2 ml-4">
-            <li>Provide and personalize our health and wellness services</li>
-            <li>Generate AI-powered meal plans and fitness recommendations</li>
-            <li>Process payments and manage subscriptions</li>
-            <li>Send important updates, notifications, and promotional materials</li>
-            <li>Improve our services and develop new features</li>
-            <li>Ensure security and prevent fraud</li>
-            <li>Comply with legal obligations</li>
+            {t('privacy.section2.items', { returnObjects: true }).map((item, idx) => (
+              <li key={idx}>{item}</li>
+            ))}
           </ul>
         </div>
 
+        {/* Section 3: Information Sharing and Disclosure */}
         <div className="glass-effect p-8 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4">3. Information Sharing and Disclosure</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('privacy.section3.title')}</h2>
           <p className="text-text-secondary mb-4">
-            We do not sell your personal information. We may share your information with:
+            {t('privacy.section3.intro')}
           </p>
           <ul className="list-disc list-inside text-text-secondary space-y-2 ml-4">
-            <li>Service providers who assist in operating our platform</li>
-            <li>Payment processors for transaction processing</li>
-            <li>AI service providers for generating personalized recommendations</li>
-            <li>Legal authorities when required by law</li>
-            <li>Healthcare professionals (only with your explicit consent)</li>
+            {t('privacy.section3.items', { returnObjects: true }).map((item, idx) => (
+              <li key={idx}>{item}</li>
+            ))}
           </ul>
         </div>
 
+        {/* Section 4: Data Security */}
         <div className="glass-effect p-8 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4">4. Data Security</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('privacy.section4.title')}</h2>
           <p className="text-text-secondary">
-            We implement industry-standard security measures to protect your data, including encryption, secure servers, and regular security audits. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.
+            {t('privacy.section4.content')}
           </p>
         </div>
 
+        {/* Section 5: Your Rights and Choices */}
         <div className="glass-effect p-8 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4">5. Your Rights and Choices</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('privacy.section5.title')}</h2>
           <p className="text-text-secondary mb-4">
-            You have the right to:
+            {t('privacy.section5.intro')}
           </p>
           <ul className="list-disc list-inside text-text-secondary space-y-2 ml-4">
-            <li>Access, update, or delete your personal information</li>
-            <li>Opt-out of marketing communications</li>
-            <li>Request a copy of your data</li>
-            <li>Withdraw consent for data processing</li>
-            <li>Lodge a complaint with a data protection authority</li>
+            {t('privacy.section5.items', { returnObjects: true }).map((item, idx) => (
+              <li key={idx}>{item}</li>
+            ))}
           </ul>
         </div>
 
+        {/* Section 6: Cookies and Tracking Technologies */}
         <div className="glass-effect p-8 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4">6. Cookies and Tracking Technologies</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('privacy.section6.title')}</h2>
           <p className="text-text-secondary mb-4">
-            We use cookies and similar technologies to enhance your experience, analyze usage patterns, and deliver personalized content.
+            {t('privacy.section6.intro')}
           </p>
 
-          <h3 className="text-xl font-semibold mb-3 mt-6">What Are Cookies?</h3>
+          <h3 className="text-xl font-semibold mb-3 mt-6">{t('privacy.section6.whatAreCookies.title')}</h3>
           <p className="text-text-secondary mb-4">
-            Cookies are small text files stored on your device that help us remember your preferences and improve your experience on our platform.
+            {t('privacy.section6.whatAreCookies.content')}
           </p>
 
-          <h3 className="text-xl font-semibold mb-3 mt-6">Types of Cookies We Use:</h3>
+          <h3 className="text-xl font-semibold mb-3 mt-6">{t('privacy.section6.typesTitle')}</h3>
           <div className="space-y-4 ml-4">
             <div>
-              <p className="font-medium text-text-primary">Essential Cookies (Required)</p>
+              <p className="font-medium text-text-primary">{t('privacy.section6.types.essential.title')}</p>
               <p className="text-text-secondary text-sm">
-                These cookies are necessary for the website to function properly. They enable core functionality such as security, authentication, and accessibility features. These cannot be disabled.
+                {t('privacy.section6.types.essential.content')}
               </p>
             </div>
 
             <div>
-              <p className="font-medium text-text-primary">Functional Cookies</p>
+              <p className="font-medium text-text-primary">{t('privacy.section6.types.functional.title')}</p>
               <p className="text-text-secondary text-sm">
-                These cookies enable enhanced functionality and personalization, such as remembering your preferences, language settings, and customized content.
+                {t('privacy.section6.types.functional.content')}
               </p>
             </div>
 
             <div>
-              <p className="font-medium text-text-primary">Analytics Cookies</p>
+              <p className="font-medium text-text-primary">{t('privacy.section6.types.analytics.title')}</p>
               <p className="text-text-secondary text-sm">
-                We use analytics tools to understand how visitors interact with our website, helping us improve our services. These cookies collect anonymous data about page visits, session duration, and user behavior.
+                {t('privacy.section6.types.analytics.content')}
               </p>
             </div>
 
             <div>
-              <p className="font-medium text-text-primary">Marketing Cookies</p>
+              <p className="font-medium text-text-primary">{t('privacy.section6.types.marketing.title')}</p>
               <p className="text-text-secondary text-sm">
-                These cookies track your browsing habits to provide you with relevant advertisements and measure the effectiveness of our marketing campaigns.
+                {t('privacy.section6.types.marketing.content')}
               </p>
             </div>
           </div>
 
-          <h3 className="text-xl font-semibold mb-3 mt-6">Managing Your Cookie Preferences</h3>
+          <h3 className="text-xl font-semibold mb-3 mt-6">{t('privacy.section6.managing.title')}</h3>
           <p className="text-text-secondary mb-2">
-            You can control and manage cookies in several ways:
+            {t('privacy.section6.managing.intro')}
           </p>
           <ul className="list-disc list-inside text-text-secondary space-y-2 ml-4">
-            <li>Browser Settings: Most browsers allow you to refuse cookies or delete cookies already stored</li>
-            <li>Third-party Tools: You can use browser extensions or privacy tools to manage cookies</li>
-            <li>Opt-out Links: For marketing cookies, you can opt out through industry opt-out pages</li>
+            {t('privacy.section6.managing.items', { returnObjects: true }).map((item, idx) => (
+              <li key={idx}>{item}</li>
+            ))}
           </ul>
           <p className="text-text-secondary mt-4 text-sm italic">
-            Please note that disabling certain cookies may affect the functionality of our website and limit your access to certain features.
+            {t('privacy.section6.managing.note')}
           </p>
         </div>
 
+        {/* Section 7: Children's Privacy */}
         <div className="glass-effect p-8 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4">7. Children's Privacy</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('privacy.section7.title')}</h2>
           <p className="text-text-secondary">
-            Our services are not intended for individuals under the age of 18. We do not knowingly collect personal information from children. If you believe we have inadvertently collected such information, please contact us immediately.
+            {t('privacy.section7.content')}
           </p>
         </div>
 
+        {/* Section 8: Changes to This Policy */}
         <div className="glass-effect p-8 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4">8. Changes to This Policy</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('privacy.section8.title')}</h2>
           <p className="text-text-secondary">
-            We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting the new policy on this page and updating the "Last Updated" date.
+            {t('privacy.section8.content')}
           </p>
         </div>
 
+        {/* Section 9: International Data Transfers */}
         <div className="glass-effect p-8 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4">9. International Data Transfers</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('privacy.section9.title')}</h2>
           <p className="text-text-secondary">
-            Your information may be transferred to and processed in countries other than your country of residence. We ensure that all such transfers comply with applicable data protection laws and that your data receives adequate protection.
+            {t('privacy.section9.content')}
           </p>
         </div>
 
+        {/* Section 10: GDPR Compliance */}
         <div className="glass-effect p-8 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4">10. GDPR Compliance (For EU Users)</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('privacy.section10.title')}</h2>
           <p className="text-text-secondary mb-4">
-            If you are located in the European Economic Area (EEA), you have additional rights under the General Data Protection Regulation (GDPR):
+            {t('privacy.section10.intro')}
           </p>
           <ul className="list-disc list-inside text-text-secondary space-y-2 ml-4">
-            <li><strong>Right to Access:</strong> You can request a copy of your personal data</li>
-            <li><strong>Right to Rectification:</strong> You can request correction of inaccurate data</li>
-            <li><strong>Right to Erasure:</strong> You can request deletion of your data ("right to be forgotten")</li>
-            <li><strong>Right to Restrict Processing:</strong> You can limit how we use your data</li>
-            <li><strong>Right to Data Portability:</strong> You can receive your data in a structured format</li>
-            <li><strong>Right to Object:</strong> You can object to certain data processing activities</li>
+            <li><strong>{t('privacy.section10.rights.access').split(':')[0]}:</strong> {t('privacy.section10.rights.access').split(': ')[1]}</li>
+            <li><strong>{t('privacy.section10.rights.rectification').split(':')[0]}:</strong> {t('privacy.section10.rights.rectification').split(': ')[1]}</li>
+            <li><strong>{t('privacy.section10.rights.erasure').split(':')[0]}:</strong> {t('privacy.section10.rights.erasure').split(': ')[1]}</li>
+            <li><strong>{t('privacy.section10.rights.restrict').split(':')[0]}:</strong> {t('privacy.section10.rights.restrict').split(': ')[1]}</li>
+            <li><strong>{t('privacy.section10.rights.portability').split(':')[0]}:</strong> {t('privacy.section10.rights.portability').split(': ')[1]}</li>
+            <li><strong>{t('privacy.section10.rights.object').split(':')[0]}:</strong> {t('privacy.section10.rights.object').split(': ')[1]}</li>
           </ul>
           <p className="text-text-secondary mt-4">
-            To exercise any of these rights, please contact us at privacy@greenofig.com
+            {t('privacy.section10.contact')}
           </p>
         </div>
 
+        {/* Section 11: CCPA Rights */}
         <div className="glass-effect p-8 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4">11. CCPA Rights (For California Users)</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('privacy.section11.title')}</h2>
           <p className="text-text-secondary mb-4">
-            If you are a California resident, you have specific rights under the California Consumer Privacy Act (CCPA):
+            {t('privacy.section11.intro')}
           </p>
           <ul className="list-disc list-inside text-text-secondary space-y-2 ml-4">
-            <li><strong>Right to Know:</strong> You can request what personal information we collect, use, and share</li>
-            <li><strong>Right to Delete:</strong> You can request deletion of your personal information</li>
-            <li><strong>Right to Opt-Out:</strong> You can opt-out of the sale of your personal information (Note: We do not sell personal information)</li>
-            <li><strong>Right to Non-Discrimination:</strong> We will not discriminate against you for exercising your privacy rights</li>
+            <li><strong>{t('privacy.section11.rights.know').split(':')[0]}:</strong> {t('privacy.section11.rights.know').split(': ')[1]}</li>
+            <li><strong>{t('privacy.section11.rights.delete').split(':')[0]}:</strong> {t('privacy.section11.rights.delete').split(': ')[1]}</li>
+            <li><strong>{t('privacy.section11.rights.optOut').split(':')[0]}:</strong> {t('privacy.section11.rights.optOut').split(': ')[1]}</li>
+            <li><strong>{t('privacy.section11.rights.nonDiscrimination').split(':')[0]}:</strong> {t('privacy.section11.rights.nonDiscrimination').split(': ')[1]}</li>
           </ul>
           <p className="text-text-secondary mt-4">
-            To submit a request, email privacy@greenofig.com with "CCPA Request" in the subject line.
+            {t('privacy.section11.contact')}
           </p>
         </div>
 
+        {/* Section 12: Data Retention */}
         <div className="glass-effect p-8 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4">12. Data Retention</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('privacy.section12.title')}</h2>
           <p className="text-text-secondary">
-            We retain your personal information for as long as necessary to provide our services, comply with legal obligations, resolve disputes, and enforce our agreements. When you delete your account, we will delete or anonymize your data within 90 days, except where we are required to retain it by law.
+            {t('privacy.section12.content')}
           </p>
         </div>
 
+        {/* Section 13: Contact Us */}
         <div className="glass-effect p-8 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4">13. Contact Us</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('privacy.section13.title')}</h2>
           <p className="text-text-secondary mb-4">
-            If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at:
+            {t('privacy.section13.intro')}
           </p>
           <div className="bg-background/50 p-4 rounded-lg">
             <p className="text-text-secondary">
-              <strong>Email:</strong> <a href="mailto:privacy@greenofig.com" className="text-primary hover:underline">privacy@greenofig.com</a><br />
-              <strong>Support:</strong> <a href="mailto:support@greenofig.com" className="text-primary hover:underline">support@greenofig.com</a><br />
-              <strong>Address:</strong> GreenoFig Inc., Health & Wellness Division<br />
-              <strong>Response Time:</strong> We aim to respond to all privacy inquiries within 30 days
+              <strong>{t('privacy.section13.email')}</strong> <a href="mailto:privacy@greenofig.com" className="text-primary hover:underline">privacy@greenofig.com</a><br />
+              <strong>{t('privacy.section13.support')}</strong> <a href="mailto:support@greenofig.com" className="text-primary hover:underline">support@greenofig.com</a><br />
+              <strong>{t('privacy.section13.address')}</strong> {t('privacy.section13.addressValue')}<br />
+              <strong>{t('privacy.section13.responseTime')}</strong> {t('privacy.section13.responseTimeValue')}
             </p>
           </div>
         </div>

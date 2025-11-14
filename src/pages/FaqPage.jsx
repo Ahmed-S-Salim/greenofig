@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import SiteLayout from '@/components/SiteLayout';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/lib/customSupabaseClient';
 import { toast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 
 const FaqPageContent = () => {
+    const { t } = useTranslation();
     const [faqs, setFaqs] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -16,19 +18,22 @@ const FaqPageContent = () => {
             setLoading(true);
             const { data, error } = await supabase
                 .from('site_content')
-                .select('content')
+                .select('content, content_ar')
                 .eq('page_key', 'faq_page')
                 .single();
-            
+
             if (error) {
-                toast({ title: 'Error fetching FAQs', description: error.message, variant: 'destructive' });
+                toast({ title: t('faq.errorFetching'), description: error.message, variant: 'destructive' });
             } else if (data) {
-                setFaqs(data.content.faqs || []);
+                // Use Arabic content if language is Arabic and Arabic content exists
+                const currentLang = localStorage.getItem('language') || 'en';
+                const content = (currentLang === 'ar' && data.content_ar) ? data.content_ar : data.content;
+                setFaqs(content.faqs || []);
             }
             setLoading(false);
         };
         fetchFaqs();
-    }, []);
+    }, [t]);
 
     if (loading) {
         return (
@@ -41,8 +46,8 @@ const FaqPageContent = () => {
     if (faqs.length === 0) {
         return (
             <div className="text-center py-20">
-                <h2 className="text-2xl font-semibold">No FAQs Found.</h2>
-                <p className="text-text-secondary mt-2">Check back soon or contact support if you have questions.</p>
+                <h2 className="text-2xl font-semibold">{t('faq.noFaqsFound')}</h2>
+                <p className="text-text-secondary mt-2">{t('faq.checkBackSoon')}</p>
             </div>
         );
     }
@@ -71,18 +76,19 @@ const FaqPageContent = () => {
 };
 
 const FaqPage = ({ logoUrl }) => {
+    const { t } = useTranslation();
     return (
         <SiteLayout
             logoUrl={logoUrl}
-            pageTitle={<>Frequently Asked <span className="gradient-text">Questions</span></>}
-            pageDescription="Have questions? We've got answers. If you can't find what you're looking for, feel free to contact us."
+            pageTitle={<>{t('faq.title')}</>}
+            pageDescription={t('faq.pageDescription')}
         >
              <Helmet>
-                <title>FAQ - GreenoFig</title>
-                <meta name="description" content="Find answers to frequently asked questions about GreenoFig's services, plans, and features." />
+                <title>{t('faq.title')} - GreenoFig</title>
+                <meta name="description" content={t('faq.metaDescription')} />
                 <link rel="canonical" href="https://greenofig.com/faq" />
-                <meta property="og:title" content="FAQ - GreenoFig" />
-                <meta property="og:description" content="Find answers to frequently asked questions about GreenoFig's services, plans, and features." />
+                <meta property="og:title" content={`${t('faq.title')} - GreenoFig`} />
+                <meta property="og:description" content={t('faq.metaDescription')} />
                 <meta property="og:url" content="https://greenofig.com/faq" />
                 <meta property="og:type" content="website" />
             </Helmet>

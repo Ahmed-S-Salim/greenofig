@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import SiteLayout from '@/components/SiteLayout';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/lib/customSupabaseClient';
 import { toast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 
 const AboutPageContent = () => {
+    const { t } = useTranslation();
     const [pageContent, setPageContent] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -15,19 +17,22 @@ const AboutPageContent = () => {
             setLoading(true);
             const { data, error } = await supabase
                 .from('site_content')
-                .select('content')
+                .select('content, content_ar')
                 .eq('page_key', 'about_page')
                 .single();
 
             if (error) {
-                toast({ title: 'Error fetching page content', description: error.message, variant: 'destructive' });
+                toast({ title: t('about.errorFetchingContent'), description: error.message, variant: 'destructive' });
             } else if (data) {
-                setPageContent(data.content);
+                // Use Arabic content if language is Arabic and Arabic content exists
+                const currentLang = localStorage.getItem('language') || 'en';
+                const content = (currentLang === 'ar' && data.content_ar) ? data.content_ar : data.content;
+                setPageContent(content);
             }
             setLoading(false);
         };
         fetchContent();
-    }, []);
+    }, [t]);
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -50,8 +55,8 @@ const AboutPageContent = () => {
     if (!pageContent) {
         return (
             <div className="text-center py-20">
-                <h2 className="text-2xl font-semibold">Content not available.</h2>
-                <p className="text-text-secondary mt-2">Please check back later or contact support.</p>
+                <h2 className="text-2xl font-semibold">{t('about.contentNotAvailable')}</h2>
+                <p className="text-text-secondary mt-2">{t('about.checkBackLater')}</p>
             </div>
         );
     }
@@ -95,14 +100,15 @@ const AboutPageContent = () => {
 
 
 const AboutPage = ({ logoUrl }) => {
+    const { t } = useTranslation();
     return (
         <SiteLayout logoUrl={logoUrl}>
             <Helmet>
-                <title>About Us - GreenoFig</title>
-                <meta name="description" content="Learn about the mission, philosophy, and story behind GreenoFig." />
+                <title>{t('about.title')} - GreenoFig</title>
+                <meta name="description" content={t('about.metaDescription')} />
                 <link rel="canonical" href="https://greenofig.com/about" />
-                <meta property="og:title" content="About Us - GreenoFig" />
-                <meta property="og:description" content="Learn about the mission, philosophy, and story behind GreenoFig." />
+                <meta property="og:title" content={`${t('about.title')} - GreenoFig`} />
+                <meta property="og:description" content={t('about.metaDescription')} />
                 <meta property="og:url" content="https://greenofig.com/about" />
                 <meta property="og:type" content="website" />
             </Helmet>

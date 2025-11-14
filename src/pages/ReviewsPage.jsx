@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
     import { Helmet } from 'react-helmet';
     import { motion } from 'framer-motion';
+    import { useTranslation } from 'react-i18next';
     import SiteLayout from '@/components/SiteLayout';
     import { Button } from '@/components/ui/button';
     import { Card, CardContent } from '@/components/ui/card';
@@ -24,6 +25,11 @@ import React, { useState, useEffect } from 'react';
         return name.split(' ').map(n => n[0]).join('').toUpperCase();
       };
 
+      // Use Arabic content if language is Arabic and Arabic content exists
+      const currentLang = localStorage.getItem('language') || 'en';
+      const customerTitle = (currentLang === 'ar' && review.customer_title_ar) ? review.customer_title_ar : review.customer_title;
+      const quote = (currentLang === 'ar' && review.quote_ar) ? review.quote_ar : review.quote;
+
       return (
         <motion.div variants={cardVariants} initial="hidden" animate="visible">
           <Card className="glass-effect h-full flex flex-col">
@@ -35,7 +41,7 @@ import React, { useState, useEffect } from 'react';
                 </Avatar>
                 <div className="ml-4">
                   <p className="font-bold text-lg">{review.customer_name}</p>
-                  {review.customer_title && <p className="text-xs text-text-secondary">{review.customer_title}</p>}
+                  {customerTitle && <p className="text-xs text-text-secondary">{customerTitle}</p>}
                   <div className="flex items-center">
                     {[...Array(5)].map((_, i) => (
                       <Star
@@ -46,7 +52,7 @@ import React, { useState, useEffect } from 'react';
                   </div>
                 </div>
               </div>
-              <p className="text-text-secondary text-sm flex-grow">{review.quote}</p>
+              <p className="text-text-secondary text-sm flex-grow">{quote}</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -54,6 +60,7 @@ import React, { useState, useEffect } from 'react';
     };
     
     const ReviewForm = ({ setOpen }) => {
+      const { t } = useTranslation();
       const [formData, setFormData] = useState({
         name: '',
         title: '',
@@ -67,8 +74,8 @@ import React, { useState, useEffect } from 'react';
 
         if (formData.rating === 0) {
           toast({
-            title: 'Rating Required',
-            description: 'Please select a star rating before submitting.',
+            title: t('reviews.ratingRequiredError'),
+            description: t('reviews.ratingRequiredMessage'),
             variant: 'destructive'
           });
           return;
@@ -93,8 +100,8 @@ import React, { useState, useEffect } from 'react';
           if (error) throw error;
 
           toast({
-            title: 'Review Submitted!',
-            description: 'Thank you for sharing your experience with us.',
+            title: t('reviews.reviewSubmitted'),
+            description: t('reviews.thankYou'),
           });
 
           setOpen(false);
@@ -102,8 +109,8 @@ import React, { useState, useEffect } from 'react';
         } catch (error) {
           console.error('Error submitting review:', error);
           toast({
-            title: 'Submission Failed',
-            description: error.message || 'Please try again later.',
+            title: t('reviews.submissionFailed'),
+            description: error.message || t('reviews.tryAgainLater'),
             variant: 'destructive'
           });
         } finally {
@@ -114,37 +121,37 @@ import React, { useState, useEffect } from 'react';
       return (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Your Name</Label>
+            <Label htmlFor="name">{t('reviews.yourName')}</Label>
             <Input
               id="name"
-              placeholder="John Doe"
+              placeholder={t('reviews.namePlaceholder')}
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="review-title">Review Title</Label>
+            <Label htmlFor="review-title">{t('reviews.reviewTitle')}</Label>
             <Input
               id="review-title"
-              placeholder="An amazing experience!"
+              placeholder={t('reviews.reviewTitlePlaceholder')}
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="review">Your Review</Label>
+            <Label htmlFor="review">{t('reviews.yourReview')}</Label>
             <Textarea
               id="review"
-              placeholder="Tell us what you think..."
+              placeholder={t('reviews.reviewPlaceholder')}
               value={formData.review}
               onChange={(e) => setFormData({...formData, review: e.target.value})}
               required
             />
           </div>
           <div className="space-y-2">
-            <Label>Rating *</Label>
+            <Label>{t('reviews.ratingRequired')}</Label>
             <div className="flex items-center space-x-1">
               {[...Array(5)].map((_, i) => (
                 <Star
@@ -164,12 +171,12 @@ import React, { useState, useEffect } from 'react';
               {submitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Submitting...
+                  {t('reviews.submitting')}
                 </>
               ) : (
                 <>
                   <Send className="mr-2 h-4 w-4" />
-                  Submit Review
+                  {t('reviews.submitReview')}
                 </>
               )}
             </Button>
@@ -179,6 +186,7 @@ import React, { useState, useEffect } from 'react';
     }
 
     const ReviewsPage = ({ logoUrl }) => {
+      const { t } = useTranslation();
       const [isFormOpen, setIsFormOpen] = useState(false);
       const [reviews, setReviews] = useState([]);
       const [loading, setLoading] = useState(true);
@@ -194,7 +202,7 @@ import React, { useState, useEffect } from 'react';
 
           if (error) {
             console.error('Error fetching testimonials:', error);
-            toast({ title: 'Error loading reviews', description: error.message, variant: 'destructive' });
+            toast({ title: t('reviews.errorLoadingReviews'), description: error.message, variant: 'destructive' });
             setReviews([]);
           } else {
             setReviews(data || []);
@@ -203,38 +211,38 @@ import React, { useState, useEffect } from 'react';
         };
 
         fetchReviews();
-      }, []);
+      }, [t]);
 
       return (
         <>
           <Helmet>
-            <title>Reviews - GreenoFig</title>
-            <meta name="description" content="See what our members are saying about their success with GreenoFig. Real stories from real people transforming their health." />
+            <title>{t('reviews.title')} - GreenoFig</title>
+            <meta name="description" content={t('reviews.metaDescription')} />
             <link rel="canonical" href="https://greenofig.com/reviews" />
-            <meta property="og:title" content="Reviews - GreenoFig" />
-            <meta property="og:description" content="See what our members are saying about their success with GreenoFig. Real stories from real people transforming their health." />
+            <meta property="og:title" content={`${t('reviews.title')} - GreenoFig`} />
+            <meta property="og:description" content={t('reviews.metaDescription')} />
             <meta property="og:url" content="https://greenofig.com/reviews" />
             <meta property="og:type" content="website" />
             <meta name="robots" content="index, follow" />
           </Helmet>
           <SiteLayout
             logoUrl={logoUrl}
-            pageTitle={<>Success Stories from Our <span className="gradient-text">Community</span></>}
-            pageDescription="See how GreenoFig is helping people just like you achieve their health and wellness goals."
+            pageTitle={<>{t('reviews.pageTitle')}</>}
+            pageDescription={t('reviews.pageDescription')}
           >
             <div className="text-center mb-12">
               <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                 <DialogTrigger asChild>
                   <Button size="lg" className="bg-primary hover:bg-primary/90 hover:shadow-xl transition-all text-primary-foreground shadow-lg">
                     <MessageSquarePlus className="mr-2 h-5 w-5" />
-                    Write a Review
+                    {t('reviews.writeReview')}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px] glass-effect">
                   <DialogHeader>
-                    <DialogTitle>Share Your Story</DialogTitle>
+                    <DialogTitle>{t('reviews.shareYourStory')}</DialogTitle>
                     <DialogDescription>
-                      We'd love to hear about your experience with GreenoFig.
+                      {t('reviews.experienceDescription')}
                     </DialogDescription>
                   </DialogHeader>
                   <ReviewForm setOpen={setIsFormOpen} />
@@ -248,8 +256,8 @@ import React, { useState, useEffect } from 'react';
               </div>
             ) : reviews.length === 0 ? (
               <div className="text-center py-20">
-                <h2 className="text-2xl font-semibold">No Reviews Yet!</h2>
-                <p className="text-text-secondary mt-2">Be the first to share your success story with GreeonFig.</p>
+                <h2 className="text-2xl font-semibold">{t('reviews.noReviewsYet')}</h2>
+                <p className="text-text-secondary mt-2">{t('reviews.beTheFirst')}</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

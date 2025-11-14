@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
@@ -13,6 +14,7 @@ import { LogOut, User } from 'lucide-react';
 const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey: propOpenSurvey }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
   const { user, userProfile, signOut } = useAuth();
   const [isSurveyOpen, setIsSurveyOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -36,15 +38,14 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
   };
 
   const navLinks = [
-    { name: "Features", path: "/features" },
-    { name: "Pricing", path: "/pricing" },
-    { name: "Download", path: "/download" },
-    { name: "Blog", path: "/blog" },
-    { name: "Reviews", path: "/reviews" },
-    { name: "Contact", path: "/contact" },
-    { name: "FAQ", path: "/faq" },
-    { name: "About Us", path: "/about" },
-    { name: "Privacy Policy", path: "/privacy-policy" },
+    { name: t('nav.features'), path: "/features" },
+    { name: t('nav.pricing'), path: "/pricing" },
+    { name: t('nav.download'), path: "/download" },
+    { name: t('nav.blog'), path: "/blog" },
+    { name: t('nav.reviews'), path: "/reviews" },
+    { name: t('nav.contact'), path: "/contact" },
+    { name: t('nav.faq'), path: "/faq" },
+    { name: t('nav.about'), path: "/about" },
   ];
   
   const openSurvey = propOpenSurvey || (() => setIsSurveyOpen(true));
@@ -62,22 +63,28 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
                 className="fixed inset-0 bg-black/40 backdrop-blur-sm"
                 onClick={() => setIsMobileMenuOpen(false)}
               />
               <motion.div
-                initial={{ opacity: 0, x: '100%' }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: '100%' }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{
+                  type: "tween",
+                  duration: 0.35,
+                  ease: [0.25, 0.1, 0.25, 1]
+                }}
                 className="fixed right-0 top-0 h-[80vh] w-[60vw] min-w-[250px] rounded-bl-3xl overflow-hidden"
                 style={{
                   background: 'rgba(22, 163, 74, 0.05)',
                   backdropFilter: 'blur(60px) saturate(180%)',
                   WebkitBackdropFilter: 'blur(60px) saturate(180%)',
                   border: '1px solid rgba(16, 185, 129, 0.2)',
-                  boxShadow: '0 8px 32px 0 rgba(16, 185, 129, 0.15)'
+                  boxShadow: '0 8px 32px 0 rgba(16, 185, 129, 0.15)',
+                  transform: 'translateZ(0)',
+                  willChange: 'transform'
                 }}
               >
               <div className="p-4 h-full flex flex-col">
@@ -93,15 +100,22 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                   </Button>
                 </div>
 
-                <nav className="space-y-1 flex-shrink-0">
+                <nav className="space-y-2 flex-shrink-0">
                   {navLinks.map((link, index) => {
                     const isActive = location.pathname === link.path;
+                    const currentLang = localStorage.getItem('language') || 'en';
+                    const isArabic = currentLang === 'ar';
+
                     return (
                       <motion.button
                         key={link.name}
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
+                        initial={{ x: 50 }}
+                        animate={{ x: 0 }}
+                        transition={{
+                          duration: 0.4,
+                          delay: 0.35 + (index * 0.05),
+                          ease: [0.4, 0, 0.2, 1]
+                        }}
                         onClick={() => {
                           if (isActive) return;
                           if (link.unimplemented) {
@@ -111,7 +125,9 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                           }
                           setIsMobileMenuOpen(false);
                         }}
-                        className={`w-full text-left px-4 py-2.5 text-base font-medium rounded-md transition-all duration-300 ${
+                        className={`w-full text-left px-4 py-3 font-medium rounded-md transition-all duration-300 ${
+                          isArabic ? 'text-sm' : 'text-base'
+                        } ${
                           isActive
                             ? 'text-primary bg-white/10 cursor-default'
                             : 'text-text-secondary hover:text-primary hover:bg-white/5 cursor-pointer'
@@ -150,7 +166,7 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                         }}
                       >
                         <LogOut className="w-4 h-4" />
-                        Logout
+                        {t('nav.logout')}
                       </Button>
                     </>
                   ) : (
@@ -163,7 +179,7 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                           setIsMobileMenuOpen(false);
                         }}
                       >
-                        Login
+                        {t('nav.login')}
                       </Button>
                       <Button
                         className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-10 text-sm"
@@ -172,7 +188,7 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                           setIsMobileMenuOpen(false);
                         }}
                       >
-                        Sign Up
+                        {t('nav.signup')}
                       </Button>
                     </>
                   )}
@@ -190,28 +206,39 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                 <img src={logoUrl} alt="GreenoFig Logo" className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10" />
                 <span className="text-lg sm:text-xl lg:text-2xl font-extrabold tracking-tight gradient-text">GreenoFig</span>
               </Link>
-              <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
-                {navLinks.map(link => {
-                  const isActive = location.pathname === link.path;
-                  return (
-                    <button
-                      key={link.name}
-                      onClick={() => {
-                        if (isActive) return;
-                        link.unimplemented ? handleUnimplemented(link.pageName) : navigate(link.path);
-                      }}
-                      className={`text-sm font-medium transition-colors ${
-                        isActive
-                          ? 'text-primary cursor-default'
-                          : 'text-text-secondary hover:text-primary cursor-pointer'
-                      }`}
-                      disabled={isActive}
-                    >
-                      {link.name}
-                    </button>
-                  );
-                })}
-              </nav>
+              {/* Navigation with dynamic spacing based on language */}
+              {(() => {
+                const currentLang = localStorage.getItem('language') || 'en';
+                const isArabic = currentLang === 'ar';
+
+                return (
+                  <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+                    {navLinks.map(link => {
+                      const isActive = location.pathname === link.path;
+
+                      return (
+                        <button
+                          key={link.name}
+                          onClick={() => {
+                            if (isActive) return;
+                            link.unimplemented ? handleUnimplemented(link.pageName) : navigate(link.path);
+                          }}
+                          className={`font-medium transition-colors whitespace-nowrap ${
+                            isArabic ? 'text-xs' : 'text-sm'
+                          } ${
+                            isActive
+                              ? 'text-primary cursor-default'
+                              : 'text-text-secondary hover:text-primary cursor-pointer'
+                          }`}
+                          disabled={isActive}
+                        >
+                          {link.name}
+                        </button>
+                      );
+                    })}
+                  </nav>
+                );
+              })()}
               <div className="flex items-center gap-1 sm:gap-2">
                 <LanguageSwitcher />
                 {user && userProfile ? (
@@ -225,13 +252,13 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                       navigate('/home');
                     }} className="flex items-center gap-2 h-10 min-h-[44px] sm:min-h-0 px-2 sm:px-3">
                       <LogOut className="w-4 h-4" />
-                      <span className="hidden md:inline text-sm">Logout</span>
+                      <span className="hidden md:inline text-sm">{t('nav.logout')}</span>
                     </Button>
                   </>
                 ) : (
                   <>
-                    <Button variant="ghost" onClick={() => navigate('/login')} className="h-10 min-h-[44px] sm:min-h-0 text-sm">Login</Button>
-                    <Button onClick={() => navigate('/signup')} className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg h-10 min-h-[44px] sm:min-h-0 text-sm">Sign Up</Button>
+                    <Button variant="ghost" onClick={() => navigate('/login')} className="h-10 min-h-[44px] sm:min-h-0 text-sm">{t('nav.login')}</Button>
+                    <Button onClick={() => navigate('/signup')} className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg h-10 min-h-[44px] sm:min-h-0 text-sm">{t('nav.signup')}</Button>
                   </>
                 )}
                 <Button size="icon" variant="ghost" className="lg:hidden min-h-[44px] min-w-[44px]" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>

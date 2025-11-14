@@ -1,38 +1,44 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Apple, Download, Smartphone, Star, CheckCircle, Carrot, Dumbbell, BrainCircuit, Camera, TrendingUp, Clock } from 'lucide-react';
 import SiteLayout from '@/components/SiteLayout';
 
 const DownloadPage = ({ logoUrl }) => {
+  const { t } = useTranslation();
   const features = [
-    { icon: Carrot, title: "AI Meal Plans", description: "Personalized nutrition tailored to your goals" },
-    { icon: Dumbbell, title: "Custom Workouts", description: "Exercise routines that adapt to your progress" },
-    { icon: BrainCircuit, title: "24/7 AI Coach", description: "Your personal health companion" },
-    { icon: Camera, title: "Food Recognition", description: "Snap photos to log meals instantly" },
-    { icon: TrendingUp, title: "Progress Tracking", description: "Watch your transformation in real-time" },
-    { icon: Clock, title: "Smart Reminders", description: "Never miss a meal or workout" }
+    { icon: Carrot, title: t('download.appFeatures.aiMealPlans'), description: t('download.appFeatures.aiMealPlansDesc') },
+    { icon: Dumbbell, title: t('download.appFeatures.customWorkouts'), description: t('download.appFeatures.customWorkoutsDesc') },
+    { icon: BrainCircuit, title: t('download.appFeatures.aiCoach247'), description: t('download.appFeatures.aiCoach247Desc') },
+    { icon: Camera, title: t('download.appFeatures.foodRecognition'), description: t('download.appFeatures.foodRecognitionDesc') },
+    { icon: TrendingUp, title: t('download.appFeatures.progressTracking'), description: t('download.appFeatures.progressTrackingDesc') },
+    { icon: Clock, title: t('download.appFeatures.smartReminders'), description: t('download.appFeatures.smartRemindersDesc') }
   ];
 
   const screenshots = [
-    { title: "Dashboard", description: "Track your daily health metrics", color: "from-green-500 to-emerald-600" },
-    { title: "Meal Plans", description: "Delicious recipes personalized for you", color: "from-blue-500 to-cyan-600" },
-    { title: "Workouts", description: "Exercise plans that work", color: "from-purple-500 to-pink-600" },
-    { title: "AI Coach", description: "Chat with your personal coach", color: "from-orange-500 to-red-600" }
+    { title: t('download.screenshots.dashboard'), description: t('download.screenshots.dashboardDesc'), color: "from-green-500 to-emerald-600" },
+    { title: t('download.screenshots.mealPlans'), description: t('download.screenshots.mealPlansDesc'), color: "from-blue-500 to-cyan-600" },
+    { title: t('download.screenshots.workouts'), description: t('download.screenshots.workoutsDesc'), color: "from-purple-500 to-pink-600" },
+    { title: t('download.screenshots.aiCoach'), description: t('download.screenshots.aiCoachDesc'), color: "from-orange-500 to-red-600" }
   ];
 
   return (
     <SiteLayout
       logoUrl={logoUrl}
-      pageTitle={<>Download <span className="gradient-text">GreenoFig</span></>}
-      pageDescription="Get the app on iOS and start your health journey today"
+      pageTitle={
+        <>
+          Download <span className="gradient-text">GreenoFig</span>
+        </>
+      }
+      pageDescription={t('download.subtitle')}
     >
       <Helmet>
-        <title>Download GreenoFig - iOS & Android App</title>
-        <meta name="description" content="Download GreenoFig app for iOS and Android. Your AI-powered health companion for personalized nutrition and fitness coaching." />
+        <title>{t('download.title')} - GreenoFig</title>
+        <meta name="description" content={t('download.subtitle')} />
         <link rel="canonical" href="https://greenofig.com/download" />
-        <meta property="og:title" content="Download GreenoFig App" />
-        <meta property="og:description" content="Get the GreenoFig app on iOS and Android for personalized health coaching." />
+        <meta property="og:title" content={`${t('download.title')} - GreenoFig`} />
+        <meta property="og:description" content={t('download.subtitle')} />
         <meta property="og:url" content="https://greenofig.com/download" />
         <meta property="og:type" content="website" />
       </Helmet>
@@ -43,9 +49,11 @@ const DownloadPage = ({ logoUrl }) => {
           <div className="section-content glass-effect p-12 rounded-2xl max-w-4xl mx-auto">
             <div className="mb-8">
               <img src={logoUrl} alt="GreenoFig Logo" className="w-24 h-24 mx-auto mb-4 rounded-3xl shadow-2xl" />
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Get GreenoFig Today</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Get <span className="gradient-text">GreenoFig</span> Today
+              </h2>
               <p className="text-text-secondary text-lg max-w-2xl mx-auto">
-                Transform your health with AI-powered coaching. Available now on iOS, coming soon to Android.
+                {t('download.appDescription')}
               </p>
             </div>
 
@@ -59,11 +67,10 @@ const DownloadPage = ({ logoUrl }) => {
                 >
                   <Apple className="w-8 h-8 mr-3" />
                   <div className="text-left">
-                    <div className="text-xs opacity-80">Download on the</div>
-                    <div className="text-xl font-bold">App Store</div>
+                    <div className="text-xs opacity-80">{t('download.downloadIOS')}</div>
                   </div>
                 </Button>
-                <p className="text-xs text-text-secondary mt-2">iOS 14.0 or later</p>
+                <p className="text-xs text-text-secondary mt-2">{t('download.iosVersion')}</p>
               </div>
 
               {/* Android Download */}
@@ -75,11 +82,10 @@ const DownloadPage = ({ logoUrl }) => {
                 >
                   <Smartphone className="w-8 h-8 mr-3" />
                   <div className="text-left">
-                    <div className="text-xs opacity-80">Get it on</div>
-                    <div className="text-xl font-bold">Google Play</div>
+                    <div className="text-xs opacity-80">{t('download.downloadAndroid')}</div>
                   </div>
                 </Button>
-                <p className="text-xs text-text-secondary mt-2">Android 8.0 or later</p>
+                <p className="text-xs text-text-secondary mt-2">{t('download.androidVersion')}</p>
               </div>
             </div>
 
@@ -87,11 +93,11 @@ const DownloadPage = ({ logoUrl }) => {
             <div className="mt-8 p-4 bg-primary/10 border border-primary/20 rounded-xl">
               <div className="flex items-center justify-center gap-2 text-primary mb-2">
                 <Download className="w-5 h-5" />
-                <span className="font-semibold">Join Beta Testing</span>
+                <span className="font-semibold">{t('download.joinBeta')}</span>
               </div>
               <p className="text-sm text-text-secondary">
-                Want early access? Install directly on your iPhone using TestFlight.
-                <button className="text-primary hover:underline ml-1">Contact us for invite</button>
+                {t('download.betaDescription')}
+                <button className="text-primary hover:underline ml-1">{t('download.contactInvite')}</button>
               </p>
             </div>
           </div>
@@ -100,9 +106,9 @@ const DownloadPage = ({ logoUrl }) => {
         {/* App Preview Section */}
         <section className="page-section">
           <div className="section-content text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">See It In Action</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('download.seeInAction')}</h2>
             <p className="text-text-secondary text-lg max-w-2xl mx-auto">
-              A sneak peek at what awaits you inside the app
+              {t('download.sneakPeek')}
             </p>
           </div>
 
@@ -131,9 +137,9 @@ const DownloadPage = ({ logoUrl }) => {
         {/* Features Grid */}
         <section className="page-section">
           <div className="section-content text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Powerful Features</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('download.powerfulFeatures')}</h2>
             <p className="text-text-secondary text-lg max-w-2xl mx-auto">
-              Everything you need to achieve your health goals in one app
+              {t('download.featuresDescription')}
             </p>
           </div>
 
@@ -156,21 +162,21 @@ const DownloadPage = ({ logoUrl }) => {
         {/* Reviews Section */}
         <section className="page-section">
           <div className="section-content text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Loved by Thousands</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('download.lovedByThousands')}</h2>
             <div className="flex items-center justify-center gap-2 mb-4">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="w-8 h-8 text-yellow-400 fill-current" />
               ))}
-              <span className="text-2xl font-bold ml-2">4.9</span>
+              <span className="text-2xl font-bold ml-2">{t('download.rating')}</span>
             </div>
-            <p className="text-text-secondary text-lg">Based on 10,000+ reviews</p>
+            <p className="text-text-secondary text-lg">{t('download.basedOnReviews')}</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { name: "Sarah L.", review: "GreenoFig changed my life! Lost 20 pounds and feel amazing.", rating: 5 },
-              { name: "Mike T.", review: "Best health app I've ever used. The AI coach is incredible!", rating: 5 },
-              { name: "Jessica P.", review: "So easy to use and the results speak for themselves!", rating: 5 }
+              { name: "Sarah L.", review: t('download.userReviews.review1'), rating: 5 },
+              { name: "Mike T.", review: t('download.userReviews.review2'), rating: 5 },
+              { name: "Jessica P.", review: t('download.userReviews.review3'), rating: 5 }
             ].map((review, index) => (
               <div
                 key={review.name}
@@ -191,13 +197,13 @@ const DownloadPage = ({ logoUrl }) => {
         {/* CTA Section */}
         <section className="page-section text-center">
           <div className="section-content glass-effect p-12 rounded-2xl">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Health?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('download.readyToTransform')}</h2>
             <p className="text-text-secondary text-lg max-w-2xl mx-auto mb-8">
-              Join thousands of users who have already started their journey to a healthier life
+              {t('download.joinThousands')}
             </p>
             <Button size="lg" className="btn-primary">
               <Download className="w-6 h-6 mr-2" />
-              Download Now
+              {t('download.downloadNow')}
             </Button>
           </div>
         </section>

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { supabase } from '@/lib/customSupabaseClient';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { toast } from '@/components/ui/use-toast';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +27,7 @@ import {
 } from 'lucide-react';
 
 const SupportPage = () => {
+  const { t } = useTranslation();
   const { userProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -86,8 +88,8 @@ const SupportPage = () => {
 
     if (!subject.trim() || !description.trim() || !category) {
       toast({
-        title: 'Missing Information',
-        description: 'Please fill in all required fields',
+        title: t('support.missingInfo'),
+        description: t('support.missingInfoDesc'),
         variant: 'destructive'
       });
       return;
@@ -108,14 +110,14 @@ const SupportPage = () => {
 
     if (error) {
       toast({
-        title: 'Error Creating Ticket',
+        title: t('support.errorCreating'),
         description: error.message,
         variant: 'destructive'
       });
     } else {
       toast({
-        title: 'Support Ticket Created!',
-        description: 'A conversation has been started with our support team. Check the Messages page for updates.'
+        title: t('support.ticketCreated'),
+        description: t('support.ticketCreatedDesc')
       });
 
       // Reset form
@@ -137,8 +139,8 @@ const SupportPage = () => {
 
     if (!feedbackText.trim()) {
       toast({
-        title: 'Missing Information',
-        description: 'Please provide your feedback',
+        title: t('support.missingInfo'),
+        description: t('support.missingFeedbackDesc'),
         variant: 'destructive'
       });
       return;
@@ -161,14 +163,14 @@ const SupportPage = () => {
 
     if (error) {
       toast({
-        title: 'Error Submitting Feedback',
+        title: t('support.errorSubmitting'),
         description: error.message,
         variant: 'destructive'
       });
     } else {
       toast({
-        title: 'Feedback Submitted! 🎉',
-        description: 'Thank you! A conversation has been created with our team. Check Messages for any follow-up.'
+        title: t('support.feedbackSubmitted'),
+        description: t('support.feedbackSubmittedDesc')
       });
 
       // Reset form
@@ -186,13 +188,13 @@ const SupportPage = () => {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'open':
-        return <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30"><ShieldQuestion className="w-3 h-3 mr-1" />Open</Badge>;
+        return <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30"><ShieldQuestion className="w-3 h-3 mr-1" />{t('support.statusOpen')}</Badge>;
       case 'in_progress':
-        return <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30"><Clock className="w-3 h-3 mr-1" />In Progress</Badge>;
+        return <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30"><Clock className="w-3 h-3 mr-1" />{t('support.statusInProgress')}</Badge>;
       case 'resolved':
-        return <Badge className="bg-green-500/20 text-green-400 border-green-500/30"><CheckCircle className="w-3 h-3 mr-1" />Resolved</Badge>;
+        return <Badge className="bg-green-500/20 text-green-400 border-green-500/30"><CheckCircle className="w-3 h-3 mr-1" />{t('support.statusResolved')}</Badge>;
       case 'closed':
-        return <Badge variant="outline">Closed</Badge>;
+        return <Badge variant="outline">{t('support.statusClosed')}</Badge>;
       default:
         return <Badge>{status}</Badge>;
     }
@@ -201,13 +203,13 @@ const SupportPage = () => {
   const getPriorityBadge = (priority) => {
     switch (priority) {
       case 'urgent':
-        return <Badge className="bg-red-500/20 text-red-300 border-red-500/30"><AlertTriangle className="w-3 h-3 mr-1" />Urgent</Badge>;
+        return <Badge className="bg-red-500/20 text-red-300 border-red-500/30"><AlertTriangle className="w-3 h-3 mr-1" />{t('support.priorityUrgentBadge')}</Badge>;
       case 'high':
-        return <Badge className="bg-orange-500/20 text-orange-300 border-orange-500/30"><AlertTriangle className="w-3 h-3 mr-1" />High</Badge>;
+        return <Badge className="bg-orange-500/20 text-orange-300 border-orange-500/30"><AlertTriangle className="w-3 h-3 mr-1" />{t('support.priorityHighBadge')}</Badge>;
       case 'medium':
-        return <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">Medium</Badge>;
+        return <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">{t('support.priorityMediumBadge')}</Badge>;
       case 'low':
-        return <Badge className="bg-gray-500/20 text-gray-300 border-gray-500/30">Low</Badge>;
+        return <Badge className="bg-gray-500/20 text-gray-300 border-gray-500/30">{t('support.priorityLowBadge')}</Badge>;
       default:
         return <Badge>{priority}</Badge>;
     }
@@ -220,15 +222,15 @@ const SupportPage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl font-bold mb-2">Support Center</h1>
-        <p className="text-text-secondary">Need help? Submit a ticket and our team will assist you.</p>
+        <h1 className="text-4xl font-bold mb-2">{t('support.title')}</h1>
+        <p className="text-text-secondary">{t('support.subtitle')}</p>
       </motion.div>
 
       <Tabs defaultValue="feedback" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="feedback">Quick Feedback</TabsTrigger>
-          <TabsTrigger value="create">Create Ticket</TabsTrigger>
-          <TabsTrigger value="mytickets">My Tickets ({myIssues.length})</TabsTrigger>
+          <TabsTrigger value="feedback">{t('support.quickFeedback')}</TabsTrigger>
+          <TabsTrigger value="create">{t('support.createTicket')}</TabsTrigger>
+          <TabsTrigger value="mytickets">{t('support.myTickets')} ({myIssues.length})</TabsTrigger>
         </TabsList>
 
         {/* Quick Feedback Tab */}
@@ -237,10 +239,10 @@ const SupportPage = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Star className="w-6 h-6 text-yellow-500" />
-                Quick Feedback
+                {t('support.quickFeedback')}
               </CardTitle>
               <CardDescription>
-                Share your thoughts, suggestions, or report issues quickly
+                {t('support.quickFeedbackDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -248,7 +250,7 @@ const SupportPage = () => {
                 {/* Rating */}
                 <div>
                   <label className="block text-sm font-medium mb-3">
-                    How would you rate your experience?
+                    {t('support.rateExperience')}
                   </label>
                   <div className="flex gap-2 justify-center py-4">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -270,11 +272,11 @@ const SupportPage = () => {
                   </div>
                   {feedbackRating > 0 && (
                     <p className="text-center text-sm text-muted-foreground">
-                      {feedbackRating === 5 && '🎉 Excellent!'}
-                      {feedbackRating === 4 && '😊 Great!'}
-                      {feedbackRating === 3 && '👍 Good'}
-                      {feedbackRating === 2 && '😐 Could be better'}
-                      {feedbackRating === 1 && '😞 Needs improvement'}
+                      {feedbackRating === 5 && t('support.ratingExcellent')}
+                      {feedbackRating === 4 && t('support.ratingGreat')}
+                      {feedbackRating === 3 && t('support.ratingGood')}
+                      {feedbackRating === 2 && t('support.ratingCouldBeBetter')}
+                      {feedbackRating === 1 && t('support.ratingNeedsImprovement')}
                     </p>
                   )}
                 </div>
@@ -282,7 +284,7 @@ const SupportPage = () => {
                 {/* Feedback Type */}
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    What type of feedback is this?
+                    {t('support.feedbackType')}
                   </label>
                   <div className="grid grid-cols-3 gap-3">
                     <Button
@@ -292,7 +294,7 @@ const SupportPage = () => {
                       className="h-auto py-4 flex flex-col items-center gap-2"
                     >
                       <ThumbsUp className="w-5 h-5" />
-                      <span>Suggestion</span>
+                      <span>{t('support.suggestion')}</span>
                     </Button>
                     <Button
                       type="button"
@@ -301,7 +303,7 @@ const SupportPage = () => {
                       className="h-auto py-4 flex flex-col items-center gap-2"
                     >
                       <ThumbsDown className="w-5 h-5" />
-                      <span>Issue</span>
+                      <span>{t('support.issue')}</span>
                     </Button>
                     <Button
                       type="button"
@@ -310,7 +312,7 @@ const SupportPage = () => {
                       className="h-auto py-4 flex flex-col items-center gap-2"
                     >
                       <Star className="w-5 h-5" />
-                      <span>Praise</span>
+                      <span>{t('support.praise')}</span>
                     </Button>
                   </div>
                 </div>
@@ -318,15 +320,15 @@ const SupportPage = () => {
                 {/* Feedback Text */}
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Tell us more <span className="text-red-400">*</span>
+                    {t('support.tellUsMore')} <span className="text-red-400">{t('support.required')}</span>
                   </label>
                   <Textarea
                     placeholder={
                       feedbackType === 'suggestion'
-                        ? 'What feature or improvement would you like to see?'
+                        ? t('support.feedbackPlaceholderSuggestion')
                         : feedbackType === 'complaint'
-                        ? 'What issue did you encounter? Please provide details...'
-                        : 'What did you love about your experience?'
+                        ? t('support.feedbackPlaceholderIssue')
+                        : t('support.feedbackPlaceholderPraise')
                     }
                     value={feedbackText}
                     onChange={(e) => setFeedbackText(e.target.value)}
@@ -339,9 +341,9 @@ const SupportPage = () => {
                 <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 flex items-start gap-3">
                   <Mail className="w-5 h-5 text-blue-400 mt-0.5" />
                   <div className="text-sm">
-                    <p className="font-medium text-blue-300 mb-1">Direct conversation with our team</p>
+                    <p className="font-medium text-blue-300 mb-1">{t('support.conversationInfo')}</p>
                     <p className="text-blue-200/70">
-                      Your feedback will create a conversation with our support team. You'll be able to chat with them in the Messages section.
+                      {t('support.conversationInfoDesc')}
                     </p>
                   </div>
                 </div>
@@ -355,12 +357,12 @@ const SupportPage = () => {
                   {loading ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Submitting...
+                      {t('support.submitting')}
                     </>
                   ) : (
                     <>
                       <Send className="w-4 h-4 mr-2" />
-                      Send Feedback
+                      {t('support.sendFeedback')}
                     </>
                   )}
                 </Button>
@@ -375,10 +377,10 @@ const SupportPage = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <MessageSquare className="w-6 h-6" />
-                Submit a Support Ticket
+                {t('support.submitTicket')}
               </CardTitle>
               <CardDescription>
-                Describe your issue and we'll get back to you within 24 hours
+                {t('support.submitTicketDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -386,11 +388,11 @@ const SupportPage = () => {
                 {/* Subject */}
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Subject <span className="text-red-400">*</span>
+                    {t('support.subject')} <span className="text-red-400">{t('support.required')}</span>
                   </label>
                   <Input
                     type="text"
-                    placeholder="Brief description of your issue"
+                    placeholder={t('support.subjectPlaceholder')}
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     required
@@ -400,11 +402,11 @@ const SupportPage = () => {
                 {/* Category */}
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Category <span className="text-red-400">*</span>
+                    {t('support.category')} <span className="text-red-400">{t('support.required')}</span>
                   </label>
                   <Select value={category} onValueChange={setCategory} required>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a category" />
+                      <SelectValue placeholder={t('support.categoryPlaceholder')} />
                     </SelectTrigger>
                     <SelectContent>
                       {categories.map(cat => (
@@ -419,17 +421,17 @@ const SupportPage = () => {
                 {/* Priority */}
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Priority
+                    {t('support.priority')}
                   </label>
                   <Select value={priority} onValueChange={setPriority}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="low">Low - General inquiry</SelectItem>
-                      <SelectItem value="medium">Medium - Standard issue</SelectItem>
-                      <SelectItem value="high">High - Affects my work</SelectItem>
-                      <SelectItem value="urgent">Urgent - Critical issue</SelectItem>
+                      <SelectItem value="low">{t('support.priorityLow')}</SelectItem>
+                      <SelectItem value="medium">{t('support.priorityMedium')}</SelectItem>
+                      <SelectItem value="high">{t('support.priorityHigh')}</SelectItem>
+                      <SelectItem value="urgent">{t('support.priorityUrgent')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -437,17 +439,17 @@ const SupportPage = () => {
                 {/* Description */}
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Description <span className="text-red-400">*</span>
+                    {t('support.description')} <span className="text-red-400">{t('support.required')}</span>
                   </label>
                   <Textarea
-                    placeholder="Please provide as much detail as possible about your issue..."
+                    placeholder={t('support.descriptionPlaceholder')}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     rows={8}
                     required
                   />
                   <p className="text-xs text-text-secondary mt-2">
-                    Include steps to reproduce the issue, error messages, or screenshots if applicable
+                    {t('support.descriptionHelper')}
                   </p>
                 </div>
 
@@ -460,12 +462,12 @@ const SupportPage = () => {
                   {loading ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Submitting...
+                      {t('support.submitting')}
                     </>
                   ) : (
                     <>
                       <Send className="w-4 h-4 mr-2" />
-                      Submit Ticket
+                      {t('support.submitButton')}
                     </>
                   )}
                 </Button>
@@ -478,9 +480,9 @@ const SupportPage = () => {
         <TabsContent value="mytickets">
           <Card className="glass-effect">
             <CardHeader>
-              <CardTitle>My Support Tickets</CardTitle>
+              <CardTitle>{t('support.myTicketsTitle')}</CardTitle>
               <CardDescription>
-                View and track your submitted support tickets
+                {t('support.myTicketsDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -491,7 +493,7 @@ const SupportPage = () => {
               ) : myIssues.length === 0 ? (
                 <div className="text-center py-10">
                   <HelpCircle className="w-16 h-16 mx-auto text-text-secondary opacity-50 mb-4" />
-                  <p className="text-text-secondary">You haven't submitted any tickets yet</p>
+                  <p className="text-text-secondary">{t('support.noTicketsYet')}</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -517,23 +519,23 @@ const SupportPage = () => {
 
                       <div className="flex items-center justify-between text-xs text-text-secondary">
                         <div className="flex items-center gap-4">
-                          <span>Ticket #{issue.id.slice(0, 8)}</span>
+                          <span>{t('support.ticketNumber')}{issue.id.slice(0, 8)}</span>
                           {issue.category && (
                             <span className="capitalize">
-                              Category: {issue.category.replace('_', ' ')}
+                              {t('support.categoryLabel')} {issue.category.replace('_', ' ')}
                             </span>
                           )}
                         </div>
                         <div className="flex items-center gap-4">
-                          <span>Created: {new Date(issue.created_at).toLocaleDateString()}</span>
-                          <span>Updated: {new Date(issue.updated_at).toLocaleDateString()}</span>
+                          <span>{t('support.created')} {new Date(issue.created_at).toLocaleDateString()}</span>
+                          <span>{t('support.updated')} {new Date(issue.updated_at).toLocaleDateString()}</span>
                         </div>
                       </div>
 
                       {issue.status === 'resolved' && (
                         <div className="mt-3 pt-3 border-t border-white/10">
                           <p className="text-sm text-green-400">
-                            ✓ This issue has been resolved. If you need further assistance, please create a new ticket.
+                            {t('support.resolved')}
                           </p>
                         </div>
                       )}

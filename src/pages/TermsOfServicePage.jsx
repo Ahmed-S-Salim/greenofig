@@ -2,20 +2,23 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import SiteLayout from '@/components/SiteLayout';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const TermsOfServicePage = ({ logoUrl }) => {
+  const { t } = useTranslation();
+
   return (
     <SiteLayout
       logoUrl={logoUrl}
-      pageTitle={<>Terms of <span className="gradient-text">Service</span></>}
-      pageDescription="Please read these terms and conditions carefully before using GreenoFig services."
+      pageTitle={<>{t('terms.title').split(' ').slice(0, 2).join(' ')} <span className="gradient-text">{t('terms.title').split(' ')[2]}</span></>}
+      pageDescription={t('terms.pageDescription')}
     >
       <Helmet>
-        <title>Terms of Service - GreenoFig</title>
-        <meta name="description" content="Terms and conditions for using GreenoFig's AI-powered health and wellness platform." />
+        <title>{t('terms.title')} - GreenoFig</title>
+        <meta name="description" content={t('terms.metaDescription')} />
         <link rel="canonical" href="https://greenofig.com/terms-of-service" />
-        <meta property="og:title" content="Terms of Service - GreenoFig" />
-        <meta property="og:description" content="Terms and conditions for using GreenoFig's AI-powered health and wellness platform." />
+        <meta property="og:title" content={`${t('terms.title')} - GreenoFig`} />
+        <meta property="og:description" content={t('terms.metaDescription')} />
         <meta property="og:url" content="https://greenofig.com/terms-of-service" />
         <meta property="og:type" content="website" />
         <meta name="robots" content="index, follow" />
@@ -29,7 +32,7 @@ const TermsOfServicePage = ({ logoUrl }) => {
       >
         <div className="glass-effect p-8 rounded-2xl">
           <p className="text-text-secondary mb-4">
-            <strong>Last Updated:</strong> October 24, 2025
+            <strong>{t('terms.lastUpdated')}</strong> {t('terms.lastUpdatedDate')}
           </p>
           <p className="text-text-secondary mb-4">
             Welcome to GreenoFig! These Terms of Service govern your use of our website, mobile applications, and services. By accessing or using GreenoFig, you agree to be bound by these terms.

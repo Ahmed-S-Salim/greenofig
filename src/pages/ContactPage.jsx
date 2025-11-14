@@ -1,17 +1,20 @@
 import React from 'react';
     import { Helmet } from 'react-helmet';
     import { motion } from 'framer-motion';
+    import { useTranslation } from 'react-i18next';
     import SiteLayout from '@/components/SiteLayout';
     import { Button } from '@/components/ui/button';
     import { toast } from '@/components/ui/use-toast';
     import { Send, Mail, MessageSquare, User } from 'lucide-react';
 
     const ContactPage = ({ logoUrl }) => {
+      const { t } = useTranslation();
+
       const handleSubmit = (e) => {
         e.preventDefault();
         toast({
-          title: "Message Sent! (Just Kidding 😉)",
-          description: "This is a demo, but in a real app, your message would be on its way!",
+          title: t('contact.messageSent'),
+          description: t('contact.demoMessage'),
         });
         e.target.reset();
       };
@@ -19,15 +22,15 @@ import React from 'react';
       return (
         <SiteLayout
           logoUrl={logoUrl}
-          pageTitle={<>Get In <span className="gradient-text">Touch</span></>}
-          pageDescription="Have questions or feedback? We'd love to hear from you. Reach out and we'll get back to you shortly."
+          pageTitle={<>{t('contact.title')}</>}
+          pageDescription={t('contact.pageDescription')}
         >
           <Helmet>
-            <title>Contact Us - GreenoFig</title>
-            <meta name="description" content="Get in touch with the GreenoFig team. We're here to answer your questions and help with your health journey." />
+            <title>{t('contact.title')} - GreenoFig</title>
+            <meta name="description" content={t('contact.metaDescription')} />
             <link rel="canonical" href="https://greenofig.com/contact" />
-            <meta property="og:title" content="Contact Us - GreenoFig" />
-            <meta property="og:description" content="Get in touch with the GreenoFig team. We're here to answer your questions and help with your health journey." />
+            <meta property="og:title" content={`${t('contact.title')} - GreenoFig`} />
+            <meta property="og:description" content={t('contact.metaDescription')} />
             <meta property="og:url" content="https://greenofig.com/contact" />
             <meta property="og:type" content="website" />
             <meta name="robots" content="index, follow" />
@@ -40,7 +43,7 @@ import React from 'react';
             >
               <form onSubmit={handleSubmit} className="space-y-6" aria-label="Contact form">
                 <div>
-                  <label htmlFor="contact-name" className="block text-sm font-medium text-text-secondary mb-2">Full Name</label>
+                  <label htmlFor="contact-name" className="block text-sm font-medium text-text-secondary mb-2">{t('contact.fullName')}</label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary pointer-events-none" aria-hidden="true" />
                     <input
@@ -48,14 +51,14 @@ import React from 'react';
                       name="name"
                       type="text"
                       className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200 hover:border-primary/50"
-                      placeholder="John Doe"
+                      placeholder={t('contact.namePlaceholder')}
                       required
                       aria-required="true"
                     />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="contact-email" className="block text-sm font-medium text-text-secondary mb-2">Email</label>
+                  <label htmlFor="contact-email" className="block text-sm font-medium text-text-secondary mb-2">{t('contact.email')}</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary pointer-events-none" aria-hidden="true" />
                     <input
@@ -63,14 +66,14 @@ import React from 'react';
                       name="email"
                       type="email"
                       className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200 hover:border-primary/50"
-                      placeholder="you@example.com"
+                      placeholder={t('contact.emailPlaceholder')}
                       required
                       aria-required="true"
                     />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="contact-message" className="block text-sm font-medium text-text-secondary mb-2">Message</label>
+                  <label htmlFor="contact-message" className="block text-sm font-medium text-text-secondary mb-2">{t('contact.message')}</label>
                   <div className="relative">
                     <MessageSquare className="absolute left-3 top-4 w-5 h-5 text-primary pointer-events-none" aria-hidden="true" />
                     <textarea
@@ -78,14 +81,14 @@ import React from 'react';
                       name="message"
                       rows="5"
                       className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200 hover:border-primary/50 resize-none"
-                      placeholder="Your message..."
+                      placeholder={t('contact.messagePlaceholder')}
                       required
                       aria-required="true"
                     ></textarea>
                   </div>
                 </div>
                 <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg py-3" aria-label="Send contact message">
-                  Send Message <Send className="w-4 h-4 ml-2" aria-hidden="true" />
+                  {t('contact.send')} <Send className="w-4 h-4 ml-2" aria-hidden="true" />
                 </Button>
               </form>
             </motion.div>

@@ -9,8 +9,10 @@ import { toast } from '@/components/ui/use-toast';
 import { Loader2, ArrowLeft, ArrowRight, CheckCircle, Scale, Dumbbell, HeartPulse, Zap, X } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { useTranslation } from 'react-i18next';
 
 const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
+  const { t } = useTranslation();
   const { user, userProfile, refreshUserProfile } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -43,19 +45,19 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
   const totalSteps = 4;
 
   const activityLevels = [
-    { id: 'sedentary', label: 'Sedentary', description: 'Little or no exercise' },
-    { id: 'lightly_active', label: 'Lightly Active', description: 'Light exercise/sports 1-3 days/week' },
-    { id: 'moderately_active', label: 'Moderately Active', description: 'Moderate exercise/sports 3-5 days/week' },
-    { id: 'very_active', label: 'Very Active', description: 'Hard exercise/sports 6-7 days a week' },
-    { id: 'super_active', label: 'Super Active', description: 'Very hard exercise & physical job' },
+    { id: 'sedentary', label: t('onboarding.activitySedentary'), description: t('onboarding.activitySedentaryDesc') },
+    { id: 'lightly_active', label: t('onboarding.activityLightlyActive'), description: t('onboarding.activityLightlyActiveDesc') },
+    { id: 'moderately_active', label: t('onboarding.activityModeratelyActive'), description: t('onboarding.activityModeratelyActiveDesc') },
+    { id: 'very_active', label: t('onboarding.activityVeryActive'), description: t('onboarding.activityVeryActiveDesc') },
+    { id: 'super_active', label: t('onboarding.activitySuperActive'), description: t('onboarding.activitySuperActiveDesc') },
   ];
 
   const healthGoals = [
-    { id: 'lose_weight', label: 'Lose Weight', icon: Scale },
-    { id: 'build_muscle', label: 'Build Muscle', icon: Dumbbell },
-    { id: 'improve_endurance', label: 'Improve Endurance', icon: HeartPulse },
-    { id: 'eat_healthier', label: 'Eat Healthier', icon: HeartPulse },
-    { id: 'increase_energy', label: 'Increase Energy', icon: Zap },
+    { id: 'lose_weight', label: t('onboarding.goalLoseWeight'), icon: Scale },
+    { id: 'build_muscle', label: t('onboarding.goalBuildMuscle'), icon: Dumbbell },
+    { id: 'improve_endurance', label: t('onboarding.goalImproveEndurance'), icon: HeartPulse },
+    { id: 'eat_healthier', label: t('onboarding.goalEatHealthier'), icon: HeartPulse },
+    { id: 'increase_energy', label: t('onboarding.goalIncreaseEnergy'), icon: Zap },
   ];
 
   // Unit conversion helpers
@@ -197,20 +199,20 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
       case 1:
         return (
           <motion.div key="step1" className="space-y-3">
-            <h2 className="text-lg font-bold">About You</h2>
+            <h2 className="text-lg font-bold">{t('onboarding.aboutYou')}</h2>
             <div className="space-y-2.5">
               <div>
-                <label className="block text-xs font-medium text-text-secondary mb-1">Age</label>
-                <input type="number" name="age" value={formData.age} onChange={handleInputChange} className="w-full bg-background border border-border rounded-md p-2 text-sm" placeholder="e.g., 28" />
+                <label className="block text-xs font-medium text-text-secondary mb-1">{t('onboarding.age')}</label>
+                <input type="number" name="age" value={formData.age} onChange={handleInputChange} className="w-full bg-background border border-border rounded-md p-2 text-sm" placeholder={t('onboarding.agePlaceholder')} />
               </div>
               <div>
-                <label className="block text-xs font-medium text-text-secondary mb-1">Gender</label>
+                <label className="block text-xs font-medium text-text-secondary mb-1">{t('onboarding.gender')}</label>
                 <select name="gender" value={formData.gender} onChange={handleInputChange} className="w-full bg-background border border-border rounded-md p-2 text-sm">
-                  <option value="">Select gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
-                  <option value="prefer_not_to_say">Prefer not to say</option>
+                  <option value="">{t('onboarding.selectGender')}</option>
+                  <option value="male">{t('onboarding.male')}</option>
+                  <option value="female">{t('onboarding.female')}</option>
+                  <option value="other">{t('onboarding.other')}</option>
+                  <option value="prefer_not_to_say">{t('onboarding.preferNotToSay')}</option>
                 </select>
               </div>
             </div>
@@ -220,7 +222,7 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
         return (
           <motion.div key="step2" className="space-y-3">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-lg font-bold">Your Body Metrics</h2>
+              <h2 className="text-lg font-bold">{t('onboarding.bodyMetrics')}</h2>
               <div className="flex gap-1 bg-muted rounded-md p-0.5">
                 <button
                   onClick={() => setUnitSystem('metric')}
@@ -228,7 +230,7 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
                     unitSystem === 'metric' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'
                   }`}
                 >
-                  Metric
+                  {t('onboarding.metric')}
                 </button>
                 <button
                   onClick={() => setUnitSystem('imperial')}
@@ -236,34 +238,34 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
                     unitSystem === 'imperial' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'
                   }`}
                 >
-                  Imperial
+                  {t('onboarding.imperial')}
                 </button>
               </div>
             </div>
             <div className="space-y-2.5">
               <div>
                 <label className="block text-xs font-medium text-text-secondary mb-1">
-                  Height {unitSystem === 'metric' ? '(cm)' : '(inches)'}
+                  {t('onboarding.height')} {unitSystem === 'metric' ? '(cm)' : '(inches)'}
                 </label>
                 <input
                   type="number"
                   value={getDisplayHeight()}
                   onChange={handleHeightChange}
                   className="w-full bg-background border border-border rounded-md p-2 text-sm"
-                  placeholder={unitSystem === 'metric' ? 'e.g., 175' : 'e.g., 69'}
+                  placeholder={unitSystem === 'metric' ? t('onboarding.heightPlaceholderMetric') : t('onboarding.heightPlaceholderImperial')}
                   step="0.1"
                 />
               </div>
               <div>
                 <label className="block text-xs font-medium text-text-secondary mb-1">
-                  Weight {unitSystem === 'metric' ? '(kg)' : '(lbs)'}
+                  {t('onboarding.weight')} {unitSystem === 'metric' ? '(kg)' : '(lbs)'}
                 </label>
                 <input
                   type="number"
                   value={getDisplayWeight()}
                   onChange={handleWeightChange}
                   className="w-full bg-background border border-border rounded-md p-2 text-sm"
-                  placeholder={unitSystem === 'metric' ? 'e.g., 70' : 'e.g., 154'}
+                  placeholder={unitSystem === 'metric' ? t('onboarding.weightPlaceholderMetric') : t('onboarding.weightPlaceholderImperial')}
                   step="0.1"
                 />
               </div>
@@ -273,9 +275,9 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
       case 3:
         return (
           <motion.div key="step3" className="space-y-3">
-            <h2 className="text-lg font-bold">Your Lifestyle</h2>
+            <h2 className="text-lg font-bold">{t('onboarding.lifestyle')}</h2>
              <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-text-secondary mb-1">Activity Level</label>
+              <label className="block text-xs font-medium text-text-secondary mb-1">{t('onboarding.activityLevel')}</label>
               {activityLevels.map(level => (
                 <button key={level.id} onClick={() => setFormData(p => ({...p, activity_level: level.id}))} className={`w-full text-left p-2 rounded-md border-2 transition-all ${formData.activity_level === level.id ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'}`}>
                   <p className="text-xs font-semibold">{level.label}</p>
@@ -288,8 +290,8 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
       case 4:
         return (
           <motion.div key="step4" className="space-y-3">
-            <h2 className="text-lg font-bold">Your Goals</h2>
-            <p className="text-xs text-text-secondary">Select your primary health and fitness goals. You can select multiple.</p>
+            <h2 className="text-lg font-bold">{t('onboarding.goals')}</h2>
+            <p className="text-xs text-text-secondary">{t('onboarding.goalsSubtitle')}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {healthGoals.map(goal => {
                 const Icon = goal.icon;
@@ -307,9 +309,9 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
         return (
           <motion.div key="step5" className="text-center flex flex-col items-center py-3">
              <CheckCircle className="w-12 h-12 text-green-500 mb-3" />
-             <h2 className="text-lg font-bold">Setup Complete!</h2>
-             <p className="text-xs text-text-secondary mt-1.5 mb-4">Your profile is personalized. Get ready to start your wellness journey.</p>
-             <Button onClick={finishOnboarding} size="sm">Go to Dashboard</Button>
+             <h2 className="text-lg font-bold">{t('onboarding.setupComplete')}</h2>
+             <p className="text-xs text-text-secondary mt-1.5 mb-4">{t('onboarding.setupCompleteDesc')}</p>
+             <Button onClick={finishOnboarding} size="sm">{t('onboarding.goToDashboard')}</Button>
           </motion.div>
         );
       default:
@@ -329,10 +331,10 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
             <img src={logoUrl} alt="GreenoFig Logo" className="w-8 h-8" />
             <div className="flex-1">
               <h2 className="text-sm font-bold gradient-text">
-                {isLoggedIn ? 'Complete Your Profile' : 'Get Personalized Health Guidance'}
+                {isLoggedIn ? t('onboarding.completeProfile') : t('onboarding.getPersonalizedGuidance')}
               </h2>
               <p className="text-xs text-text-secondary">
-                {isLoggedIn ? 'Personalize your GreenoFig experience' : 'Sign up to create your custom health plan'}
+                {isLoggedIn ? t('onboarding.personalizeExperience') : t('onboarding.signUpToPlan')}
               </p>
             </div>
             {!isLoggedIn && (
@@ -341,7 +343,7 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
                 onClick={() => navigate('/signup')}
                 className="bg-primary text-primary-foreground text-xs px-3 py-1 h-auto"
               >
-                Sign Up
+                {t('onboarding.signUp')}
               </Button>
             )}
           </div>
@@ -377,17 +379,17 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
                 disabled={step === 1 || loading}
                 className="text-xs"
               >
-                <ArrowLeft className="w-3 h-3 mr-1" /> Back
+                <ArrowLeft className="w-3 h-3 mr-1" /> {t('onboarding.back')}
               </Button>
 
               {step < totalSteps ? (
                 <Button size="sm" onClick={nextStep} className="text-xs">
-                  Next <ArrowRight className="w-3 h-3 ml-1" />
+                  {t('onboarding.next')} <ArrowRight className="w-3 h-3 ml-1" />
                 </Button>
               ) : (
                 <Button size="sm" onClick={handleSubmit} disabled={loading} className="text-xs">
                   {loading && <Loader2 className="w-3 h-3 mr-1 animate-spin" />}
-                  Finish
+                  {t('onboarding.finish')}
                 </Button>
               )}
             </div>
@@ -408,8 +410,8 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
               <div className="flex items-center gap-2">
                 <img src={logoUrl} alt="GreenoFig Logo" className="w-8 h-8" />
                 <div>
-                  <h1 className="text-base font-bold gradient-text">Welcome to GreenoFig</h1>
-                  <p className="text-xs text-text-secondary">Let's personalize your experience.</p>
+                  <h1 className="text-base font-bold gradient-text">{t('onboarding.welcomeTitle')}</h1>
+                  <p className="text-xs text-text-secondary">{t('onboarding.welcomeSubtitle')}</p>
                 </div>
               </div>
               <Button variant="ghost" size="icon" onClick={handleClose} className="h-8 w-8">
@@ -445,17 +447,17 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
               {step <= totalSteps && (
                 <div className="flex justify-between items-center mt-4">
                   <Button variant="outline" size="sm" onClick={prevStep} disabled={step === 1 || loading} className="text-xs">
-                    <ArrowLeft className="w-3 h-3 mr-1" /> Back
+                    <ArrowLeft className="w-3 h-3 mr-1" /> {t('onboarding.back')}
                   </Button>
 
                   {step < totalSteps ? (
                     <Button size="sm" onClick={nextStep} className="text-xs">
-                      Next <ArrowRight className="w-3 h-3 ml-1" />
+                      {t('onboarding.next')} <ArrowRight className="w-3 h-3 ml-1" />
                     </Button>
                   ) : (
                     <Button size="sm" onClick={handleSubmit} disabled={loading} className="text-xs">
                       {loading && <Loader2 className="w-3 h-3 mr-1 animate-spin" />}
-                      Finish
+                      {t('onboarding.finish')}
                     </Button>
                   )}
                 </div>
