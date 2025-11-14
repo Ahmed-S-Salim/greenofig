@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
     import { useNavigate } from 'react-router-dom';
+    import { useTranslation } from 'react-i18next';
     import { Button } from '@/components/ui/button';
     import { ArrowRight, Star, ShieldCheck, Dumbbell, Carrot, BrainCircuit, CheckCircle, Loader2 } from 'lucide-react';
     import SiteLayout from '@/components/SiteLayout';
@@ -10,33 +11,56 @@ import React, { useState, useEffect } from 'react';
 
     const HomePage = ({ logoUrl }) => {
       const navigate = useNavigate();
+      const { t } = useTranslation();
       const { user } = useAuth();
       const [plans, setPlans] = useState([]);
       const [loadingPlans, setLoadingPlans] = useState(true);
       const [checkoutPlan, setCheckoutPlan] = useState(null);
       const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+      const [currentSlide, setCurrentSlide] = useState(0);
 
-      // Plan-specific features matching the PricingPage
+      // Hero slideshow images
+      const heroImages = [
+        { url: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=1920&h=1080&fit=crop", alt: "Fresh fruits and healthy food arrangement" },
+        { url: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1920&h=1080&fit=crop", alt: "Fresh vegetables and produce" },
+        { url: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1920&h=1080&fit=crop", alt: "Healthy salad bowl with fresh ingredients" },
+        { url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1920&h=1080&fit=crop", alt: "Person exercising and working out" },
+        { url: "https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=1920&h=1080&fit=crop", alt: "Colorful fresh fruits" },
+        { url: "https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=1920&h=1080&fit=crop", alt: "Nutritionist consultation session" },
+        { url: "https://images.unsplash.com/photo-1543362906-acfc16c67564?w=1920&h=1080&fit=crop", alt: "Meal planning and healthy eating" },
+        { url: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1920&h=1080&fit=crop", alt: "Female fitness coach training with client" }
+      ];
+
+      // Plan-specific features matching the PricingPage (showing key highlights)
       const planFeatures = {
         'Premium': [
-          '✨ Ad-free experience',
-          'Unlimited AI meal plans',
-          'Unlimited AI workout plans',
-          'Advanced progress analytics'
+          t('pricing.planFeatures.premium.adFree'),
+          t('pricing.planFeatures.premium.unlimitedMeals'),
+          t('pricing.planFeatures.premium.unlimitedWorkouts'),
+          t('pricing.planFeatures.premium.analytics')
         ],
         'Ultimate': [
-          '✨ Everything in Premium',
-          'AI Coach Chat',
-          'Wearable device sync',
-          'Video consultations'
+          t('pricing.planFeatures.ultimate.everythingPremium'),
+          t('pricing.planFeatures.ultimate.nutritionists'),
+          t('pricing.planFeatures.ultimate.videoConsultations'),
+          t('pricing.planFeatures.ultimate.workoutBuilder')
         ],
         'Elite': [
-          '✨ Everything in Ultimate',
-          '📸 Photo food recognition',
-          'Doctor consultations',
-          'Priority 24/7 support'
+          t('pricing.planFeatures.elite.everythingUltimate'),
+          t('pricing.planFeatures.elite.photoRecognition'),
+          t('pricing.planFeatures.elite.doctorConsultations'),
+          t('pricing.planFeatures.elite.appointmentScheduling')
         ]
       };
+
+      // Auto-advance slideshow
+      useEffect(() => {
+        const interval = setInterval(() => {
+          setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+        }, 4000); // Change slide every 4 seconds
+
+        return () => clearInterval(interval);
+      }, []);
 
       useEffect(() => {
         const fetchPlans = async () => {
@@ -71,41 +95,71 @@ import React, { useState, useEffect } from 'react';
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="hero-content">
                       <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
-                        Your AI-Powered <span className="gradient-text">Health Companion</span>
+                        <span className="gradient-text">{t('home.hero.title')}</span>
                       </h1>
                       <p className="max-w-2xl mx-auto text-lg md:text-xl text-text-secondary mb-8">
-                        Achieve your wellness goals with hyper-personalized nutrition, fitness, and lifestyle coaching. All powered by cutting-edge AI.
+                        {t('home.hero.subtitle')}
                       </p>
                       <div className="flex justify-center gap-4">
                         <Button size="lg" onClick={() => navigate('/survey')} className="btn-primary">
-                          Get Started <ArrowRight className="ml-2 w-5 h-5" />
+                          {t('home.hero.getStarted')} <ArrowRight className="ml-2 w-5 h-5" />
                         </Button>
                         <Button size="lg" variant="outline" onClick={() => navigate('/features')} className="btn-secondary">
-                          Explore Features
+                          {t('home.hero.learnMore')}
                         </Button>
                       </div>
                     </div>
                     <div className="mt-10 animate-item">
-                      <div className="relative glass-effect rounded-2xl shadow-2xl p-2 max-w-6xl mx-auto img-zoom">
-                        <div className="w-full h-64 md:h-80 overflow-hidden rounded-xl">
-                          <img className="w-full h-full object-cover object-center" alt="Fresh fruits and healthy food arrangement" src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=1920&h=1080&fit=crop" />
+                      <div className="relative glass-effect rounded-2xl shadow-2xl p-2 max-w-6xl mx-auto overflow-hidden">
+                        <div className="relative w-full h-64 md:h-80 overflow-hidden rounded-xl">
+                          {/* Slideshow Images */}
+                          {heroImages.map((image, index) => (
+                            <div
+                              key={index}
+                              className={`absolute inset-0 transition-opacity duration-1000 ${
+                                index === currentSlide ? 'opacity-100' : 'opacity-0'
+                              }`}
+                            >
+                              <img
+                                className="w-full h-full object-cover object-center"
+                                alt={image.alt}
+                                src={image.url}
+                              />
+                            </div>
+                          ))}
+
+                          {/* Navigation Dots */}
+                          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                            {heroImages.map((_, index) => (
+                              <button
+                                key={index}
+                                onClick={() => setCurrentSlide(index)}
+                                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                                  index === currentSlide
+                                    ? 'bg-primary w-8'
+                                    : 'bg-white/50 hover:bg-white/80'
+                                }`}
+                                aria-label={`Go to slide ${index + 1}`}
+                              />
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </section>
 
-                <section className="page-section py-8">
+                <section className="page-section py-16">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-8 section-content">
-                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Transform Your Health Journey</h2>
-                      <p className="max-w-xl mx-auto mt-4 text-text-secondary">Unlock your full potential with our suite of intelligent features.</p>
+                    <div className="text-center mb-12 section-content">
+                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t('home.features.title')}</h2>
+                      <p className="max-w-xl mx-auto mt-4 text-text-secondary">{t('home.features.subtitle')}</p>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                       {[
-                        { icon: Carrot, title: "AI Meal Plans", text: "Get delicious, easy-to-make meal plans tailored to your goals and dietary preferences." },
-                        { icon: Dumbbell, title: "Personalized Workouts", text: "Custom-built exercise routines that adapt to your progress and keep you challenged." },
-                        { icon: BrainCircuit, title: "Your AI Coach", text: "24/7 guidance and motivation from your personal AI health companion." }
+                        { icon: Carrot, title: t('home.features.aiMealPlans'), text: t('home.features.aiMealPlansDesc') },
+                        { icon: Dumbbell, title: t('home.features.personalizedWorkouts'), text: t('home.features.personalizedWorkoutsDesc') },
+                        { icon: BrainCircuit, title: t('home.features.aiCoach'), text: t('home.features.aiCoachDesc') }
                       ].map((feat, i) => (
                         <div
                           key={i}
@@ -122,11 +176,11 @@ import React, { useState, useEffect } from 'react';
                   </div>
                 </section>
 
-                <section className="page-section py-8">
+                <section className="page-section py-16">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-8 section-content">
-                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Choose Your Perfect Plan</h2>
-                      <p className="max-w-xl mx-auto mt-4 text-text-secondary">Simple, transparent pricing. Save 25% with any yearly plan!</p>
+                    <div className="text-center mb-12 section-content">
+                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t('home.pricing.title')}</h2>
+                      <p className="max-w-xl mx-auto mt-4 text-text-secondary">{t('home.pricing.subtitle')}</p>
                     </div>
                     {loadingPlans ? (
                       <div className="flex justify-center items-center py-12">
@@ -148,13 +202,13 @@ import React, { useState, useEffect } from 'react';
                             >
                               {plan.is_popular && (
                                 <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-4 py-1 text-sm font-semibold text-primary-foreground bg-primary rounded-full">
-                                  Most Popular
+                                  {t('home.pricing.mostPopular')}
                                 </div>
                               )}
                               <h3 className="text-2xl font-bold text-center mb-2">{plan.name}</h3>
                               <p className="text-center text-4xl font-extrabold mb-4">
                                 ${plan.price_monthly}
-                                <span className="text-lg font-medium text-text-secondary">/mo</span>
+                                <span className="text-lg font-medium text-text-secondary">{t('home.pricing.perMonth')}</span>
                               </p>
                               <ul className="space-y-3 mb-8 flex-grow">
                                 {(planFeatures[plan.name] || []).map((feature, idx) => (
@@ -169,30 +223,30 @@ import React, { useState, useEffect } from 'react';
                                 variant={plan.is_popular ? 'default' : 'outline'}
                                 onClick={() => handleChoosePlan(plan)}
                               >
-                                Choose {plan.name}
+                                {t('home.pricing.choosePlan')} {plan.name}
                               </Button>
                             </div>
                           ))}
                         </div>
                         <div className="text-center mt-8">
-                          <Button variant="link" onClick={() => navigate('/pricing')}>View All Plans & Features</Button>
+                          <Button variant="link" onClick={() => navigate('/pricing')}>{t('home.pricing.viewAllPlans')}</Button>
                         </div>
                       </>
                     )}
                   </div>
                 </section>
 
-                <section className="page-section py-8">
+                <section className="page-section py-16">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-8 section-content">
-                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">How It Works</h2>
-                      <p className="max-w-xl mx-auto mt-4 text-text-secondary">Start your transformation in three simple steps.</p>
+                    <div className="text-center mb-12 section-content">
+                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t('home.howItWorks.title')}</h2>
+                      <p className="max-w-xl mx-auto mt-4 text-text-secondary">{t('home.howItWorks.subtitle')}</p>
                     </div>
                     <div className="grid md:grid-cols-3 gap-8 text-center">
                       {[
-                        { num: "01", title: "Tell Us Your Goals", text: "Complete a quick survey to help our AI understand you." },
-                        { num: "02", title: "Get Your Personalized Plan", text: "Receive your unique fitness and nutrition plan instantly." },
-                        { num: "03", title: "Achieve Your Best Self", text: "Track your progress, adapt, and reach your wellness goals." },
+                        { num: "01", title: t('home.howItWorks.step1Title'), text: t('home.howItWorks.step1Text') },
+                        { num: "02", title: t('home.howItWorks.step2Title'), text: t('home.howItWorks.step2Text') },
+                        { num: "03", title: t('home.howItWorks.step3Title'), text: t('home.howItWorks.step3Text') },
                       ].map((step, i) => (
                         <div
                           key={i}
@@ -207,38 +261,38 @@ import React, { useState, useEffect } from 'react';
                   </div>
                 </section>
 
-                <section className="page-section py-8">
+                <section className="page-section py-16">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-8 section-content">
-                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Loved by users worldwide</h2>
+                    <div className="text-center mb-12 section-content">
+                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t('home.reviews.title')}</h2>
                     </div>
                     <div className="grid lg:grid-cols-3 gap-8">
                       {[
-                        { name: "Sarah L.", review: "GreenoFig changed my life. I've lost 20 pounds and have never felt more energetic. The AI coach is like having a personal cheerleader!", rating: 5 },
-                        { name: "Mike T.", review: "As a busy professional, the meal plans are a lifesaver. Healthy eating has never been so easy and delicious.", rating: 5 },
-                        { name: "Jessica P.", review: "I love how it syncs with my watch. Seeing all my health data in one place is incredibly motivating. Highly recommend!", rating: 5 },
-                      ].map((t, i) => (
+                        { name: t('home.reviews.author1'), review: t('home.reviews.review1'), rating: 5 },
+                        { name: t('home.reviews.author2'), review: t('home.reviews.review2'), rating: 5 },
+                        { name: t('home.reviews.author3'), review: t('home.reviews.review3'), rating: 5 },
+                      ].map((review, i) => (
                         <div
                           key={i}
                           className="card card-scale glass-effect p-8 rounded-2xl animate-item"
                         >
                           <div className="flex items-center mb-4">
-                            {Array(t.rating).fill(0).map((_, j) => <Star key={j} className="w-5 h-5 text-yellow-400 fill-current" />)}
+                            {Array(review.rating).fill(0).map((_, j) => <Star key={j} className="w-5 h-5 text-yellow-400 fill-current" />)}
                           </div>
-                          <p className="mb-4 text-text-secondary">"{t.review}"</p>
-                          <p className="font-bold text-right">- {t.name}</p>
+                          <p className="mb-4 text-text-secondary">"{review.review}"</p>
+                          <p className="font-bold text-right">- {review.name}</p>
                         </div>
                       ))}
                     </div>
                   </div>
                 </section>
 
-                <section className="page-section py-8 text-center">
+                <section className="page-section py-16 text-center">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8 glass-effect p-12 rounded-2xl section-content">
-                     <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Ready to Transform Your Health?</h2>
-                     <p className="max-w-xl mx-auto mt-4 text-text-secondary mb-8">Join thousands of users who are already on their journey to a healthier, happier life.</p>
+                     <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t('home.cta.title')}</h2>
+                     <p className="max-w-xl mx-auto mt-4 text-text-secondary mb-8">{t('home.cta.subtitle')}</p>
                      <Button size="lg" onClick={() => navigate('/survey')} className="btn-primary">
-                        Get Started Today <ArrowRight className="ml-2 w-5 h-5" />
+                        {t('home.cta.button')} <ArrowRight className="ml-2 w-5 h-5" />
                      </Button>
                   </div>
                 </section>
