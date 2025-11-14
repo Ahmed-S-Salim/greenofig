@@ -295,10 +295,10 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                     <img src={logoUrl} alt="GreenoFig Logo" className="w-8 h-8" />
                     <span className="text-xl font-extrabold tracking-tight gradient-text">GreenoFig</span>
                   </Link>
-                  <p className="text-sm text-text-secondary">&copy; {new Date().getFullYear()} GreenoFig. All rights reserved.</p>
+                  <p className="text-sm text-text-secondary">&copy; {new Date().getFullYear()} GreenoFig. {t('footer.allRightsReserved')}</p>
                 </div>
                 <div>
-                  <p className="font-semibold mb-4">Contact Us</p>
+                  <p className="font-semibold mb-4">{t('footer.contactUs')}</p>
                   <ul className="space-y-2 text-sm">
                     <li>
                       <a href="mailto:health@greenofig.com" className="text-text-secondary hover:text-primary transition-colors">health@greenofig.com</a>
@@ -312,66 +312,66 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                   </ul>
                 </div>
                 <div>
-                  <p className="font-semibold mb-4">Platform</p>
+                  <p className="font-semibold mb-4">{t('footer.platform')}</p>
                   <ul className="space-y-2 text-sm">
                     <li>
                       {location.pathname === '/features' ? (
-                        <span className="text-primary cursor-default">Features</span>
+                        <span className="text-primary cursor-default">{t('nav.features')}</span>
                       ) : (
-                        <Link to="/features" className="text-text-secondary hover:text-primary">Features</Link>
+                        <Link to="/features" className="text-text-secondary hover:text-primary">{t('nav.features')}</Link>
                       )}
                     </li>
                     <li>
                       {location.pathname === '/pricing' ? (
-                        <span className="text-primary cursor-default">Pricing</span>
+                        <span className="text-primary cursor-default">{t('nav.pricing')}</span>
                       ) : (
-                        <Link to="/pricing" className="text-text-secondary hover:text-primary">Pricing</Link>
+                        <Link to="/pricing" className="text-text-secondary hover:text-primary">{t('nav.pricing')}</Link>
                       )}
                     </li>
-                    <li><button onClick={() => handleUnimplemented('Updates')} className="text-text-secondary hover:text-primary">Updates</button></li>
+                    <li><button onClick={() => handleUnimplemented('Updates')} className="text-text-secondary hover:text-primary">{t('footer.updates')}</button></li>
                   </ul>
                 </div>
                  <div>
-                  <p className="font-semibold mb-4">Company</p>
+                  <p className="font-semibold mb-4">{t('footer.company')}</p>
                   <ul className="space-y-2 text-sm">
                     <li>
                       {location.pathname === '/about' ? (
-                        <span className="text-primary cursor-default">About Us</span>
+                        <span className="text-primary cursor-default">{t('nav.about')}</span>
                       ) : (
-                        <Link to="/about" className="text-text-secondary hover:text-primary">About Us</Link>
+                        <Link to="/about" className="text-text-secondary hover:text-primary">{t('nav.about')}</Link>
                       )}
                     </li>
                     <li>
                       {location.pathname === '/blog' ? (
-                        <span className="text-primary cursor-default">Blog</span>
+                        <span className="text-primary cursor-default">{t('nav.blog')}</span>
                       ) : (
-                        <Link to="/blog" className="text-text-secondary hover:text-primary">Blog</Link>
+                        <Link to="/blog" className="text-text-secondary hover:text-primary">{t('nav.blog')}</Link>
                       )}
                     </li>
                     <li>
                       {location.pathname === '/contact' ? (
-                        <span className="text-primary cursor-default">Contact</span>
+                        <span className="text-primary cursor-default">{t('nav.contact')}</span>
                       ) : (
-                        <Link to="/contact" className="text-text-secondary hover:text-primary">Contact</Link>
+                        <Link to="/contact" className="text-text-secondary hover:text-primary">{t('nav.contact')}</Link>
                       )}
                     </li>
                   </ul>
                 </div>
                  <div>
-                  <p className="font-semibold mb-4">Legal</p>
+                  <p className="font-semibold mb-4">{t('footer.legal')}</p>
                   <ul className="space-y-2 text-sm">
                     <li>
                       {location.pathname === '/privacy-policy' ? (
-                        <span className="text-primary cursor-default">Privacy Policy</span>
+                        <span className="text-primary cursor-default">{t('footer.privacyPolicy')}</span>
                       ) : (
-                        <Link to="/privacy-policy" className="text-text-secondary hover:text-primary transition-colors">Privacy Policy</Link>
+                        <Link to="/privacy-policy" className="text-text-secondary hover:text-primary transition-colors">{t('footer.privacyPolicy')}</Link>
                       )}
                     </li>
                     <li>
                       {location.pathname === '/terms-of-service' ? (
-                        <span className="text-primary cursor-default">Terms of Service</span>
+                        <span className="text-primary cursor-default">{t('footer.termsOfService')}</span>
                       ) : (
-                        <Link to="/terms-of-service" className="text-text-secondary hover:text-primary transition-colors">Terms of Service</Link>
+                        <Link to="/terms-of-service" className="text-text-secondary hover:text-primary transition-colors">{t('footer.termsOfService')}</Link>
                       )}
                     </li>
                   </ul>
