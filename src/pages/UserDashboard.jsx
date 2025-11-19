@@ -1,6 +1,7 @@
 import React, { memo, useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,25 +19,99 @@ import AiWorkoutPlanner from '@/components/user/AiWorkoutPlanner';
 import PersonalizedInsights from '@/components/user/PersonalizedInsights';
 import SubscriptionManager from '@/components/user/SubscriptionManager';
 import AdBanner from '@/components/AdBanner';
+import AdContainer from '@/components/ads/AdContainer';
+import VideoAd from '@/components/ads/VideoAd';
+import InterstitialAd from '@/components/ads/InterstitialAd';
 import { useFeatureAccess } from '@/hooks/useFeatureAccess';
+import { Gift, Camera, Scan, Watch, Search, MessageSquare } from 'lucide-react';
 
-const UserDashboard = memo(({ logoUrl }) => {
-  const { userProfile } = useAuth();
-  const { hasAds, planName } = useFeatureAccess();
+// Phase 1: Premium Feature Components
+import PhotoFoodRecognition from '@/components/user/PhotoFoodRecognition';
+import BarcodeScanner from '@/components/user/BarcodeScanner';
+import WearableDeviceSync from '@/components/user/WearableDeviceSync';
+import FoodDatabaseSearch from '@/components/user/FoodDatabaseSearch';
+import MessagingCenter from '@/components/user/MessagingCenter';
+import { MockAuthContext, MockFeatureAccessContext } from '@/components/admin/UserDashboardPreview';
+import { generateMockDashboardData } from '@/utils/mockDataGenerator';
+
+// All New Premium Features
+import RecipeDatabase from '@/components/user/RecipeDatabase';
+import MacroTracking from '@/components/user/MacroTracking';
+import ExerciseLibrary from '@/components/user/ExerciseLibrary';
+import GoalTracking from '@/components/user/GoalTracking';
+import HealthStreaks from '@/components/user/HealthStreaks';
+import CustomNotifications from '@/components/user/CustomNotifications';
+import MotivationalSupport from '@/components/user/MotivationalSupport';
+
+// Ultimate Features
+import AdvancedAnalytics from '@/components/user/AdvancedAnalytics';
+import ProgressReports from '@/components/user/ProgressReports';
+import WorkoutAnalytics from '@/components/user/WorkoutAnalytics';
+import DataExport from '@/components/user/DataExport';
+
+// Elite Features
+import DoctorConsultations from '@/components/user/DoctorConsultations';
+import AppointmentScheduling from '@/components/user/AppointmentScheduling';
+
+const UserDashboard = memo(({ logoUrl, previewMode = false }) => {
+  // Use mock context in preview mode, otherwise use real hooks
+  const realAuth = useAuth();
+  const mockAuth = React.useContext(MockAuthContext);
+  const auth = previewMode && mockAuth ? mockAuth : realAuth;
+
+  const { userProfile } = auth;
+  const { t } = useTranslation();
+
+  const realFeatureAccess = useFeatureAccess();
+  const mockFeatureAccess = React.useContext(MockFeatureAccessContext);
+  const featureAccess = previewMode && mockFeatureAccess ? mockFeatureAccess : realFeatureAccess;
+
+  const { hasAds, planName, hasAccess, planKey } = featureAccess;
+
   const [todayMetrics, setTodayMetrics] = useState(null);
   const [recentActivity, setRecentActivity] = useState([]);
   const [streaks, setStreaks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
   const [showAd, setShowAd] = useState(true);
+  const [showVideoAd, setShowVideoAd] = useState(false);
+  const [showInterstitialAd, setShowInterstitialAd] = useState(false);
+  const [bonusMessages, setBonusMessages] = useState(0);
+
+  const handleRewardEarned = () => {
+    if (previewMode) {
+      // In preview mode, just show a toast without actually updating anything
+      toast({
+        title: "Preview Mode",
+        description: "This is a demo - no actual changes are made",
+      });
+      return;
+    }
+
+    setBonusMessages(prev => prev + 1);
+    toast({
+      title: "🎁 Reward Earned!",
+      description: "You've earned +1 bonus AI message!",
+    });
+  };
 
   useEffect(() => {
-    if (userProfile?.id) {
+    if (previewMode) {
+      // In preview mode, load mock data immediately
+      const tier = userProfile?.subscription_tier || 'free';
+      const mockData = generateMockDashboardData(tier);
+      setTodayMetrics(mockData.todayMetrics);
+      setRecentActivity(mockData.recentActivity);
+      setStreaks(mockData.streaks);
+      setLoading(false);
+    } else if (userProfile?.id) {
       fetchDashboardData();
     }
-  }, [userProfile?.id, refreshKey]);
+  }, [userProfile?.id, refreshKey, previewMode]);
 
   const fetchDashboardData = async () => {
+    if (previewMode) return; // Don't fetch real data in preview mode
+
     try {
       const today = new Date().toISOString().split('T')[0];
 
@@ -80,6 +155,13 @@ const UserDashboard = memo(({ logoUrl }) => {
   };
 
   const handleRefresh = () => {
+    if (previewMode) {
+      toast({
+        title: "Preview Mode",
+        description: "Data refresh is disabled in preview mode",
+      });
+      return;
+    }
     setRefreshKey(prev => prev + 1);
   };
 
@@ -148,6 +230,11 @@ const UserDashboard = memo(({ logoUrl }) => {
           <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-text-secondary mt-2">
             Here's your wellness snapshot for today. Let's make it a great one!
             {planName && <span className="ml-2 text-xs font-semibold text-primary">({planName} Plan)</span>}
+            {bonusMessages > 0 && (
+              <span className="ml-2 text-xs font-semibold text-green-500">
+                🎁 +{bonusMessages} bonus AI message{bonusMessages > 1 ? 's' : ''}
+              </span>
+            )}
           </p>
         </motion.div>
 
@@ -155,6 +242,31 @@ const UserDashboard = memo(({ logoUrl }) => {
         {hasAds && showAd && (
           <motion.div variants={itemVariants}>
             <AdBanner onDismiss={() => setShowAd(false)} />
+          </motion.div>
+        )}
+
+        {/* Rewarded Video Ad Button - Only for Basic users */}
+        {hasAds && (
+          <motion.div variants={itemVariants}>
+            <Card className="glass-effect border-yellow-500/30 bg-gradient-to-r from-yellow-500/10 to-orange-500/10">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center gap-3">
+                    <Gift className="w-8 h-8 text-yellow-400 flex-shrink-0" />
+                    <div>
+                      <h3 className="font-semibold text-white text-sm sm:text-base">Earn Bonus Features!</h3>
+                      <p className="text-xs sm:text-sm text-yellow-200/80">Watch a short video to get +1 extra AI message</p>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => setShowVideoAd(true)}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
+                  >
+                    Watch Ad
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </motion.div>
         )}
 
@@ -244,6 +356,124 @@ const UserDashboard = memo(({ logoUrl }) => {
             </Card>
           </motion.div>
         </motion.div>
+
+        {/* Premium Features Section */}
+        {(hasAccess('photoRecognition') || hasAccess('wearableIntegration') || planKey !== 'free') && (
+          <motion.div variants={itemVariants}>
+            <Card className="glass-effect border-primary/30">
+              <CardHeader className="p-4 sm:p-6">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg sm:text-xl font-bold flex items-center gap-2">
+                    <Zap className="w-5 h-5 text-yellow-500" />
+                    {t('userDashboard.premiumFeatures')}
+                  </CardTitle>
+                  {planKey === 'free' && (
+                    <Button size="sm" onClick={() => window.location.href = '/pricing'}>
+                      {t('userDashboard.upgradeButton')}
+                    </Button>
+                  )}
+                </div>
+                <p className="text-sm text-text-secondary mt-1">
+                  {planKey === 'free'
+                    ? t('userDashboard.unlockPowerfulTools')
+                    : t('userDashboard.advancedToolsAvailable')}
+                </p>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 sm:p-6 pt-0">
+                {/* Photo Food Recognition - Elite Only */}
+                {hasAccess('photoRecognition') && (
+                  <Button
+                    variant="outline"
+                    className="h-24 flex flex-col gap-2 relative overflow-hidden group"
+                    onClick={() => document.getElementById('photo-food-recognition')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Camera className="h-6 w-6 text-purple-500" />
+                    <span className="text-sm font-medium">{t('userDashboard.photoFoodRecognition')}</span>
+                    <span className="text-xs text-text-secondary">{t('userDashboard.photoFoodRecognitionTier')}</span>
+                  </Button>
+                )}
+
+                {/* Barcode Scanner - Premium+ */}
+                {(hasAccess('photoRecognition') || planKey !== 'free') && (
+                  <Button
+                    variant="outline"
+                    className="h-24 flex flex-col gap-2 relative overflow-hidden group"
+                    onClick={() => document.getElementById('barcode-scanner')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Scan className="h-6 w-6 text-blue-500" />
+                    <span className="text-sm font-medium">{t('userDashboard.barcodeScanner')}</span>
+                    <span className="text-xs text-text-secondary">{t('userDashboard.barcodeScannerTier')}</span>
+                  </Button>
+                )}
+
+                {/* Wearable Sync - Premium+ */}
+                {hasAccess('wearableIntegration') && (
+                  <Button
+                    variant="outline"
+                    className="h-24 flex flex-col gap-2 relative overflow-hidden group"
+                    onClick={() => document.getElementById('wearable-sync')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Watch className="h-6 w-6 text-green-500" />
+                    <span className="text-sm font-medium">{t('userDashboard.wearableDevices')}</span>
+                    <span className="text-xs text-text-secondary">{t('userDashboard.wearableDevicesTier')}</span>
+                  </Button>
+                )}
+
+                {/* Food Database - Premium+ */}
+                {planKey !== 'free' && (
+                  <Button
+                    variant="outline"
+                    className="h-24 flex flex-col gap-2 relative overflow-hidden group"
+                    onClick={() => document.getElementById('food-database')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Search className="h-6 w-6 text-orange-500" />
+                    <span className="text-sm font-medium">{t('userDashboard.foodDatabase')}</span>
+                    <span className="text-xs text-text-secondary">{t('userDashboard.foodDatabaseTier')}</span>
+                  </Button>
+                )}
+
+                {/* Messaging Center - Ultimate+ */}
+                {hasAccess('nutritionistAccess') && (
+                  <Button
+                    variant="outline"
+                    className="h-24 flex flex-col gap-2 relative overflow-hidden group"
+                    onClick={() => document.getElementById('messaging-center')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <MessageSquare className="h-6 w-6 text-indigo-500" />
+                    <span className="text-sm font-medium">{t('userDashboard.messageNutritionist')}</span>
+                    <span className="text-xs text-text-secondary">{t('userDashboard.messageNutritionistTier')}</span>
+                  </Button>
+                )}
+
+                {/* Locked features for free users */}
+                {planKey === 'free' && (
+                  <>
+                    <div className="h-24 flex flex-col gap-2 items-center justify-center border-2 border-dashed border-border rounded-lg opacity-50">
+                      <Camera className="h-6 w-6" />
+                      <span className="text-xs">{t('userDashboard.photoFoodRecognition')}</span>
+                      <span className="text-xs text-text-secondary">{t('userDashboard.photoFoodRecognitionTier')}</span>
+                    </div>
+                    <div className="h-24 flex flex-col gap-2 items-center justify-center border-2 border-dashed border-border rounded-lg opacity-50">
+                      <Watch className="h-6 w-6" />
+                      <span className="text-xs">{t('userDashboard.wearableDevices')}</span>
+                      <span className="text-xs text-text-secondary">{t('userDashboard.wearableDevicesTier')}</span>
+                    </div>
+                    <div className="h-24 flex flex-col gap-2 items-center justify-center border-2 border-dashed border-border rounded-lg opacity-50">
+                      <MessageSquare className="h-6 w-6" />
+                      <span className="text-xs">{t('userDashboard.messageNutritionist')}</span>
+                      <span className="text-xs text-text-secondary">{t('userDashboard.messageNutritionistTier')}</span>
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Single Streak Badge - Show inline if only 1 streak */}
         {streaks.length === 1 && (
@@ -391,11 +621,184 @@ const UserDashboard = memo(({ logoUrl }) => {
           </motion.div>
         </motion.div>
 
+        {/* Phase 1: Premium Feature Components */}
+
+        {/* Photo Food Recognition - Elite Only */}
+        {hasAccess('photoRecognition') && (
+          <motion.div variants={itemVariants} id="photo-food-recognition">
+            <PhotoFoodRecognition />
+          </motion.div>
+        )}
+
+        {/* Barcode Scanner - Premium+ (shown to all premium tiers) */}
+        {planKey !== 'free' && (
+          <motion.div variants={itemVariants} id="barcode-scanner">
+            <BarcodeScanner onFoodAdded={handleRefresh} />
+          </motion.div>
+        )}
+
+        {/* Wearable Device Sync - Premium+ */}
+        {hasAccess('wearableIntegration') && (
+          <motion.div variants={itemVariants} id="wearable-sync">
+            <WearableDeviceSync />
+          </motion.div>
+        )}
+
+        {/* Food Database Search - Premium+ */}
+        {planKey !== 'free' && (
+          <motion.div variants={itemVariants} id="food-database">
+            <FoodDatabaseSearch onFoodAdded={handleRefresh} />
+          </motion.div>
+        )}
+
+        {/* Messaging Center - Ultimate+ (nutritionist access) */}
+        {hasAccess('nutritionistAccess') && (
+          <motion.div variants={itemVariants} id="messaging-center">
+            <Card className="glass-effect">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5" />
+                  {t('userDashboard.nutritionistMessaging')}
+                </CardTitle>
+                <p className="text-sm text-text-secondary">
+                  {t('userDashboard.connectWithNutritionist')}
+                </p>
+              </CardHeader>
+              <CardContent>
+                <MessagingCenter />
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
+        {/* NEW PREMIUM FEATURES */}
+
+        {/* Recipe Database - Premium+ */}
+        {planKey !== 'free' && (
+          <motion.div variants={itemVariants}>
+            <RecipeDatabase />
+          </motion.div>
+        )}
+
+        {/* Macro Tracking - Premium+ */}
+        {planKey !== 'free' && (
+          <motion.div variants={itemVariants}>
+            <MacroTracking />
+          </motion.div>
+        )}
+
+        {/* Exercise Library - Premium+ */}
+        {planKey !== 'free' && (
+          <motion.div variants={itemVariants}>
+            <ExerciseLibrary />
+          </motion.div>
+        )}
+
+        {/* Goal Tracking - Premium+ */}
+        {planKey !== 'free' && (
+          <motion.div variants={itemVariants}>
+            <GoalTracking />
+          </motion.div>
+        )}
+
+        {/* Health Streaks - Premium+ (Enhanced Version) */}
+        {planKey !== 'free' && (
+          <motion.div variants={itemVariants}>
+            <HealthStreaks />
+          </motion.div>
+        )}
+
+        {/* Custom Notifications - Premium+ */}
+        {planKey !== 'free' && (
+          <motion.div variants={itemVariants}>
+            <CustomNotifications />
+          </motion.div>
+        )}
+
+        {/* Motivational Support - Premium+ */}
+        {planKey !== 'free' && (
+          <motion.div variants={itemVariants}>
+            <MotivationalSupport />
+          </motion.div>
+        )}
+
+        {/* ULTIMATE FEATURES */}
+
+        {/* Advanced Analytics - Ultimate+ */}
+        {(planKey === 'ultimate' || planKey === 'elite') && (
+          <motion.div variants={itemVariants}>
+            <AdvancedAnalytics />
+          </motion.div>
+        )}
+
+        {/* Progress Reports - Ultimate+ */}
+        {(planKey === 'ultimate' || planKey === 'elite') && (
+          <motion.div variants={itemVariants}>
+            <ProgressReports />
+          </motion.div>
+        )}
+
+        {/* Workout Analytics - Ultimate+ */}
+        {(planKey === 'ultimate' || planKey === 'elite') && (
+          <motion.div variants={itemVariants}>
+            <WorkoutAnalytics />
+          </motion.div>
+        )}
+
+        {/* Data Export - Ultimate+ */}
+        {(planKey === 'ultimate' || planKey === 'elite') && (
+          <motion.div variants={itemVariants}>
+            <DataExport />
+          </motion.div>
+        )}
+
+        {/* ELITE FEATURES */}
+
+        {/* Doctor Consultations - Elite Only */}
+        {planKey === 'elite' && (
+          <motion.div variants={itemVariants}>
+            <DoctorConsultations />
+          </motion.div>
+        )}
+
+        {/* Appointment Scheduling - Elite Only */}
+        {planKey === 'elite' && (
+          <motion.div variants={itemVariants}>
+            <AppointmentScheduling />
+          </motion.div>
+        )}
+
         {/* Subscription Management */}
         <motion.div variants={itemVariants}>
           <SubscriptionManager />
         </motion.div>
+
+        {/* Sidebar Ad - Only for Basic users */}
+        {hasAds && (
+          <motion.div variants={itemVariants}>
+            <AdContainer placementName="dashboard_sidebar" />
+          </motion.div>
+        )}
       </motion.div>
+
+      {/* Video Ad Modal */}
+      {showVideoAd && (
+        <VideoAd
+          placementName="rewarded_video"
+          onClose={() => setShowVideoAd(false)}
+          onRewardEarned={handleRewardEarned}
+          rewardDescription="Get +1 bonus AI message"
+        />
+      )}
+
+      {/* Interstitial Ad Modal - Can be triggered after AI generation */}
+      {showInterstitialAd && (
+        <InterstitialAd
+          placementName="after_ai_generation"
+          onClose={() => setShowInterstitialAd(false)}
+          forceCountdown={3}
+        />
+      )}
     </>
   );
 });

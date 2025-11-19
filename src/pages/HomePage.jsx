@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
     import { useNavigate } from 'react-router-dom';
     import { useTranslation } from 'react-i18next';
+    import { Helmet } from 'react-helmet';
     import { Button } from '@/components/ui/button';
     import { ArrowRight, Star, ShieldCheck, Dumbbell, Carrot, BrainCircuit, CheckCircle, Loader2 } from 'lucide-react';
     import SiteLayout from '@/components/SiteLayout';
@@ -8,6 +9,7 @@ import React, { useState, useEffect } from 'react';
     import { useAuth } from '@/contexts/SupabaseAuthContext';
     import CheckoutDialog from '@/components/CheckoutDialog';
     import { cn } from '@/lib/utils';
+    import { AdContainer } from '@/components/ads';
 
     const HomePage = ({ logoUrl }) => {
       const navigate = useNavigate();
@@ -91,6 +93,21 @@ import React, { useState, useEffect } from 'react';
       return (
         <>
         <SiteLayout logoUrl={logoUrl}>
+          <Helmet>
+            <title>Online Nutritionist & Personalized Meal Plans | Certified Dietitian App</title>
+            <meta name="description" content="Get personalized meal plans and expert fitness coaching from certified nutritionists online. Professional diet planning, workout routines, and 24/7 health guidance. Start your transformation today!" />
+            <link rel="canonical" href="https://greenofig.com/home" />
+            <meta property="og:title" content="Online Nutritionist & Personalized Meal Plans | Certified Dietitian App" />
+            <meta property="og:description" content="Get personalized meal plans and expert fitness coaching from certified nutritionists online. Start your health transformation today with professional guidance." />
+            <meta property="og:url" content="https://greenofig.com/home" />
+            <meta property="og:type" content="website" />
+            <meta property="og:image" content="https://greenofig.com/og-image.jpg" />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content="Online Nutritionist & Personalized Meal Plans | Certified Dietitian App" />
+            <meta name="twitter:description" content="Get personalized meal plans and expert fitness coaching from certified nutritionists online. Start your health transformation today!" />
+            <meta name="robots" content="index, follow" />
+            <meta name="keywords" content="online nutritionist, personalized meal plans, certified dietitian online, nutrition coaching app, weight loss nutritionist, custom diet plan, fitness coaching online, registered dietitian consultation, healthy meal planning, workout plans personalized" />
+          </Helmet>
           <section className="hero-section text-center">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="hero-content">
@@ -177,6 +194,11 @@ import React, { useState, useEffect } from 'react';
                     </div>
                   </div>
                 </section>
+
+                {/* Ad placement between Features and Pricing */}
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                  <AdContainer placementName="homepage_inline" className="max-w-4xl mx-auto" />
+                </div>
 
                 <section className="page-section py-16">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">

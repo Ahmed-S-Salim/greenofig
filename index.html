@@ -7,6 +7,20 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="theme-color" content="#10b981" />
 
+		<!-- Content Security Policy - Restricts resource loading to approved sources -->
+		<meta http-equiv="Content-Security-Policy" content="
+			default-src 'self';
+			script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com;
+			style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+			font-src 'self' https://fonts.gstatic.com;
+			img-src 'self' data: blob: https: http:;
+			connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co https://api.stripe.com https://www.google-analytics.com https://fonts.googleapis.com https://fonts.gstatic.com;
+			frame-src 'self' https://js.stripe.com;
+			object-src 'none';
+			base-uri 'self';
+			form-action 'self';
+		" />
+
 		<!-- Cache Control - Force fresh content -->
 		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 		<meta http-equiv="Pragma" content="no-cache" />
@@ -18,26 +32,42 @@
 
 		<!-- Preload critical fonts if using custom fonts -->
 		<!-- <link rel="preload" href="/fonts/main-font.woff2" as="font" type="font/woff2" crossorigin /> -->
-		<!-- Google Search Console Verification (add your verification code here after registering) -->
-		<!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE_HERE" /> -->
 
-		<meta name="description" content="GreenoFig - Your AI-Powered Health Companion. Achieve your wellness goals with personalized nutrition, fitness, and lifestyle coaching powered by cutting-edge AI." />
-		<meta name="keywords" content="AI health coach, personalized meal plans, fitness coaching, nutrition app, wellness platform, weight loss, healthy eating, workout plans, diet tracker, health goals, AI nutritionist, fitness app, personalized nutrition, health tracking, wellness coach, meal planning, exercise routines, health and wellness, AI fitness, lifestyle coaching" />
+		<!-- Google Search Console Verification -->
+		<!-- IMPORTANT: Replace YOUR_VERIFICATION_CODE with the actual code from Google Search Console -->
+		<meta name="google-site-verification" content="YOUR_VERIFICATION_CODE_HERE" />
+
+		<!-- Google Analytics 4 -->
+		<!-- IMPORTANT: Replace G-XXXXXXXXXX with your actual GA4 Measurement ID -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'G-XXXXXXXXXX', {
+				page_title: document.title,
+				page_location: window.location.href,
+				send_page_view: true
+			});
+		</script>
+
+		<meta name="description" content="Get personalized meal plans and expert fitness coaching from certified nutritionists online. Professional diet planning, workout routines, and 24/7 health guidance. Start your transformation today!" />
+		<meta name="keywords" content="online nutritionist, personalized meal plans, certified dietitian online, nutrition coaching app, weight loss nutritionist, custom diet plan, fitness coaching online, registered dietitian consultation, healthy meal planning, workout plans personalized, nutrition app, dietitian meal plan, online health coach, weight management program, fitness nutrition plan, diet and exercise app, professional nutritionist online, meal prep planning, nutrition counseling online, health and wellness coach" />
 		<meta name="author" content="GreenoFig" />
 		<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content="https://greenofig.com/" />
-		<meta property="og:title" content="GreenoFig - AI-Powered Health & Wellness" />
-		<meta property="og:description" content="Achieve your wellness goals with personalized nutrition, fitness, and lifestyle coaching powered by cutting-edge AI." />
+		<meta property="og:title" content="Online Nutritionist & Personalized Meal Plans | Certified Dietitian App" />
+		<meta property="og:description" content="Get personalized meal plans and expert fitness coaching from certified nutritionists online. Start your health transformation today with professional guidance." />
 		<meta property="og:image" content="https://greenofig.com/logo.png" />
 
 		<!-- Twitter -->
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:url" content="https://greenofig.com/" />
-		<meta name="twitter:title" content="GreenoFig - AI-Powered Health & Wellness" />
-		<meta name="twitter:description" content="Achieve your wellness goals with personalized nutrition, fitness, and lifestyle coaching powered by cutting-edge AI." />
+		<meta name="twitter:title" content="Online Nutritionist & Personalized Meal Plans | Certified Dietitian App" />
+		<meta name="twitter:description" content="Get personalized meal plans and expert fitness coaching from certified nutritionists online. Start your health transformation today!" />
 		<meta name="twitter:image" content="https://greenofig.com/logo.png" />
 
 		<!-- Canonical URL -->
@@ -51,7 +81,7 @@
 			"name": "GreenoFig",
 			"url": "https://greenofig.com",
 			"logo": "https://greenofig.com/logo.png",
-			"description": "AI-powered health and wellness platform providing personalized nutrition and fitness coaching",
+			"description": "Online platform connecting you with certified nutritionists and registered dietitians for personalized meal plans, fitness coaching, and professional health guidance",
 			"sameAs": [
 				"https://www.facebook.com/greenofig",
 				"https://twitter.com/greenofig",
@@ -70,7 +100,7 @@
 		{
 			"@context": "https://schema.org",
 			"@type": "WebSite",
-			"name": "GreenoFig",
+			"name": "GreenoFig - Online Nutritionist & Meal Planning App",
 			"url": "https://greenofig.com",
 			"potentialAction": {
 				"@type": "SearchAction",
@@ -86,7 +116,7 @@
 			"@context": "https://schema.org",
 			"@type": "HealthAndBeautyBusiness",
 			"name": "GreenoFig",
-			"description": "AI-powered personalized health, nutrition, and fitness coaching platform",
+			"description": "Connect with certified nutritionists and registered dietitians online for personalized meal plans, custom workout routines, and professional health coaching",
 			"url": "https://greenofig.com",
 			"priceRange": "$9.99 - $29.99",
 			"offers": {
@@ -99,7 +129,7 @@
 		}
 		</script>
 
-		<title>GreenoFig - AI-Powered Health & Wellness</title>
+		<title>Online Nutritionist & Personalized Meal Plans | Certified Dietitian App</title>
 
 	<!-- Single Page Apps for GitHub Pages -->
 	<!-- Start Single Page Apps for GitHub Pages -->

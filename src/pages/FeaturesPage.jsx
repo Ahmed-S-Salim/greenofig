@@ -9,6 +9,7 @@ import React, { useState, useEffect } from 'react';
     import { toast } from '@/components/ui/use-toast';
     import * as LucideIcons from 'lucide-react';
     import FloatingFruits from '@/components/ui/FloatingFruits';
+    import { AdContainer } from '@/components/ads';
 
     const getIcon = (name) => {
         const Icon = LucideIcons[name];
@@ -154,6 +155,11 @@ import React, { useState, useEffect } from 'react';
                     <p className="text-text-secondary">{t('features.subtitle')}</p>
                 </div>
                )}
+
+               {/* Ad placement before CTA section */}
+               <div className="max-w-4xl mx-auto py-8">
+                 <AdContainer placementName="features_inline" />
+               </div>
 
                <section className="page-section py-24 text-center">
                    <div className="container mx-auto px-4 sm:px-6 lg:px-8 glass-effect p-12 rounded-2xl section-content">

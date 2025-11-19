@@ -34,6 +34,7 @@ import React, { useState, useEffect } from 'react';
       Wallet,
       Ticket,
       Gift,
+      Megaphone,
     } from 'lucide-react';
     import { Outlet } from 'react-router-dom';
     import FloatingAiChat from '@/components/FloatingAiChat';
@@ -147,6 +148,7 @@ import React, { useState, useEffect } from 'react';
 
       const adminNavLinks = [
         { icon: LayoutDashboard, label: 'Dashboard', path: '/app/admin' },
+        { icon: User, label: 'Tier Preview', path: '/app/admin?tab=tier-preview' },
         { icon: BarChart3, label: 'Analytics', path: '/app/admin?tab=analytics' },
         { icon: DollarSign, label: 'Revenue', path: '/app/admin?tab=revenue' },
         { icon: Bug, label: 'AI Errors', path: '/app/admin?tab=errors' },
@@ -159,6 +161,7 @@ import React, { useState, useEffect } from 'react';
         { icon: MessageSquare, label: 'Messaging', path: '/app/admin?tab=messaging' },
         { icon: FileText, label: 'Blog', path: '/app/admin?tab=blog' },
         { icon: Globe, label: 'Website', path: '/app/admin?tab=website' },
+        { icon: Megaphone, label: 'Ad Management', path: '/app/admin?tab=ads' },
         { icon: Bot, label: 'AI Coach', path: '/app/admin?tab=ai-coach' },
         { icon: Database, label: 'Database', path: '/app/admin?tab=studio' },
       ];

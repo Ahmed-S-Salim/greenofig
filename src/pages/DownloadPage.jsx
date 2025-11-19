@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
-import { Apple, Download, Smartphone, Star, CheckCircle, Carrot, Dumbbell, BrainCircuit, Camera, TrendingUp, Clock } from 'lucide-react';
+import { Download, Smartphone, Star, Carrot, Dumbbell, BrainCircuit, Camera, TrendingUp, Clock, LayoutDashboard } from 'lucide-react';
 import SiteLayout from '@/components/SiteLayout';
 
 const DownloadPage = ({ logoUrl }) => {
@@ -17,10 +17,10 @@ const DownloadPage = ({ logoUrl }) => {
   ];
 
   const screenshots = [
-    { title: t('download.screenshots.dashboard'), description: t('download.screenshots.dashboardDesc'), color: "from-green-500 to-emerald-600" },
-    { title: t('download.screenshots.mealPlans'), description: t('download.screenshots.mealPlansDesc'), color: "from-blue-500 to-cyan-600" },
-    { title: t('download.screenshots.workouts'), description: t('download.screenshots.workoutsDesc'), color: "from-purple-500 to-pink-600" },
-    { title: t('download.screenshots.aiCoach'), description: t('download.screenshots.aiCoachDesc'), color: "from-orange-500 to-red-600" }
+    { title: t('download.screenshots.dashboard'), description: t('download.screenshots.dashboardDesc'), color: "from-green-500 to-emerald-600", icon: LayoutDashboard },
+    { title: t('download.screenshots.mealPlans'), description: t('download.screenshots.mealPlansDesc'), color: "from-blue-500 to-cyan-600", icon: Carrot },
+    { title: t('download.screenshots.workouts'), description: t('download.screenshots.workoutsDesc'), color: "from-purple-500 to-pink-600", icon: Dumbbell },
+    { title: t('download.screenshots.aiCoach'), description: t('download.screenshots.aiCoachDesc'), color: "from-orange-500 to-red-600", icon: BrainCircuit }
   ];
 
   return (
@@ -57,35 +57,37 @@ const DownloadPage = ({ logoUrl }) => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-              {/* iOS Download */}
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center max-w-2xl mx-auto">
+              {/* iOS Download - Official App Store Badge */}
               <div className="animate-item">
-                <Button
-                  size="lg"
-                  className="btn-primary w-full h-20 text-lg bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 text-white shadow-xl"
-                  onClick={() => window.open('https://testflight.apple.com', '_blank')}
+                <a
+                  href="https://apps.apple.com/app/greenofig"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block transition-transform hover:scale-105 active:scale-95"
                 >
-                  <Apple className="w-8 h-8 mr-3" />
-                  <div className="text-left">
-                    <div className="text-xs opacity-80">{t('download.downloadIOS')}</div>
-                  </div>
-                </Button>
-                <p className="text-xs text-text-secondary mt-2">{t('download.iosVersion')}</p>
+                  <img
+                    src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+                    alt="Download on the App Store"
+                    className="h-14 w-auto"
+                  />
+                </a>
               </div>
 
-              {/* Android Download */}
+              {/* Android Download - Official Google Play Badge */}
               <div className="animate-item">
-                <Button
-                  size="lg"
-                  className="btn-primary w-full h-20 text-lg bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white shadow-xl"
-                  onClick={() => window.open('https://play.google.com', '_blank')}
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.greenofig.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block transition-transform hover:scale-105 active:scale-95"
                 >
-                  <Smartphone className="w-8 h-8 mr-3" />
-                  <div className="text-left">
-                    <div className="text-xs opacity-80">{t('download.downloadAndroid')}</div>
-                  </div>
-                </Button>
-                <p className="text-xs text-text-secondary mt-2">{t('download.androidVersion')}</p>
+                  <img
+                    src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                    alt="Get it on Google Play"
+                    className="h-[82px] w-auto"
+                  />
+                </a>
               </div>
             </div>
 
@@ -123,7 +125,7 @@ const DownloadPage = ({ logoUrl }) => {
                   <div className="absolute inset-0 bg-black/20" />
                   <div className="relative z-10 text-white text-center p-6">
                     <div className="w-16 h-16 bg-white/20 backdrop-blur-xl rounded-2xl mx-auto mb-4 flex items-center justify-center">
-                      <Smartphone className="w-8 h-8" />
+                      <screenshot.icon className="w-8 h-8" />
                     </div>
                     <h3 className="text-xl font-bold mb-2">{screenshot.title}</h3>
                     <p className="text-sm opacity-90">{screenshot.description}</p>

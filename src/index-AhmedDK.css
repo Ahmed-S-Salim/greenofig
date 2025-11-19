@@ -1,0 +1,823 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 220 15% 10%;
+  --foreground: 220 10% 95%;
+  --card: 220 15% 15%;
+  --card-foreground: 220 10% 95%;
+  --popover: 220 15% 15%;
+  --popover-foreground: 220 10% 95%;
+  --primary: 100 70% 55%;
+  --primary-foreground: 100 70% 15%;
+  --secondary: 220 10% 25%;
+  --secondary-foreground: 220 10% 95%;
+  --muted: 220 10% 18%;
+  --muted-foreground: 220 10% 65%;
+  --accent: 220 10% 20%;
+  --accent-foreground: 220 10% 95%;
+  --destructive: 0 62% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 10% 25%;
+  --input: 220 10% 25%;
+  --ring: 100 70% 60%;
+  --radius: 0.75rem;
+
+  --glass-bg: 220 15% 12% / 0.6;
+  --glass-border: 220 10% 25%;
+  --text-primary: 220 10% 98%;
+  --text-secondary: 220 10% 70%;
+}
+
+.dark {
+  --background: 220 15% 10%;
+  --foreground: 220 10% 95%;
+  --card: 220 15% 15%;
+  --card-foreground: 220 10% 95%;
+  --popover: 220 15% 15%;
+  --popover-foreground: 220 10% 95%;
+  --primary: 100 70% 55%;
+  --primary-foreground: 100 70% 15%;
+  --secondary: 220 10% 25%;
+  --secondary-foreground: 220 10% 95%;
+  --muted: 220 10% 18%;
+  --muted-foreground: 220 10% 65%;
+  --accent: 220 10% 20%;
+  --accent-foreground: 220 10% 95%;
+  --destructive: 0 62% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 10% 25%;
+  --input: 220 10% 25%;
+  --ring: 100 70% 60%;
+
+  --glass-bg: 220 15% 12% / 0.6;
+  --glass-border: 220 10% 25%;
+  --text-primary: 220 10% 98%;
+  --text-secondary: 220 10% 70%;
+}
+
+.light {
+  --background: 220 20% 96%;
+  --foreground: 220 15% 10%;
+  --card: 220 20% 100%;
+  --card-foreground: 220 15% 15%;
+  --popover: 220 20% 100%;
+  --popover-foreground: 220 15% 15%;
+  --primary: 100 80% 50%;
+  --primary-foreground: 100 80% 10%;
+  --secondary: 220 10% 75%;
+  --secondary-foreground: 220 15% 15%;
+  --muted: 220 10% 90%;
+  --muted-foreground: 220 10% 45%;
+  --accent: 220 10% 90%;
+  --accent-foreground: 220 15% 15%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 15% 88%;
+  --input: 220 15% 88%;
+  --ring: 100 80% 55%;
+
+  --glass-bg: 220 20% 98% / 0.8;
+  --glass-border: 220 15% 88%;
+  --text-primary: 220 15% 10%;
+  --text-secondary: 220 10% 35%;
+}
+
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  @supports (font-variation-settings: normal) {
+    body {
+      font-family: 'Inter var', sans-serif;
+    }
+  }
+
+  /* Enhanced focus-visible styles for better keyboard navigation */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Improved text readability */
+  h1, h2, h3, h4, h5, h6 {
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Better contrast for links */
+  a {
+    text-decoration-skip-ink: auto;
+  }
+
+  /* Smooth scrolling for better UX */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Skip to content link for accessibility */
+  .skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 0 0 4px 0;
+    z-index: 100;
+    transition: top 0.2s ease-in-out;
+  }
+
+  .skip-to-content:focus {
+    top: 0;
+  }
+
+  /* Screen reader only text */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .glass-effect {
+    background-color: hsl(var(--glass-bg));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid hsl(var(--glass-border));
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-green-400;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, hsl(var(--border) / 0.25) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.25) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.95;
+      transform: scale(1.02);
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 2s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite linear;
+    background: linear-gradient(
+      to right,
+      hsl(var(--muted)) 0%,
+      hsl(var(--accent)) 20%,
+      hsl(var(--muted)) 40%,
+      hsl(var(--muted)) 100%
+    );
+    background-size: 1000px 100%;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+
+  @keyframes slide-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.3s ease-out;
+  }
+
+  .nav-link-item:hover {
+    background: linear-gradient(to bottom right, hsl(var(--primary)), hsl(var(--primary) / 0.8)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+  }
+
+  .nav-link-item.active-link:hover {
+    background: linear-gradient(to bottom right, hsl(var(--primary)), hsl(var(--primary) / 0.9)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+  }
+
+  /* Custom scrollbar for dialogs - consistent across mobile and desktop */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    transition: background 0.2s ease;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  /* Firefox scrollbar styling */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+  }
+
+  /* GLOBAL THIN SCROLLBAR - Apply to entire website (body, html, all scrollable elements) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    transition: background 0.2s ease;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  /* Ensure body and html have thin scrollbar */
+  body, html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+  }
+
+  /* Fix date inputs to not be too wide - force same width as text inputs */
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="time"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Remove any intrinsic width from date input calendar icon */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    margin-left: auto;
+  }
+
+  /* Hide scrollbar but keep scroll functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ========================================
+     COMPLETE ANIMATION SYSTEM
+     Applied to all pages - mobile, tablet, desktop
+     ======================================== */
+
+  /* Animation Variables */
+  :root {
+    /* Transitions */
+    --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.2s ease;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+    --shadow-glow: 0 4px 20px rgba(163, 230, 53, 0.3);
+
+    /* Animation Colors (matched to theme) */
+    --accent-color: #a3e635;
+    --accent-light: rgba(163, 230, 53, 0.1);
+    --gradient: linear-gradient(135deg, #a3e635, hsl(100, 70%, 65%));
+  }
+
+  /* Page Load Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Apply to Sections */
+  .hero-section,
+  .page-section {
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .hero-content,
+  .section-content {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  /* Staggered animation for multiple items */
+  .animate-item:nth-child(1) { animation: fadeInUp 0.6s ease-out 0.1s backwards; }
+  .animate-item:nth-child(2) { animation: fadeInUp 0.6s ease-out 0.2s backwards; }
+  .animate-item:nth-child(3) { animation: fadeInUp 0.6s ease-out 0.3s backwards; }
+  .animate-item:nth-child(4) { animation: fadeInUp 0.6s ease-out 0.4s backwards; }
+  .animate-item:nth-child(5) { animation: fadeInUp 0.6s ease-out 0.5s backwards; }
+  .animate-item:nth-child(6) { animation: fadeInUp 0.6s ease-out 0.6s backwards; }
+  .animate-item:nth-child(7) { animation: fadeInUp 0.6s ease-out 0.7s backwards; }
+  .animate-item:nth-child(8) { animation: fadeInUp 0.6s ease-out 0.8s backwards; }
+
+  /* Card Hover Animations */
+  .card {
+    transition: var(--transition-base);
+    border: 1px solid rgba(163, 230, 53, 0.1);
+  }
+
+  .card:hover {
+    border-color: var(--accent-color);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-4px);
+  }
+
+  .card-scale {
+    transition: var(--transition-base);
+  }
+
+  .card-scale:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .card-rotate {
+    transition: var(--transition-base);
+  }
+
+  .card-rotate:hover {
+    transform: rotate(1deg) translateY(-2px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Button Animations */
+  .btn-primary {
+    transition: var(--transition-base);
+    box-shadow: var(--shadow-md);
+    background: var(--gradient);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .btn-secondary {
+    transition: var(--transition-base);
+    background: transparent;
+    border: 2px solid var(--accent-color);
+  }
+
+  .btn-secondary:hover {
+    background: var(--accent-light);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .btn-pulse:hover {
+    animation: pulse 0.6s ease-out;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  /* Image/Media Animations */
+  .img-zoom {
+    overflow: hidden;
+  }
+
+  .img-zoom img {
+    transition: var(--transition-base);
+  }
+
+  .img-zoom:hover img {
+    transform: scale(1.1);
+  }
+
+  .img-blur img {
+    transition: var(--transition-base);
+    filter: blur(0px);
+  }
+
+  .img-blur:hover img {
+    filter: blur(0px) brightness(1.1);
+  }
+
+  /* Text Animations */
+  .text-underline {
+    position: relative;
+    transition: var(--transition-fast);
+  }
+
+  .text-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-color);
+    transition: width 0.3s ease;
+  }
+
+  .text-underline:hover::after {
+    width: 100%;
+  }
+
+  .text-color {
+    transition: color 0.3s ease;
+  }
+
+  .text-color:hover {
+    color: var(--accent-color);
+  }
+
+  /* Scroll Animations */
+  .scroll-animate {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .scroll-animate.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Responsive Animation Adjustments */
+  @media (max-width: 768px) {
+    /* Slightly faster animations on mobile */
+    .hero-section,
+    .page-section {
+      animation-duration: 0.6s;
+    }
+
+    .hero-content,
+    .section-content {
+      animation-duration: 0.5s;
+    }
+
+    /* Reduce transform distance on mobile */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Smaller lift on hover for mobile */
+    .card:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  /* Floating Fruits Animation */
+  @keyframes float {
+    0% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.3;
+    }
+    90% {
+      opacity: 0.3;
+    }
+    100% {
+      transform: translateY(-100vh) translateX(var(--end-x, 0)) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .animate-float {
+    animation: float linear infinite;
+    will-change: transform, opacity;
+  }
+
+  /* Blog Post Link Styles */
+  .prose a {
+    color: hsl(var(--primary));
+    text-decoration: none;
+    position: relative;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid transparent;
+  }
+
+  .prose a:hover {
+    color: hsl(var(--primary) / 0.8);
+    border-bottom-color: hsl(var(--primary) / 0.5);
+  }
+
+  .prose a:active {
+    color: hsl(var(--primary) / 0.6);
+  }
+
+  /* Table of Contents Active State */
+  .toc-active {
+    color: hsl(var(--primary));
+    font-weight: 600;
+    border-left: 2px solid hsl(var(--primary));
+    padding-left: 0.75rem;
+  }
+
+  /* Respect user's motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-section,
+    .page-section,
+    .hero-content,
+    .section-content,
+    .animate-item,
+    .card,
+    .card-scale,
+    .card-rotate,
+    .btn-primary,
+    .btn-secondary,
+    .img-zoom img,
+    .img-blur img,
+    .text-underline,
+    .text-color,
+    .scroll-animate,
+    .animate-float {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* ========================================
+     RTL (Right-to-Left) Support for Arabic
+     ======================================== */
+
+  /* RTL Direction */
+  [dir="rtl"] {
+    text-align: right;
+  }
+
+  [dir="rtl"] body {
+    direction: rtl;
+    text-align: right;
+  }
+
+  /* Arabic Navigation Text - Smaller to prevent wrapping */
+  [dir="rtl"] nav button,
+  [dir="rtl"] nav a,
+  [dir="rtl"] header nav button,
+  [dir="rtl"] header nav a {
+    font-size: 0.85em !important;
+    letter-spacing: -0.01em !important;
+    white-space: nowrap;
+  }
+
+  /* Arabic Mobile Menu Items - Smaller */
+  [dir="rtl"] .mobile-menu button,
+  [dir="rtl"] [class*="mobile"] nav button {
+    font-size: 0.88em !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  /* RTL Margin and Padding Adjustments */
+  [dir="rtl"] .ml-auto {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+  }
+
+  [dir="rtl"] .mr-auto {
+    margin-right: 0 !important;
+    margin-left: auto !important;
+  }
+
+  /* RTL Flexbox Direction */
+  [dir="rtl"] .flex-row {
+    flex-direction: row-reverse;
+  }
+
+  /* RTL Grid Adjustments */
+  [dir="rtl"] .grid {
+    direction: rtl;
+  }
+
+  /* RTL Text Alignment */
+  [dir="rtl"] .text-left {
+    text-align: right !important;
+  }
+
+  [dir="rtl"] .text-right {
+    text-align: left !important;
+  }
+
+  /* RTL Border Radius */
+  [dir="rtl"] .rounded-l {
+    border-radius: 0 0.5rem 0.5rem 0 !important;
+  }
+
+  [dir="rtl"] .rounded-r {
+    border-radius: 0.5rem 0 0 0.5rem !important;
+  }
+
+  /* RTL Icons and Elements */
+  [dir="rtl"] .rotate-180 {
+    transform: rotate(0deg) !important;
+  }
+
+  /* RTL Navigation */
+  [dir="rtl"] nav {
+    direction: rtl;
+  }
+
+  /* RTL Dropdown Positioning */
+  [dir="rtl"] .dropdown {
+    left: auto !important;
+    right: 0 !important;
+  }
+
+  /* RTL Forms */
+  [dir="rtl"] input,
+  [dir="rtl"] textarea,
+  [dir="rtl"] select {
+    text-align: right;
+    direction: rtl;
+  }
+
+  /* RTL Tables */
+  [dir="rtl"] table {
+    direction: rtl;
+  }
+
+  /* RTL Animations - Mirror X-axis transforms */
+  [dir="rtl"] @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  [dir="rtl"] @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* RTL Mobile Menu Animation */
+  [dir="rtl"] .mobile-menu {
+    left: 0 !important;
+    right: auto !important;
+  }
+
+  /* RTL Scrollbar Position */
+  [dir="rtl"] *::-webkit-scrollbar {
+    left: 0;
+    right: auto;
+  }
+
+  /* RTL Prose (Blog Content) */
+  [dir="rtl"] .prose {
+    direction: rtl;
+    text-align: right;
+  }
+
+  [dir="rtl"] .prose ul,
+  [dir="rtl"] .prose ol {
+    padding-right: 1.5rem;
+    padding-left: 0;
+  }
+
+  /* RTL Glass Effect Elements */
+  [dir="rtl"] .glass-effect {
+    direction: rtl;
+  }
+}

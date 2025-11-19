@@ -172,12 +172,8 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
         const signUp = useCallback(async (credentials) => {
                 const { email, password, full_name } = credentials;
 
-                let role = 'user';
-                if (email.endsWith('@greenofig.com')) {
-                    if (email.startsWith('nutritionist@')) role = 'nutritionist';
-                    else if (email.startsWith('admin@')) role = 'admin';
-                    else if (email.startsWith('superadmin@')) role = 'super_admin';
-                }
+                // SECURITY FIX: Always assign 'user' role - admin roles must be set by existing admins only
+                const role = 'user';
 
                 const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
                     email,
@@ -213,14 +209,6 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
 
                 // Wait for the user profile to be created by database trigger
                 await new Promise(resolve => setTimeout(resolve, 1500));
-
-                // Update the profile with the correct role if it's a special account
-                if (role !== 'user') {
-                    await supabase
-                        .from('user_profiles')
-                        .update({ role })
-                        .eq('id', signInData.user.id);
-                }
 
                 const profile = await fetchUserProfile(signInData.user);
 

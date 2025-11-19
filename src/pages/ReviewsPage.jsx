@@ -15,6 +15,7 @@ import React, { useState, useEffect } from 'react';
     import { supabase } from '@/lib/customSupabaseClient';
 
     const ReviewCard = ({ review, index }) => {
+      const { i18n } = useTranslation();
       const cardVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: { opacity: 1, y: 0, transition: { delay: index * 0.1 } },
@@ -26,7 +27,7 @@ import React, { useState, useEffect } from 'react';
       };
 
       // Use Arabic content if language is Arabic and Arabic content exists
-      const currentLang = localStorage.getItem('language') || 'en';
+      const currentLang = i18n.language;
       const customerTitle = (currentLang === 'ar' && review.customer_title_ar) ? review.customer_title_ar : review.customer_title;
       const quote = (currentLang === 'ar' && review.quote_ar) ? review.quote_ar : review.quote;
 
@@ -186,7 +187,7 @@ import React, { useState, useEffect } from 'react';
     }
 
     const ReviewsPage = ({ logoUrl }) => {
-      const { t } = useTranslation();
+      const { t, i18n } = useTranslation();
       const [isFormOpen, setIsFormOpen] = useState(false);
       const [reviews, setReviews] = useState([]);
       const [loading, setLoading] = useState(true);
@@ -211,7 +212,7 @@ import React, { useState, useEffect } from 'react';
         };
 
         fetchReviews();
-      }, [t]);
+      }, [t, i18n.language]);
 
       return (
         <>

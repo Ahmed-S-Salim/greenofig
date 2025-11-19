@@ -3,8 +3,17 @@
  * Generates PDF invoices for payments
  */
 
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+// Lazy load jsPDF only when needed (reduces initial bundle size by ~447KB)
+let jsPDFInstance = null;
+const loadJsPDF = async () => {
+  if (!jsPDFInstance) {
+    const jsPDF = (await import('jspdf')).default;
+    await import('jspdf-autotable');
+    jsPDFInstance = jsPDF;
+  }
+  return jsPDFInstance;
+};
+
 import { supabase } from './customSupabaseClient';
 import { format } from 'date-fns';
 
@@ -105,6 +114,9 @@ export const generateInvoicePDF = async (invoiceId) => {
 
     if (error) throw error;
     if (!invoice) throw new Error('Invoice not found');
+
+    // Lazy load jsPDF when needed
+    const jsPDF = await loadJsPDF();
 
     // Create PDF
     const doc = new jsPDF();

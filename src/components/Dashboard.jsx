@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Activity, Utensils, TrendingUp, Heart, Droplet, Moon } from 'lucide-react';
+import { Activity, Utensils, TrendingUp, Heart, Droplet, Moon, Gift } from 'lucide-react';
+import { useFeatureAccess } from '@/hooks/useFeatureAccess';
+import AdContainer from '@/components/ads/AdContainer';
+import VideoAd from '@/components/ads/VideoAd';
+import { Button } from '@/components/ui/button';
 
 const Dashboard = ({ user }) => {
+  const { hasAds } = useFeatureAccess();
+  const [showVideoAd, setShowVideoAd] = useState(false);
+  const [bonusMessages, setBonusMessages] = useState(0);
+
+  const handleRewardEarned = () => {
+    setBonusMessages(prev => prev + 1);
+  };
+
   const stats = [
     { label: 'Calories Today', value: '1,850', target: '2,200', icon: Utensils, color: 'from-orange-500 to-red-500' },
     { label: 'Steps', value: '8,432', target: '10,000', icon: Activity, color: 'from-green-500 to-emerald-500' },
@@ -12,6 +24,17 @@ const Dashboard = ({ user }) => {
 
   return (
     <div className="max-w-7xl mx-auto">
+      {/* Top Banner Ad - Only for Basic (free) users */}
+      {hasAds && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <AdContainer placementName="top_banner" />
+        </motion.div>
+      )}
+
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -21,6 +44,11 @@ const Dashboard = ({ user }) => {
           Welcome back, {user?.full_name || 'Friend'}!
         </h1>
         <p className="text-purple-300 text-lg">Here's your health overview for today</p>
+        {bonusMessages > 0 && (
+          <p className="text-green-400 text-sm mt-1">
+            🎁 You have {bonusMessages} bonus AI message{bonusMessages > 1 ? 's' : ''} from watching ads!
+          </p>
+        )}
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -47,6 +75,33 @@ const Dashboard = ({ user }) => {
           );
         })}
       </div>
+
+      {/* Rewarded Video Ad Button - Only for Basic users */}
+      {hasAds && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <div className="glass-effect rounded-xl p-4 border border-yellow-500/30 bg-gradient-to-r from-yellow-500/10 to-orange-500/10">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Gift className="w-8 h-8 text-yellow-400" />
+                <div>
+                  <h3 className="font-semibold text-white">Earn Bonus Features!</h3>
+                  <p className="text-sm text-yellow-200/80">Watch a short video to get +1 extra AI message</p>
+                </div>
+              </div>
+              <Button
+                onClick={() => setShowVideoAd(true)}
+                className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
+              >
+                Watch Ad
+              </Button>
+            </div>
+          </div>
+        </motion.div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <motion.div
@@ -144,6 +199,27 @@ const Dashboard = ({ user }) => {
           </div>
         </motion.div>
       </div>
+
+      {/* Sidebar Ad - Only for Basic users */}
+      {hasAds && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-6"
+        >
+          <AdContainer placementName="dashboard_sidebar" />
+        </motion.div>
+      )}
+
+      {/* Video Ad Modal */}
+      {showVideoAd && (
+        <VideoAd
+          placementName="rewarded_video"
+          onClose={() => setShowVideoAd(false)}
+          onRewardEarned={handleRewardEarned}
+          rewardDescription="Get +1 bonus AI message"
+        />
+      )}
     </div>
   );
 };

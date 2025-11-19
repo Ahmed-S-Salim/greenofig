@@ -6,6 +6,7 @@ import React from 'react';
     import { Button } from '@/components/ui/button';
     import { toast } from '@/components/ui/use-toast';
     import { Send, Mail, MessageSquare, User } from 'lucide-react';
+    import { AdContainer } from '@/components/ads';
 
     const ContactPage = ({ logoUrl }) => {
       const { t } = useTranslation();
@@ -92,6 +93,11 @@ import React from 'react';
                 </Button>
               </form>
             </motion.div>
+          </div>
+
+          {/* Ad placement at bottom of contact page */}
+          <div className="max-w-4xl mx-auto mt-12">
+            <AdContainer placementName="contact_banner" />
           </div>
         </SiteLayout>
       );

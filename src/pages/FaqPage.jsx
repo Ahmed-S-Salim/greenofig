@@ -9,7 +9,7 @@ import { Loader2 } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 
 const FaqPageContent = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [faqs, setFaqs] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -26,14 +26,14 @@ const FaqPageContent = () => {
                 toast({ title: t('faq.errorFetching'), description: error.message, variant: 'destructive' });
             } else if (data) {
                 // Use Arabic content if language is Arabic and Arabic content exists
-                const currentLang = localStorage.getItem('language') || 'en';
+                const currentLang = i18n.language;
                 const content = (currentLang === 'ar' && data.content_ar) ? data.content_ar : data.content;
                 setFaqs(content.faqs || []);
             }
             setLoading(false);
         };
         fetchFaqs();
-    }, [t]);
+    }, [t, i18n.language]);
 
     if (loading) {
         return (

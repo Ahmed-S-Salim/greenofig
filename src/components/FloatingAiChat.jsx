@@ -11,6 +11,7 @@ import { useToast } from '@/components/ui/use-toast';
 import logoUrl from '@/assets/Remove background project.png';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
+import { detectLanguage, getLanguageInstructions } from '@/utils/languageDetection';
 
 const FloatingAiChat = () => {
   const { userProfile, user } = useAuth();
@@ -566,13 +567,21 @@ const FloatingAiChat = () => {
         return;
       }
 
+      // Detect language from user's message
+      const detectedLanguage = detectLanguage(messageText);
+      const languageInstructions = getLanguageInstructions(detectedLanguage, newMessages);
+
       const { data: functionData, error: functionError } = await supabase.functions.invoke('ai-coach-memory', {
         body: JSON.stringify({
           messages: newMessages.slice(-10),
+          language: detectedLanguage,
+          languageInstructions: languageInstructions,
           userProfile: isVisitor ? {
             isVisitor: true,
             role: 'visitor',
-            systemPrompt: 'You are a helpful Website Assistant for GreenoFig, an AI-powered health and wellness platform. You can ONLY answer questions about: the website features, pricing plans, how the platform works, subscription details, privacy and security, payment methods, and general information about our services. If asked about personal health advice, meal plans, or fitness routines, politely explain that users need to sign up to access our AI Health Coach. Keep responses friendly, concise, and focused on helping visitors understand our platform.'
+            systemPrompt: detectedLanguage === 'ar'
+              ? 'أنت مساعد موقع GreenoFig، منصة صحية مدعومة بالذكاء الاصطناعي. يمكنك فقط الإجابة على الأسئلة حول: ميزات الموقع، خطط الأسعار، كيفية عمل المنصة، تفاصيل الاشتراك، الخصوصية والأمان، طرق الدفع، والمعلومات العامة عن خدماتنا. إذا سُئلت عن نصائح صحية شخصية أو خطط وجبات أو برامج رياضية، اشرح بأدب أن المستخدمين بحاجة للتسجيل للوصول إلى مدرب الصحة الذكي. كن ودوداً ومختصراً ومركزاً على مساعدة الزوار في فهم منصتنا. **أجب دائماً بالعربية.**'
+              : 'You are a helpful Website Assistant for GreenoFig, an AI-powered health and wellness platform. You can ONLY answer questions about: the website features, pricing plans, how the platform works, subscription details, privacy and security, payment methods, and general information about our services. If asked about personal health advice, meal plans, or fitness routines, politely explain that users need to sign up to access our AI Health Coach. Keep responses friendly, concise, and focused on helping visitors understand our platform. **Always respond in English.**'
           } : {
             ...userProfile,
             isAdmin: userProfile?.role === 'admin' || userProfile?.role === 'super_admin',

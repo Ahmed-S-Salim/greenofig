@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
-import { Database, TrendingUp, Users, CreditCard, ShieldQuestion, FileText, Globe, Ticket, Gift, DollarSign, LayoutDashboard, BarChart3, ArrowLeft, Wallet, Bot, UserCog, Bug, MessageSquare, Sparkles, Calendar } from 'lucide-react';
+import { Database, TrendingUp, Users, CreditCard, ShieldQuestion, FileText, Globe, Ticket, Gift, DollarSign, LayoutDashboard, BarChart3, ArrowLeft, Wallet, Bot, UserCog, Bug, MessageSquare, Sparkles, Calendar, Megaphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { getAccessibleTabs, isAdmin } from '@/lib/rbac';
@@ -20,6 +20,8 @@ import AiCoachSettings from '@/components/admin/AiCoachSettings';
 import ErrorMonitorPanel from '@/components/admin/ErrorMonitorPanel';
 import MessagingSettings from '@/components/admin/MessagingSettings';
 import BlogManagementHub from '@/components/admin/BlogManagementHub';
+import AdManagementDashboard from '@/components/ads/AdManagementDashboard';
+import TierPreviewDashboard from '@/components/admin/TierPreviewDashboard';
 
 const AdminPanel = ({ user }) => {
   const [searchParams] = useSearchParams();
@@ -36,6 +38,7 @@ const AdminPanel = ({ user }) => {
 
   const allTabs = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'tier-preview', label: 'Tier Preview', icon: UserCog },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'revenue', label: 'Revenue', icon: DollarSign },
     { id: 'errors', label: 'AI Errors', icon: Bug },
@@ -48,6 +51,7 @@ const AdminPanel = ({ user }) => {
     { id: 'messaging', label: 'Messaging', icon: MessageSquare },
     { id: 'blog', label: 'Blog', icon: FileText },
     { id: 'website', label: 'Website', icon: Globe },
+    { id: 'ads', label: 'Ad Management', icon: Megaphone },
     { id: 'ai-coach', label: 'AI Coach', icon: Bot },
     { id: 'studio', label: 'Database', icon: Database },
   ];
@@ -80,6 +84,19 @@ const AdminPanel = ({ user }) => {
     switch (activeTab) {
       case 'dashboard':
         return <DashboardOverview user={user} onNavigate={setActiveTab} />;
+      case 'tier-preview':
+        // Only super_admin can access tier preview
+        if (user.role !== 'super_admin') {
+          return (
+            <div className="flex items-center justify-center h-96">
+              <div className="text-center">
+                <h3 className="text-xl font-bold text-red-600 mb-2">Access Denied</h3>
+                <p className="text-muted-foreground">This feature is only available to Super Admins</p>
+              </div>
+            </div>
+          );
+        }
+        return <TierPreviewDashboard user={user} />;
       case 'analytics':
         return <Analytics user={user} />;
       case 'revenue':
@@ -106,6 +123,8 @@ const AdminPanel = ({ user }) => {
         return <BlogManagementHub user={user} />;
       case 'website':
         return <WebsiteManager user={user} />;
+      case 'ads':
+        return <AdManagementDashboard user={user} />;
       case 'ai-coach':
         return <AiCoachSettings user={user} />;
       default:

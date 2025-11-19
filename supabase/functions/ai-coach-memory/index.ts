@@ -38,7 +38,7 @@ serve(async (req) => {
       });
     }
 
-    const { messages, userProfile } = await req.json()
+    const { messages, userProfile, language, languageInstructions } = await req.json()
 
     // SECURITY: Validate input
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
@@ -68,25 +68,28 @@ serve(async (req) => {
 
     const { provider, api_key, model_name, temperature, max_tokens, system_prompt, api_endpoint } = settings
 
+    // Use language-specific system prompt if provided, otherwise use database system_prompt
+    const activeSystemPrompt = languageInstructions?.systemPrompt || userProfile?.systemPrompt || system_prompt
+
     // Build conversation history
     let reply = ''
 
     // Call the appropriate AI provider
     switch (provider) {
       case 'gemini':
-        reply = await callGemini(messages, userProfile, api_key, model_name, temperature, max_tokens, system_prompt)
+        reply = await callGemini(messages, userProfile, api_key, model_name, temperature, max_tokens, activeSystemPrompt)
         break
 
       case 'openai':
-        reply = await callOpenAI(messages, userProfile, api_key, model_name, temperature, max_tokens, system_prompt)
+        reply = await callOpenAI(messages, userProfile, api_key, model_name, temperature, max_tokens, activeSystemPrompt)
         break
 
       case 'claude':
-        reply = await callClaude(messages, userProfile, api_key, model_name, temperature, max_tokens, system_prompt)
+        reply = await callClaude(messages, userProfile, api_key, model_name, temperature, max_tokens, activeSystemPrompt)
         break
 
       case 'custom':
-        reply = await callCustom(messages, userProfile, api_key, api_endpoint, temperature, max_tokens, system_prompt)
+        reply = await callCustom(messages, userProfile, api_key, api_endpoint, temperature, max_tokens, activeSystemPrompt)
         break
 
       default:

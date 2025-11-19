@@ -10,6 +10,7 @@
     // Eager load critical components
     import AuthPage from '@/components/AuthPage';
     import AppLayout from '@/components/AppLayout';
+    import PersistentBottomBanner from '@/components/ads/PersistentBottomBanner';
 
     // Scroll to top component - runs on every route change
     const ScrollToTop = () => {
@@ -222,6 +223,8 @@
             </AnimatePresence>
           </Suspense>
           <Toaster />
+          {/* Persistent Bottom Banner Ad - Shows for ALL non-paid users (anonymous visitors + Basic tier) */}
+          <PersistentBottomBanner />
         </>
       );
     }

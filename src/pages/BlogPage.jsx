@@ -12,10 +12,13 @@ import SiteLayout from '@/components/SiteLayout';
 import { toast } from '@/components/ui/use-toast';
 import DOMPurify from 'dompurify';
 import FloatingFruits from '@/components/ui/FloatingFruits';
+import { useFeatureAccess } from '@/hooks/useFeatureAccess';
+import AdContainer from '@/components/ads/AdContainer';
 
 const BlogPage = ({ logoUrl }) => {
   const { t } = useTranslation();
   const params = useParams();
+  const { hasAds } = useFeatureAccess();
   const [posts, setPosts] = useState([]);
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -417,7 +420,12 @@ const BlogPage = ({ logoUrl }) => {
               <div
                 ref={contentRef}
                 className="section-content prose prose-invert max-w-none text-lg leading-relaxed text-text-secondary prose-h2:text-text-primary prose-h3:text-text-primary prose-strong:text-text-primary prose-a:text-primary prose-a:no-underline hover:prose-a:text-primary/80 prose-a:transition-colors prose-a:duration-200 glass-effect rounded-xl p-8 border border-border/50"
-                dangerouslySetInnerHTML={{ __html: getLocalizedContent(post, 'content').replace(/\n/g, '<br />') }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getLocalizedContent(post, 'content').replace(/\n/g, '<br />'), {
+                  ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'blockquote', 'img', 'span', 'div'],
+                  ALLOWED_ATTR: ['href', 'src', 'alt', 'class', 'id', 'target', 'rel'],
+                  ADD_ATTR: ['target'],
+                  FORCE_BODY: true
+                }) }}
               />
 
               {/* Related Posts Section */}
@@ -594,6 +602,13 @@ const BlogPage = ({ logoUrl }) => {
 
       <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-7xl mx-auto">
+          {/* Native Ad for Blog - Only for Basic users */}
+          {hasAds && (
+            <div className="mb-8">
+              <AdContainer placementName="blog_inline" />
+            </div>
+          )}
+
           <h2 className="text-3xl font-bold mb-8 text-center">More Articles</h2>
 
           {loading ? (
