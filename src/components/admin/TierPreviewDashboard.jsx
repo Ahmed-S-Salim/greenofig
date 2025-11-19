@@ -22,22 +22,22 @@ const TierPreviewDashboard = ({ user }) => {
       id: 'premium',
       name: 'Premium',
       color: 'bg-blue-500',
-      description: 'Ad-free with unlimited features',
-      features: ['No ads', 'Unlimited meals', 'Advanced analytics', 'Barcode scanner', 'Food database']
+      description: 'Ad-free + 9 premium features',
+      features: ['No ads', 'Recipe database', 'Macro tracking', 'Exercise library', 'Goal tracking', 'Health streaks', 'Custom notifications']
     },
     {
       id: 'ultimate',
       name: 'Ultimate',
       color: 'bg-purple-500',
-      description: 'Everything + nutritionist access',
-      features: ['All Premium', 'Nutritionist chat', 'Video consultations', 'Custom workouts', 'Wearable sync']
+      description: 'All Premium + 6 ultimate features',
+      features: ['All Premium (9)', 'Advanced analytics', 'Progress reports', 'Workout analytics', 'Data export', 'Wearable sync', 'Nutritionist chat']
     },
     {
       id: 'elite',
       name: 'Elite',
       color: 'bg-amber-500',
-      description: 'Complete health transformation',
-      features: ['All Ultimate', 'Photo recognition', 'Doctor consultations', 'Priority support']
+      description: 'Complete suite - All 18 features',
+      features: ['All Premium (9)', 'All Ultimate (6)', 'Photo recognition', 'Doctor consultations', 'Appointment scheduling']
     }
   ];
 
@@ -184,17 +184,35 @@ const TierPreviewDashboard = ({ user }) => {
               </thead>
               <tbody className="divide-y">
                 {[
+                  // Core Features
                   { name: 'Basic Tracking', free: true, premium: true, ultimate: true, elite: true },
                   { name: 'Meal Plans', free: 'Limited', premium: true, ultimate: true, elite: true },
                   { name: 'Workout Plans', free: 'Limited', premium: true, ultimate: true, elite: true },
                   { name: 'Ad-Free Experience', free: false, premium: true, ultimate: true, elite: true },
+
+                  // Premium Features (7 new features)
+                  { name: 'Recipe Database', free: false, premium: true, ultimate: true, elite: true },
+                  { name: 'Macro Tracking', free: false, premium: true, ultimate: true, elite: true },
+                  { name: 'Exercise Library', free: false, premium: true, ultimate: true, elite: true },
+                  { name: 'Goal Tracking', free: false, premium: true, ultimate: true, elite: true },
+                  { name: 'Health Streaks', free: false, premium: true, ultimate: true, elite: true },
+                  { name: 'Custom Notifications', free: false, premium: true, ultimate: true, elite: true },
+                  { name: 'Motivational Support', free: false, premium: true, ultimate: true, elite: true },
                   { name: 'Barcode Scanner', free: false, premium: true, ultimate: true, elite: true },
                   { name: 'Food Database Search', free: false, premium: true, ultimate: true, elite: true },
+
+                  // Ultimate Features (4 new features)
+                  { name: 'Advanced Analytics', free: false, premium: false, ultimate: true, elite: true },
+                  { name: 'Progress Reports', free: false, premium: false, ultimate: true, elite: true },
+                  { name: 'Workout Analytics', free: false, premium: false, ultimate: true, elite: true },
+                  { name: 'Data Export', free: false, premium: false, ultimate: true, elite: true },
                   { name: 'Wearable Device Sync', free: false, premium: false, ultimate: true, elite: true },
                   { name: 'Nutritionist Messaging', free: false, premium: false, ultimate: true, elite: true },
-                  { name: 'Video Consultations', free: false, premium: false, ultimate: true, elite: true },
-                  { name: 'Photo Food Recognition', free: false, premium: false, ultimate: false, elite: true },
+
+                  // Elite Features (2 new features)
                   { name: 'Doctor Consultations', free: false, premium: false, ultimate: false, elite: true },
+                  { name: 'Appointment Scheduling', free: false, premium: false, ultimate: false, elite: true },
+                  { name: 'Photo Food Recognition', free: false, premium: false, ultimate: false, elite: true },
                 ].map((feature, idx) => (
                   <tr key={idx}>
                     <td className="p-2 font-medium">{feature.name}</td>
