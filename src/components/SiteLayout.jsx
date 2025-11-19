@@ -125,9 +125,7 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                           }
                           setIsMobileMenuOpen(false);
                         }}
-                        className={`w-full text-left px-4 py-3 font-medium rounded-md transition-all duration-300 ${
-                          isArabic ? 'text-sm' : 'text-base'
-                        } ${
+                        className={`w-full text-left px-4 py-3 font-medium rounded-md transition-all duration-300 text-sm ${
                           isActive
                             ? 'text-primary bg-white/10 cursor-default'
                             : 'text-text-secondary hover:text-primary hover:bg-white/5 cursor-pointer'
@@ -141,9 +139,6 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                 </nav>
 
                 <div className="mt-4 pt-4 border-t border-white/10 space-y-2 flex-shrink-0">
-                  <div className="mb-3">
-                    <LanguageSwitcher />
-                  </div>
                   {user && userProfile ? (
                     <>
                       <Button
@@ -212,7 +207,7 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                 const isArabic = currentLang === 'ar';
 
                 return (
-                  <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+                  <nav className={`hidden lg:flex items-center gap-4 xl:gap-6`}>
                     {navLinks.map(link => {
                       const isActive = location.pathname === link.path;
 
@@ -223,9 +218,7 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                             if (isActive) return;
                             link.unimplemented ? handleUnimplemented(link.pageName) : navigate(link.path);
                           }}
-                          className={`font-medium transition-colors whitespace-nowrap ${
-                            isArabic ? 'text-xs' : 'text-sm'
-                          } ${
+                          className={`font-medium transition-colors whitespace-nowrap text-sm ${
                             isActive
                               ? 'text-primary cursor-default'
                               : 'text-text-secondary hover:text-primary cursor-pointer'
@@ -240,27 +233,34 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                 );
               })()}
               <div className="flex items-center gap-1 sm:gap-2">
+                {/* Language switcher - visible on all screen sizes */}
                 <LanguageSwitcher />
-                {user && userProfile ? (
-                  <>
-                    <Button variant="ghost" onClick={() => navigate(getDashboardPath())} className="flex items-center gap-2 h-10 min-h-[44px] sm:min-h-0 px-2 sm:px-3">
-                      <User className="w-4 h-4" />
-                      <span className="hidden md:inline text-sm">{userProfile.full_name || 'Dashboard'}</span>
-                    </Button>
-                    <Button variant="ghost" onClick={async () => {
-                      await signOut();
-                      navigate('/home');
-                    }} className="flex items-center gap-2 h-10 min-h-[44px] sm:min-h-0 px-2 sm:px-3">
-                      <LogOut className="w-4 h-4" />
-                      <span className="hidden md:inline text-sm">{t('nav.logout')}</span>
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button variant="ghost" onClick={() => navigate('/login')} className="h-10 min-h-[44px] sm:min-h-0 text-sm">{t('nav.login')}</Button>
-                    <Button onClick={() => navigate('/signup')} className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg h-10 min-h-[44px] sm:min-h-0 text-sm">{t('nav.signup')}</Button>
-                  </>
-                )}
+
+                {/* Desktop: Show auth buttons */}
+                <div className="hidden lg:flex items-center gap-1 sm:gap-2">
+                  {user && userProfile ? (
+                    <>
+                      <Button variant="ghost" onClick={() => navigate(getDashboardPath())} className="flex items-center gap-2 h-10 px-2 sm:px-3">
+                        <User className="w-4 h-4" />
+                        <span className="hidden md:inline text-sm">{userProfile.full_name || 'Dashboard'}</span>
+                      </Button>
+                      <Button variant="ghost" onClick={async () => {
+                        await signOut();
+                        navigate('/home');
+                      }} className="flex items-center gap-2 h-10 px-2 sm:px-3">
+                        <LogOut className="w-4 h-4" />
+                        <span className="hidden md:inline text-sm">{t('nav.logout')}</span>
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button variant="ghost" onClick={() => navigate('/login')} className="h-10 text-sm">{t('nav.login')}</Button>
+                      <Button onClick={() => navigate('/signup')} className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg h-10 text-sm">{t('nav.signup')}</Button>
+                    </>
+                  )}
+                </div>
+
+                {/* Mobile: Hamburger menu button */}
                 <Button size="icon" variant="ghost" className="lg:hidden min-h-[44px] min-w-[44px]" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
                 </Button>
