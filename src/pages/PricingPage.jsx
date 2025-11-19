@@ -133,6 +133,13 @@ import React, { useState, useEffect } from 'react';
             <meta property="og:type" content="website" />
           </Helmet>
           <div className="flex flex-col items-center">
+            {/* Pricing Overview Text */}
+            <div className="mb-8 max-w-3xl mx-auto text-center">
+              <p className="text-lg text-text-secondary leading-relaxed">
+                {t('pricing.overviewText')}
+              </p>
+            </div>
+
             <div className="mb-12 flex items-center gap-2 glass-effect p-1 rounded-full" style={{
               backdropFilter: 'blur(16px) saturate(180%)',
               WebkitBackdropFilter: 'blur(16px) saturate(180%)',
