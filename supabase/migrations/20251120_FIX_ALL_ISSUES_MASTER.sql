@@ -164,7 +164,10 @@ CREATE TRIGGER on_auth_user_created
   FOR EACH ROW
   EXECUTE FUNCTION public.handle_new_user();
 
-RAISE NOTICE '✅ PART 1 COMPLETE: Signup fixed + user_profiles RLS enabled';
+DO $$
+BEGIN
+  RAISE NOTICE '✅ PART 1 COMPLETE: Signup fixed + user_profiles RLS enabled';
+END $$;
 
 -- =====================================================
 -- PART 2: FIX 5 RLS ERRORS
@@ -326,7 +329,10 @@ TO service_role
 USING (true)
 WITH CHECK (true);
 
-RAISE NOTICE '✅ PART 2 COMPLETE: 5 RLS errors fixed';
+DO $$
+BEGIN
+  RAISE NOTICE '✅ PART 2 COMPLETE: 5 RLS errors fixed';
+END $$;
 
 -- =====================================================
 -- PART 3: CREATE SURVEY RESPONSES TABLE
@@ -385,7 +391,10 @@ CREATE POLICY "Service role bypass survey_responses"
 CREATE INDEX IF NOT EXISTS idx_survey_responses_user_id ON public.survey_responses(user_id);
 CREATE INDEX IF NOT EXISTS idx_survey_responses_completed_at ON public.survey_responses(completed_at);
 
-RAISE NOTICE '✅ PART 3 COMPLETE: Survey responses table created';
+DO $$
+BEGIN
+  RAISE NOTICE '✅ PART 3 COMPLETE: Survey responses table created';
+END $$;
 
 -- =====================================================
 -- PART 4: FIX FAQ ARABIC PRICING
@@ -427,7 +436,10 @@ SET content_ar = jsonb_set(
 WHERE page_key = 'faq_page'
 AND content_ar->'faqs' IS NOT NULL;
 
-RAISE NOTICE '✅ PART 4 COMPLETE: FAQ Arabic pricing fixed';
+DO $$
+BEGIN
+  RAISE NOTICE '✅ PART 4 COMPLETE: FAQ Arabic pricing fixed';
+END $$;
 
 -- =====================================================
 -- PART 5: FIX 65 FUNCTION SECURITY WARNINGS
