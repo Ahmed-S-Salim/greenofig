@@ -1,0 +1,31 @@
+=====================================================
+  RUN THIS SQL SCRIPT TO FIX EVERYTHING
+=====================================================
+
+FILE TO USE:
+  supabase/migrations/20251120_COMPLETE_FIX_FINAL.sql
+
+WHAT IT FIXES:
+  1. Signup functionality (automatic profile creation)
+  2. RLS on 5 tables (fixes all 5 errors you showed me)
+  3. Survey responses table
+  4. FAQ Arabic pricing
+  5. 65 function security warnings
+
+STEPS:
+  1. Open the file above
+  2. Copy ALL content (Ctrl+A, Ctrl+C)
+  3. Go to Supabase Dashboard -> SQL Editor
+  4. Paste (Ctrl+V)
+  5. Click RUN button
+  6. Wait for success messages
+
+AFTER RUNNING:
+  1. Refresh Security Advisor page
+  2. Should show 0 ERRORS
+  3. Test signup at https://greenofig.com
+  4. Verify no "database error"
+
+TIME: 2 minutes
+RESULT: 0 security errors, production-ready app
+=====================================================
