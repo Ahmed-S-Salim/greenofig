@@ -193,6 +193,12 @@ CREATE TABLE IF NOT EXISTS public.survey_responses (
 -- Enable RLS
 ALTER TABLE public.survey_responses ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Users can view own survey responses" ON public.survey_responses;
+DROP POLICY IF EXISTS "Users can insert own survey responses" ON public.survey_responses;
+DROP POLICY IF EXISTS "Admins can view all survey responses" ON public.survey_responses;
+DROP POLICY IF EXISTS "Service role bypass survey_responses" ON public.survey_responses;
+
 -- RLS Policies
 CREATE POLICY "Users can view own survey responses"
   ON public.survey_responses FOR SELECT
