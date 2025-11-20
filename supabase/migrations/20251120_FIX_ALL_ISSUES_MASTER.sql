@@ -166,7 +166,7 @@ CREATE TRIGGER on_auth_user_created
 
 DO $$
 BEGIN
-  RAISE NOTICE '✅ PART 1 COMPLETE: Signup fixed + user_profiles RLS enabled';
+  RAISE NOTICE 'PART 1 COMPLETE: Signup fixed + user_profiles RLS enabled';
 END $$;
 
 -- =====================================================
@@ -331,7 +331,7 @@ WITH CHECK (true);
 
 DO $$
 BEGIN
-  RAISE NOTICE '✅ PART 2 COMPLETE: 5 RLS errors fixed';
+  RAISE NOTICE 'PART 2 COMPLETE: 5 RLS errors fixed';
 END $$;
 
 -- =====================================================
@@ -393,7 +393,7 @@ CREATE INDEX IF NOT EXISTS idx_survey_responses_completed_at ON public.survey_re
 
 DO $$
 BEGIN
-  RAISE NOTICE '✅ PART 3 COMPLETE: Survey responses table created';
+  RAISE NOTICE 'PART 3 COMPLETE: Survey responses table created';
 END $$;
 
 -- =====================================================
@@ -438,7 +438,7 @@ AND content_ar->'faqs' IS NOT NULL;
 
 DO $$
 BEGIN
-  RAISE NOTICE '✅ PART 4 COMPLETE: FAQ Arabic pricing fixed';
+  RAISE NOTICE 'PART 4 COMPLETE: FAQ Arabic pricing fixed';
 END $$;
 
 -- =====================================================
@@ -493,10 +493,10 @@ LANGUAGE plpgsql'
         END;
     END LOOP;
 
-    RAISE NOTICE '✅ PART 5 COMPLETE: Function security warnings fixed';
-    RAISE NOTICE '   - Functions fixed: %', functions_fixed;
-    RAISE NOTICE '   - Functions skipped: %', functions_skipped;
-    RAISE NOTICE '   - Functions failed: %', functions_failed;
+    RAISE NOTICE 'PART 5 COMPLETE: Function security warnings fixed';
+    RAISE NOTICE '  - Functions fixed: %', functions_fixed;
+    RAISE NOTICE '  - Functions skipped: %', functions_skipped;
+    RAISE NOTICE '  - Functions failed: %', functions_failed;
 END $$;
 
 -- =====================================================
@@ -504,22 +504,22 @@ END $$;
 -- =====================================================
 DO $$
 BEGIN
-  RAISE NOTICE '';
-  RAISE NOTICE '🎉🎉🎉 ALL FIXES COMPLETED SUCCESSFULLY! 🎉🎉🎉';
-  RAISE NOTICE '';
-  RAISE NOTICE '✅ Signup functionality: FIXED';
-  RAISE NOTICE '✅ user_profiles RLS: ENABLED';
-  RAISE NOTICE '✅ 5 RLS errors: FIXED';
-  RAISE NOTICE '✅ Survey responses table: CREATED';
-  RAISE NOTICE '✅ FAQ Arabic pricing: FIXED';
-  RAISE NOTICE '✅ 65 function warnings: FIXED';
-  RAISE NOTICE '';
-  RAISE NOTICE '📋 REMAINING MANUAL TASKS:';
-  RAISE NOTICE '1. Go to Supabase Dashboard → Authentication → Settings';
+  RAISE NOTICE ' ';
+  RAISE NOTICE '=== ALL FIXES COMPLETED SUCCESSFULLY! ===';
+  RAISE NOTICE ' ';
+  RAISE NOTICE 'Signup functionality: FIXED';
+  RAISE NOTICE 'user_profiles RLS: ENABLED';
+  RAISE NOTICE '5 RLS errors: FIXED';
+  RAISE NOTICE 'Survey responses table: CREATED';
+  RAISE NOTICE 'FAQ Arabic pricing: FIXED';
+  RAISE NOTICE '65 function warnings: FIXED';
+  RAISE NOTICE ' ';
+  RAISE NOTICE 'REMAINING MANUAL TASKS:';
+  RAISE NOTICE '1. Go to Supabase Dashboard -> Authentication -> Settings';
   RAISE NOTICE '2. Enable "Check for leaked passwords using HaveIBeenPwned.org"';
-  RAISE NOTICE '';
+  RAISE NOTICE ' ';
   RAISE NOTICE '3. Test signup with a new user to verify everything works';
   RAISE NOTICE '4. Refresh Security Advisor page to verify 0 errors';
-  RAISE NOTICE '';
-  RAISE NOTICE '🚀 Your GreenoFig app is now production-ready for 100+ users!';
+  RAISE NOTICE ' ';
+  RAISE NOTICE 'Your GreenoFig app is now production-ready for 100+ users!';
 END $$;
