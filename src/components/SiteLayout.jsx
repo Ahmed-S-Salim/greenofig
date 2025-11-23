@@ -9,7 +9,7 @@ import FloatingAiChat from '@/components/FloatingAiChat';
 import BackToTopButton from '@/components/ui/BackToTopButton';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User, LayoutDashboard } from 'lucide-react';
 
 const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey: propOpenSurvey }) => {
   const navigate = useNavigate();
@@ -149,8 +149,19 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                           setIsMobileMenuOpen(false);
                         }}
                       >
+                        <LayoutDashboard className="w-4 h-4" />
+                        <span className="truncate">Dashboard</span>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start gap-2 h-10 text-sm backdrop-blur-sm border-white/10 hover:bg-white/5"
+                        onClick={() => {
+                          navigate('/app/profile');
+                          setIsMobileMenuOpen(false);
+                        }}
+                      >
                         <User className="w-4 h-4" />
-                        <span className="truncate">{userProfile.full_name || 'Dashboard'}</span>
+                        <span className="truncate">{userProfile.full_name || 'Profile'}</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -241,8 +252,12 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                   {user && userProfile ? (
                     <>
                       <Button variant="ghost" onClick={() => navigate(getDashboardPath())} className="flex items-center gap-2 h-10 px-2 sm:px-3">
+                        <LayoutDashboard className="w-4 h-4" />
+                        <span className="hidden md:inline text-sm">Dashboard</span>
+                      </Button>
+                      <Button variant="ghost" onClick={() => navigate('/app/profile')} className="flex items-center gap-2 h-10 px-2 sm:px-3">
                         <User className="w-4 h-4" />
-                        <span className="hidden md:inline text-sm">{userProfile.full_name || 'Dashboard'}</span>
+                        <span className="hidden md:inline text-sm">{userProfile.full_name || 'Profile'}</span>
                       </Button>
                       <Button variant="ghost" onClick={async () => {
                         await signOut();
