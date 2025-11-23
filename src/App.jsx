@@ -138,16 +138,19 @@
       }
 
       const role = userProfile.role;
-      const username = userProfile.username;
 
       // Admins and super admins go to /app/admin
       if (role === 'admin' || role === 'super_admin') {
         return <Navigate to="/app/admin" replace />;
       }
 
-      // All other users go to /app/username (or fallback to role if no username)
-      const path = username ? `/app/${username}` : `/app/${role}`;
-      return <Navigate to={path} replace />;
+      // Nutritionists go to /app/nutritionist
+      if (role === 'nutritionist') {
+        return <Navigate to="/app/nutritionist" replace />;
+      }
+
+      // Regular users go to /app/user
+      return <Navigate to="/app/user" replace />;
     };
 
     // Component to handle root path - redirect to dashboard if logged in, otherwise home
@@ -185,6 +188,8 @@
 
                 <Route path="/app" element={<ProtectedRoute><AppLayout logoUrl={logoUrl} /></ProtectedRoute>}>
                     <Route index element={<RoleBasedRedirect />} />
+                    <Route path="user" element={<UserDashboard logoUrl={logoUrl} />} />
+                    <Route path="nutritionist" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
                     <Route path="admin" element={<AdminDashboard logoUrl={logoUrl} />} />
                     <Route path="profile" element={<ProfilePage logoUrl={logoUrl} />} />
                     <Route path="billing" element={<BillingPage />} />
