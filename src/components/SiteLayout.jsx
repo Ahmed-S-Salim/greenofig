@@ -295,7 +295,7 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                     <img src={logoUrl} alt="GreenoFig Logo" className="w-8 h-8" />
                     <span className="text-xl font-extrabold tracking-tight gradient-text">GreenoFig</span>
                   </Link>
-                  <p className="text-sm text-text-secondary">&copy; {new Date().getFullYear()} GreenoFig. {t('footer.allRightsReserved')}</p>
+                  <p className="text-sm text-text-secondary">&copy; {new Date().getFullYear()} GreenoFig.com. {t('footer.allRightsReserved')}</p>
                 </div>
                 <div>
                   <p className="font-semibold mb-4">{t('footer.contactUs')}</p>

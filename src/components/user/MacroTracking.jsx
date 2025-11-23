@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Calendar } from '@/components/ui/calendar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TrendingUp, TrendingDown, Minus, Target, Flame, Activity } from 'lucide-react';
 import { supabase } from '@/lib/customSupabaseClient';
@@ -209,10 +208,9 @@ const MacroTracking = () => {
       </Card>
 
       <Tabs defaultValue="today" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="today">Today</TabsTrigger>
           <TabsTrigger value="week">This Week</TabsTrigger>
-          <TabsTrigger value="calendar">Calendar</TabsTrigger>
         </TabsList>
 
         <TabsContent value="today" className="space-y-6">
@@ -360,30 +358,6 @@ const MacroTracking = () => {
                   <Bar dataKey="fat" fill={COLORS.fat} name="Fat (g)" />
                 </BarChart>
               </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="calendar">
-          <Card className="glass-effect">
-            <CardHeader>
-              <CardTitle className="text-lg">Select a Date</CardTitle>
-              <p className="text-sm text-text-secondary">
-                View your macro tracking for any day
-              </p>
-            </CardHeader>
-            <CardContent className="flex justify-center">
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={(date) => {
-                  if (date) {
-                    setSelectedDate(date);
-                    fetchDailyMacros(date);
-                  }
-                }}
-                className="rounded-md border"
-              />
             </CardContent>
           </Card>
         </TabsContent>

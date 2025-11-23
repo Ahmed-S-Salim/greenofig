@@ -6,6 +6,8 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 // Import dashboard sections
 import DashboardOverview from '@/components/nutritionist/DashboardOverview';
 import ClientManagement from '@/components/nutritionist/ClientManagement';
+import ClientOnboarding from '@/components/nutritionist/ClientOnboarding';
+import GoalManagement from '@/components/nutritionist/GoalManagement';
 import MealPlanning from '@/components/nutritionist/MealPlanning';
 import AppointmentSchedule from '@/components/nutritionist/AppointmentSchedule';
 import MessagingCenter from '@/components/nutritionist/MessagingCenter';
@@ -13,6 +15,7 @@ import AnalyticsDashboard from '@/components/nutritionist/AnalyticsDashboard';
 import ResourceLibrary from '@/components/nutritionist/ResourceLibrary';
 import NutritionistSettings from '@/components/nutritionist/NutritionistSettings';
 import EnhancedBlogManager from '@/components/admin/EnhancedBlogManager';
+import SubscriptionManagement from '@/components/payments/SubscriptionManagement';
 
 const NutritionistPanel = ({ user }) => {
   const [searchParams] = useSearchParams();
@@ -33,6 +36,10 @@ const NutritionistPanel = ({ user }) => {
         return <DashboardOverview user={user} />;
       case 'clients':
         return <ClientManagement />;
+      case 'onboarding':
+        return <ClientOnboarding />;
+      case 'goals':
+        return <GoalManagement />;
       case 'meals':
         return <MealPlanning />;
       case 'schedule':
@@ -41,6 +48,8 @@ const NutritionistPanel = ({ user }) => {
         return <MessagingCenter />;
       case 'analytics':
         return <AnalyticsDashboard />;
+      case 'payments':
+        return <SubscriptionManagement />;
       case 'resources':
         return <ResourceLibrary />;
       case 'blog':

@@ -91,7 +91,6 @@
     "premiumPlan": "Premium",
     "ultimatePlan": "Ultimate",
     "elitePlan": "Elite",
-    "overviewText": "نحن نقدم ثلاث مستويات اشتراك: بريميوم (9.99 دولار/شهر)، برو (19.99 دولار/شهر)، ونخبة (29.99 دولار/شهر). تتضمن جميع الخطط الوصول إلى خطط وجبات وتمارين مخصصة. تفتح المستويات الأعلى ميزات مثل دردشة المدرب الذكي وتكامل الأجهزة القابلة للارتداء والتعرف على الطعام بالصور. وفر 25% مع الفوترة السنوية!",
     "planDescriptions": {
       "Base": "ابدأ بميزات التتبع الصحي الأساسية",
       "Premium": "ميزات متقدمة لعشاق اللياقة البدنية الجادين",
@@ -107,7 +106,6 @@
     "bestValue": "أفضل قيمة",
     "planFeatures": {
       "base": {
-        "adSupported": "⚠️ تجربة مدعومة بالإعلانات",
         "mealPlans": "خطتي وجبات بالذكاء الاصطناعي شهرياً",
         "workoutPlans": "خطتي تمارين بالذكاء الاصطناعي شهرياً",
         "chatMessages": "10 رسائل دردشة ذكية شهرياً",
@@ -791,6 +789,123 @@
     "goToDashboard": "انتقل إلى لوحة التحكم",
     "back": "رجوع",
     "next": "التالي",
-    "finish": "إنهاء"
+    "finish": "إنهاء",
+    "dietaryPreferences": "التفضيلات الغذائية",
+    "dietaryPreferencesSubtitle": "اختر أي قيود أو تفضيلات غذائية تتبعها. يمكنك اختيار عدة خيارات.",
+    "dietNone": "لا توجد قيود",
+    "dietVegetarian": "نباتي",
+    "dietVegan": "نباتي صرف",
+    "dietGlutenFree": "خالي من الغلوتين",
+    "dietDairyFree": "خالي من منتجات الألبان",
+    "dietKeto": "كيتو",
+    "dietPaleo": "باليو",
+    "dietHalal": "حلال",
+    "dietKosher": "كوشر",
+    "healthConditions": "الحالات الصحية",
+    "healthConditionsSubtitle": "هل لديك أي حالات صحية يجب أن نعرف عنها؟ يمكنك اختيار عدة خيارات.",
+    "conditionNone": "لا توجد",
+    "conditionDiabetes": "السكري",
+    "conditionHighBloodPressure": "ضغط الدم المرتفع",
+    "conditionHeartDisease": "أمراض القلب",
+    "conditionAsthma": "الربو",
+    "conditionArthritis": "التهاب المفاصل",
+    "conditionThyroid": "مشاكل الغدة الدرقية",
+    "conditionFoodAllergies": "حساسية الطعام"
+  },
+  "survey": {
+    "title": "ابحث عن الخطة المثالية لك",
+    "subtitle": "أجب على بعض الأسئلة للحصول على توصية خطة مخصصة لك.",
+    "stepProgress": "الخطوة {{step}} من {{total}}",
+    "back": "رجوع",
+    "next": "التالي",
+    "findMyPlan": "ابحث عن خطتي",
+    "step1": {
+      "question": "ما هو هدفك الصحي الأساسي؟",
+      "description": "سيساعدنا هذا في التوصية بأفضل نقطة انطلاق لك.",
+      "loseWeight": "فقدان الوزن",
+      "buildMuscle": "بناء العضلات",
+      "improveEndurance": "تحسين القدرة على التحمل",
+      "eatHealthier": "الأكل الصحي",
+      "increaseEnergy": "زيادة الطاقة"
+    },
+    "step2": {
+      "question": "ما هو مستوى خبرتك في اللياقة البدنية؟",
+      "beginner": "مبتدئ",
+      "beginnerDesc": "بداية رحلتي في اللياقة البدنية.",
+      "intermediate": "متوسط",
+      "intermediateDesc": "أتمرن بانتظام.",
+      "advanced": "متقدم",
+      "advancedDesc": "لدي خبرة كبيرة وأتدرب بجد."
+    },
+    "step3": {
+      "question": "ما هي ميزانيتك لخطة صحية؟",
+      "description": "اختر نطاقًا يناسبك.",
+      "budgetFriendly": "اقتصادي",
+      "budgetFriendlyDesc": "أقل من 10 دولار شهرياً",
+      "moderate": "متوسط",
+      "moderateDesc": "10-20 دولار شهرياً",
+      "premium": "متميز",
+      "premiumDesc": "20-30 دولار شهرياً"
+    },
+    "step4": {
+      "question": "هل لديك أي تفضيلات أو قيود غذائية؟",
+      "description": "اختر كل ما ينطبق.",
+      "noRestrictions": "لا قيود",
+      "vegetarian": "نباتي",
+      "vegan": "نباتي صرف",
+      "glutenFree": "خالي من الغلوتين",
+      "keto": "كيتو",
+      "halal": "حلال"
+    },
+    "step5": {
+      "question": "كم من الوقت يمكنك تخصيصه يومياً؟",
+      "description": "للتمارين وإعداد الوجبات.",
+      "minimal": "15-30 دقيقة يومياً",
+      "minimalDesc": "لدي وقت محدود",
+      "moderate": "30-60 دقيقة يومياً",
+      "moderateDesc": "يمكنني تخصيص بعض الوقت",
+      "extensive": "أكثر من 60 دقيقة يومياً",
+      "extensiveDesc": "لدي متسع من الوقت"
+    },
+    "step6": {
+      "question": "ما نوع التوجيه الذي تفضله؟",
+      "selfGuided": "ذاتي التوجيه",
+      "selfGuidedDesc": "أفضل العمل بشكل مستقل",
+      "aiCoach": "مدرب الذكاء الاصطناعي",
+      "aiCoachDesc": "أريد توجيهاً مدعوماً بالذكاء الاصطناعي",
+      "professional": "دعم احترافي",
+      "professionalDesc": "أحتاج مساعدة خبير تغذية"
+    },
+    "step7": {
+      "question": "ما هي الميزات التي تهمك أكثر؟",
+      "description": "اختر كل ما يجذبك.",
+      "mealPlanning": "تخطيط الوجبات",
+      "workoutPlans": "خطط التمارين",
+      "progressTracking": "تتبع التقدم",
+      "aiChat": "دعم الدردشة بالذكاء الاصطناعي",
+      "photoRecognition": "التعرف على الطعام بالصور",
+      "expertConsultation": "استشارة الخبراء"
+    },
+    "step8": {
+      "question": "كيف تصف صحتك الحالية؟",
+      "excellent": "ممتازة",
+      "excellentDesc": "لا توجد مخاوف صحية",
+      "good": "جيدة",
+      "goodDesc": "مخاوف بسيطة، بصحة جيدة بشكل عام",
+      "fair": "متوسطة",
+      "fairDesc": "أتعامل مع بعض الحالات الصحية",
+      "needsAttention": "تحتاج إلى اهتمام",
+      "needsAttentionDesc": "أحتاج إلى توجيه احترافي"
+    },
+    "step9": {
+      "question": "ما هو جدولك الزمني لتحقيق أهدافك؟",
+      "description": "متى تريد رؤية النتائج؟",
+      "relaxed": "مريح",
+      "relaxedDesc": "6 أشهر فأكثر",
+      "moderate": "متوسط",
+      "moderateDesc": "3-6 أشهر",
+      "urgent": "عاجل",
+      "urgentDesc": "خلال 3 أشهر"
+    }
   }
 }

@@ -122,32 +122,27 @@
       };
 
       return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-background touch-auto">
+        <div className="h-screen flex items-center justify-center p-2 bg-background touch-auto overflow-hidden">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-md"
+            className="w-full max-w-md h-full max-h-[98vh] flex items-center"
           >
-            <div className="glass-effect rounded-2xl p-4 sm:p-8 shadow-2xl">
+            <div className="glass-effect rounded-lg p-3 shadow-2xl w-full">
               <button
                 onClick={() => navigate(-1)}
-                className="flex items-center gap-2 text-text-secondary hover:text-primary transition-colors mb-4 group"
+                className="flex items-center gap-1 text-text-secondary hover:text-primary transition-colors mb-2 group"
               >
-                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                <span className="text-sm font-medium">{t('auth.back')}</span>
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                <span className="text-xs font-medium">{t('auth.back')}</span>
               </button>
 
-              <div className="text-center mb-8">
-                <Link to="/home" className="inline-block mb-4">
-                  <motion.div
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    <img src={logoUrl} alt="GreenoFig Logo" className="w-20 h-20" />
-                  </motion.div>
+              <div className="text-center mb-3">
+                <Link to="/home" className="inline-block mb-2">
+                  <img src={logoUrl} alt="GreenoFig Logo" className="w-12 h-12" />
                 </Link>
-                <h1 className="text-4xl font-bold gradient-text mb-2">GreenoFig</h1>
-                <p className="text-text-secondary">{t('auth.tagline')}</p>
+                <h1 className="text-2xl font-bold gradient-text mb-1">GreenoFig</h1>
+                <p className="text-text-secondary text-xs">{t('auth.tagline')}</p>
                 {selectedPlan && !isLogin && (
                   <div className="mt-4 bg-primary/10 text-primary font-semibold p-2 rounded-lg">
                     {t('auth.signUpForPlan')} <span className="font-bold">{selectedPlan}</span> {t('auth.plan')}
@@ -157,40 +152,39 @@
 
               <Button
                 variant="outline"
-                className="w-full py-3 min-h-[44px] rounded-lg shadow-lg flex items-center justify-center gap-2 touch-manipulation active:scale-95 transition-transform"
+                className="w-full py-2 min-h-[36px] rounded-lg shadow-lg flex items-center justify-center gap-2 touch-manipulation active:scale-95 transition-transform text-xs"
                 onClick={handleGoogleSignIn}
                 disabled={googleLoading || loading}
                 type="button"
               >
                 {googleLoading ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  <GoogleIcon className="w-5 h-5" />
+                  <GoogleIcon className="w-4 h-4" />
                 )}
                 <span>{isLogin ? t('auth.signInWithGoogle') : t('auth.signUpWithGoogle')}</span>
               </Button>
 
-              <div className="my-4 flex items-center">
+              <div className="my-2 flex items-center">
                 <div className="flex-grow border-t border-border"></div>
-                <span className="flex-shrink mx-4 text-xs text-text-secondary uppercase">{t('auth.orContinueWith')}</span>
+                <span className="flex-shrink mx-2 text-[10px] text-text-secondary uppercase">{t('auth.orContinueWith')}</span>
                 <div className="flex-grow border-t border-border"></div>
               </div>
 
 
-              <form onSubmit={handleEmailSubmit} className="space-y-4">
+              <form onSubmit={handleEmailSubmit} className="space-y-2">
                 {!isLogin && (
                   <div>
-                    <label className="block text-sm font-medium text-text-secondary mb-2">
+                    <label className="block text-xs font-medium text-text-secondary mb-1">
                       {t('auth.fullName')}
                     </label>
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
+                      <User className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
                       <input
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 min-h-[44px] bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring touch-manipulation"
-                        style={{ fontSize: '16px' }}
+                        className="w-full pl-8 pr-3 py-2 min-h-[36px] bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring touch-manipulation text-xs"
                         placeholder="John Doe"
                         disabled={loading || googleLoading}
                         required
@@ -201,17 +195,16 @@
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium text-text-secondary mb-2">
+                  <label className="block text-xs font-medium text-text-secondary mb-1">
                     {t('auth.email')}
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
+                    <Mail className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 min-h-[44px] bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring touch-manipulation"
-                      style={{ fontSize: '16px' }}
+                      className="w-full pl-8 pr-3 py-2 min-h-[36px] bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring touch-manipulation text-xs"
                       placeholder="you@example.com"
                       disabled={loading || googleLoading}
                       required
@@ -222,17 +215,16 @@
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-text-secondary mb-2">
+                  <label className="block text-xs font-medium text-text-secondary mb-1">
                     {t('auth.password')}
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
+                    <Lock className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
                     <input
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 min-h-[44px] bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring touch-manipulation"
-                      style={{ fontSize: '16px' }}
+                      className="w-full pl-8 pr-3 py-2 min-h-[36px] bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring touch-manipulation text-xs"
                       placeholder="••••••••"
                       disabled={loading || googleLoading}
                       required
@@ -243,19 +235,19 @@
 
                 <Button
                   type="submit"
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 min-h-[44px] rounded-lg shadow-lg touch-manipulation active:scale-95 transition-transform"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-2 min-h-[36px] rounded-lg shadow-lg touch-manipulation active:scale-95 transition-transform text-xs"
                   disabled={loading || googleLoading}
                 >
-                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {loading && <Loader2 className="mr-2 h-3 w-3 animate-spin" />}
                   {loading ? t('auth.processing') : (isLogin ? t('auth.login') : t('auth.signup'))}
                 </Button>
               </form>
 
-              <div className="mt-6 text-center">
+              <div className="mt-3 text-center">
                 <button
                   onClick={toggleAuthMode}
                   type="button"
-                  className="text-text-secondary hover:text-primary transition-colors disabled:opacity-50 min-h-[44px] py-2 px-4 touch-manipulation"
+                  className="text-text-secondary hover:text-primary transition-colors disabled:opacity-50 min-h-[32px] py-1 px-3 touch-manipulation text-xs"
                   disabled={loading || googleLoading}
                 >
                   {isLogin ? `${t('auth.dontHaveAccount')} ${t('auth.signup')}` : `${t('auth.alreadyHaveAccount')} ${t('auth.login')}`}

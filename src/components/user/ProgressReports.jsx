@@ -34,7 +34,116 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const ProgressReports = () => {
+// Mock data generator for preview mode
+const generateMockWeightData = (days) => {
+  const data = [];
+  const today = new Date();
+  let weight = 82.5; // Starting weight in kg
+
+  for (let i = days - 1; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    // Simulate gradual weight loss with some fluctuation
+    weight -= (Math.random() * 0.3 - 0.1);
+    data.push({
+      date: date.toISOString().split('T')[0],
+      weight_kg: parseFloat(weight.toFixed(1)),
+      user_id: 'preview-user'
+    });
+  }
+  return data;
+};
+
+const generateMockSleepData = (days) => {
+  const data = [];
+  const today = new Date();
+
+  for (let i = days - 1; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    // Simulate sleep hours between 5.5 and 8.5 hours
+    const hours = 6 + Math.random() * 2.5;
+    data.push({
+      date: date.toISOString().split('T')[0],
+      hours: parseFloat(hours.toFixed(1)),
+      quality: hours > 7 ? 'good' : hours > 6 ? 'fair' : 'poor',
+      user_id: 'preview-user'
+    });
+  }
+  return data;
+};
+
+const generateMockWorkoutData = (days) => {
+  const data = [];
+  const today = new Date();
+  const workoutTypes = ['Strength Training', 'Cardio', 'Yoga', 'HIIT', 'Running', 'Cycling'];
+
+  // Generate 3-5 workouts per week
+  const workoutsPerWeek = 4;
+  const totalWorkouts = Math.floor((days / 7) * workoutsPerWeek);
+
+  for (let i = 0; i < totalWorkouts; i++) {
+    const daysAgo = Math.floor(Math.random() * days);
+    const date = new Date(today);
+    date.setDate(date.getDate() - daysAgo);
+
+    data.push({
+      date: date.toISOString().split('T')[0],
+      type: workoutTypes[Math.floor(Math.random() * workoutTypes.length)],
+      duration_minutes: 30 + Math.floor(Math.random() * 60),
+      calories_burned: 200 + Math.floor(Math.random() * 400),
+      user_id: 'preview-user'
+    });
+  }
+
+  return data.sort((a, b) => a.date.localeCompare(b.date));
+};
+
+const generateMockMacroData = (days) => {
+  const data = [];
+  const today = new Date();
+
+  for (let i = days - 1; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+
+    // Target calories with some variation
+    const baseCalories = 2000;
+    const variation = Math.random() * 400 - 200; // +/- 200 calories
+    const calories = Math.round(baseCalories + variation);
+
+    data.push({
+      date: date.toISOString().split('T')[0],
+      calories: calories,
+      protein: Math.round(calories * 0.3 / 4), // 30% protein
+      carbs: Math.round(calories * 0.4 / 4), // 40% carbs
+      fat: Math.round(calories * 0.3 / 9), // 30% fat
+      user_id: 'preview-user'
+    });
+  }
+  return data;
+};
+
+const generateMockWaterData = (days) => {
+  const data = [];
+  const today = new Date();
+
+  for (let i = days - 1; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+
+    // 5-10 glasses per day
+    const glasses = 5 + Math.floor(Math.random() * 6);
+    data.push({
+      date: date.toISOString().split('T')[0],
+      glasses: glasses,
+      user_id: 'preview-user'
+    });
+  }
+  return data;
+};
+
+const ProgressReports = ({ previewMode = false }) => {
   const { t } = useTranslation();
   const { userProfile } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -43,10 +152,52 @@ const ProgressReports = () => {
   const [monthlyReport, setMonthlyReport] = useState(null);
 
   useEffect(() => {
-    if (userProfile?.id) {
+    if (previewMode) {
+      // Generate mock reports for preview mode
+      generateMockReport('weekly');
+      generateMockReport('monthly');
+    } else if (userProfile?.id) {
       generateReport();
     }
-  }, [userProfile?.id, reportPeriod]);
+  }, [userProfile?.id, reportPeriod, previewMode]);
+
+  const generateMockReport = (period) => {
+    setLoading(true);
+
+    const days = period === 'weekly' ? 7 : 30;
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+
+    // Generate mock data
+    const weightData = generateMockWeightData(days);
+    const sleepData = generateMockSleepData(days);
+    const workoutData = generateMockWorkoutData(days);
+    const macroData = generateMockMacroData(days);
+    const waterData = generateMockWaterData(days);
+
+    const report = {
+      period: period,
+      startDate: startDate.toISOString().split('T')[0],
+      endDate: endDate.toISOString().split('T')[0],
+      summary: generateSummary(weightData, sleepData, workoutData, macroData, waterData),
+      achievements: generateAchievements(weightData, sleepData, workoutData, macroData, waterData),
+      improvements: generateImprovements(weightData, sleepData, workoutData, macroData, waterData),
+      charts: {
+        weight: weightData,
+        sleep: sleepData,
+        workout: workoutData,
+      },
+    };
+
+    if (period === 'weekly') {
+      setWeeklyReport(report);
+    } else {
+      setMonthlyReport(report);
+    }
+
+    setLoading(false);
+  };
 
   const generateReport = async () => {
     setLoading(true);

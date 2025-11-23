@@ -91,7 +91,6 @@
     "premiumPlan": "Premium",
     "ultimatePlan": "Ultimate",
     "elitePlan": "Elite",
-    "overviewText": "We offer three subscription tiers: Premium ($9.99/month), Pro ($19.99/month), and Elite ($29.99/month). All plans include access to personalized meal plans and workouts. Higher tiers unlock features like AI coach chat, wearable integration, and photo food recognition. Save 25% with annual billing!",
     "planDescriptions": {
       "Base": "Get started with essential health tracking features",
       "Premium": "Advanced features for serious fitness enthusiasts",
@@ -107,7 +106,6 @@
     "bestValue": "Best Value",
     "planFeatures": {
       "base": {
-        "adSupported": "⚠️ Ad-supported experience",
         "mealPlans": "2 AI meal plans per month",
         "workoutPlans": "2 AI workout plans per month",
         "chatMessages": "10 AI chat messages per month",
@@ -791,6 +789,123 @@
     "goToDashboard": "Go to Dashboard",
     "back": "Back",
     "next": "Next",
-    "finish": "Finish"
+    "finish": "Finish",
+    "dietaryPreferences": "Dietary Preferences",
+    "dietaryPreferencesSubtitle": "Select any dietary restrictions or preferences you follow. You can select multiple.",
+    "dietNone": "No restrictions",
+    "dietVegetarian": "Vegetarian",
+    "dietVegan": "Vegan",
+    "dietGlutenFree": "Gluten-Free",
+    "dietDairyFree": "Dairy-Free",
+    "dietKeto": "Keto",
+    "dietPaleo": "Paleo",
+    "dietHalal": "Halal",
+    "dietKosher": "Kosher",
+    "healthConditions": "Health Conditions",
+    "healthConditionsSubtitle": "Do you have any health conditions we should know about? You can select multiple.",
+    "conditionNone": "None",
+    "conditionDiabetes": "Diabetes",
+    "conditionHighBloodPressure": "High Blood Pressure",
+    "conditionHeartDisease": "Heart Disease",
+    "conditionAsthma": "Asthma",
+    "conditionArthritis": "Arthritis",
+    "conditionThyroid": "Thyroid Issues",
+    "conditionFoodAllergies": "Food Allergies"
+  },
+  "survey": {
+    "title": "Find Your Perfect Plan",
+    "subtitle": "Answer a few questions to get your personalized plan recommendation.",
+    "stepProgress": "Step {{step}} of {{total}}",
+    "back": "Back",
+    "next": "Next",
+    "findMyPlan": "Find My Plan",
+    "step1": {
+      "question": "What is your primary health goal?",
+      "description": "This will help us recommend the best starting point for you.",
+      "loseWeight": "Lose Weight",
+      "buildMuscle": "Build Muscle",
+      "improveEndurance": "Improve Endurance",
+      "eatHealthier": "Eat Healthier",
+      "increaseEnergy": "Increase Energy"
+    },
+    "step2": {
+      "question": "What's your fitness experience level?",
+      "beginner": "Beginner",
+      "beginnerDesc": "Just starting my fitness journey.",
+      "intermediate": "Intermediate",
+      "intermediateDesc": "I work out regularly.",
+      "advanced": "Advanced",
+      "advancedDesc": "I'm very experienced and train hard."
+    },
+    "step3": {
+      "question": "What's your budget for a health plan?",
+      "description": "Choose a range that works for you.",
+      "budgetFriendly": "Budget-Friendly",
+      "budgetFriendlyDesc": "Under $10/month",
+      "moderate": "Moderate",
+      "moderateDesc": "$10-$20/month",
+      "premium": "Premium",
+      "premiumDesc": "$20-$30/month"
+    },
+    "step4": {
+      "question": "Any dietary preferences or restrictions?",
+      "description": "Select all that apply.",
+      "noRestrictions": "No Restrictions",
+      "vegetarian": "Vegetarian",
+      "vegan": "Vegan",
+      "glutenFree": "Gluten-Free",
+      "keto": "Keto",
+      "halal": "Halal"
+    },
+    "step5": {
+      "question": "How much time can you dedicate daily?",
+      "description": "For workouts and meal preparation.",
+      "minimal": "15-30 min/day",
+      "minimalDesc": "I have limited time",
+      "moderate": "30-60 min/day",
+      "moderateDesc": "I can dedicate some time",
+      "extensive": "60+ min/day",
+      "extensiveDesc": "I have plenty of time"
+    },
+    "step6": {
+      "question": "What type of guidance do you prefer?",
+      "selfGuided": "Self-Guided",
+      "selfGuidedDesc": "I prefer to work independently",
+      "aiCoach": "AI Coach",
+      "aiCoachDesc": "I want AI-powered guidance",
+      "professional": "Professional Support",
+      "professionalDesc": "I need expert nutritionist help"
+    },
+    "step7": {
+      "question": "Which features interest you most?",
+      "description": "Select all that appeal to you.",
+      "mealPlanning": "Meal Planning",
+      "workoutPlans": "Workout Plans",
+      "progressTracking": "Progress Tracking",
+      "aiChat": "AI Chat Support",
+      "photoRecognition": "Photo Food Recognition",
+      "expertConsultation": "Expert Consultation"
+    },
+    "step8": {
+      "question": "How would you describe your current health?",
+      "excellent": "Excellent",
+      "excellentDesc": "No health concerns",
+      "good": "Good",
+      "goodDesc": "Minor concerns, generally healthy",
+      "fair": "Fair",
+      "fairDesc": "Managing some health conditions",
+      "needsAttention": "Needs Attention",
+      "needsAttentionDesc": "Require professional guidance"
+    },
+    "step9": {
+      "question": "What's your timeline for achieving your goals?",
+      "description": "How soon do you want to see results?",
+      "relaxed": "Relaxed",
+      "relaxedDesc": "6+ months",
+      "moderate": "Moderate",
+      "moderateDesc": "3-6 months",
+      "urgent": "Urgent",
+      "urgentDesc": "Within 3 months"
+    }
   }
 }

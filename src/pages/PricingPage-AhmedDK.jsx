@@ -34,7 +34,6 @@ import React, { useState, useEffect } from 'react';
       // Plan-specific features using translation keys
       const planFeatures = {
         'Base': [
-          t('pricing.planFeatures.base.adSupported'),
           t('pricing.planFeatures.base.mealPlans'),
           t('pricing.planFeatures.base.workoutPlans'),
           t('pricing.planFeatures.base.chatMessages'),

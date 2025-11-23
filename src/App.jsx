@@ -57,6 +57,7 @@
     const TermsOfServicePage = lazy(() => import('@/pages/TermsOfServicePage'));
     const AdminFAQPage = lazy(() => import('@/pages/AdminFAQPage'));
     const DownloadPage = lazy(() => import('@/pages/DownloadPage'));
+    const UsernameProfile = lazy(() => import('@/components/UsernameProfile'));
 
     // Loading component
     const PageLoader = () => (
@@ -137,13 +138,15 @@
       }
 
       const role = userProfile.role;
-      let path = '/app/user';
+      const username = userProfile.username;
+
+      // Admins and super admins go to /app/admin
       if (role === 'admin' || role === 'super_admin') {
-        path = '/app/admin';
-      } else if (role === 'nutritionist') {
-        path = '/app/nutritionist';
+        return <Navigate to="/app/admin" replace />;
       }
 
+      // All other users go to /app/username (or fallback to role if no username)
+      const path = username ? `/app/${username}` : `/app/${role}`;
       return <Navigate to={path} replace />;
     };
 
@@ -182,8 +185,6 @@
 
                 <Route path="/app" element={<ProtectedRoute><AppLayout logoUrl={logoUrl} /></ProtectedRoute>}>
                     <Route index element={<RoleBasedRedirect />} />
-                    <Route path="user" element={<UserDashboard logoUrl={logoUrl} />} />
-                    <Route path="nutritionist" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
                     <Route path="admin" element={<AdminDashboard logoUrl={logoUrl} />} />
                     <Route path="profile" element={<ProfilePage logoUrl={logoUrl} />} />
                     <Route path="billing" element={<BillingPage />} />
@@ -200,6 +201,8 @@
                     <Route path="nutritionist/blog/edit/:postId" element={<BlogEditorRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></BlogEditorRoute>} />
                     <Route path="admin/faq" element={<AdminRoute><AdminFAQPage /></AdminRoute>} />
                     <Route path="admin/revenue" element={<AdminRoute><RevenueAnalyticsPage /></AdminRoute>} />
+                    {/* Username route MUST be last to avoid catching other routes */}
+                    <Route path=":username" element={<UsernameProfile logoUrl={logoUrl} />} />
                 </Route>
 
                 <Route path="/onboarding" element={<ProtectedRoute><OnboardingSurvey logoUrl={logoUrl} /></ProtectedRoute>} />
@@ -217,6 +220,7 @@
                 <Route path="/about" element={<AboutPage logoUrl={logoUrl} />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage logoUrl={logoUrl} />} />
                 <Route path="/terms-of-service" element={<TermsOfServicePage logoUrl={logoUrl} />} />
+
                 <Route path="/" element={<RootRedirect />} />
                 <Route path="/*" element={<Navigate to="/home" replace />} />
               </Routes>

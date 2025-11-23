@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Calendar } from '@/components/ui/calendar';
 import {
   Calendar as CalendarIcon,
   Clock,
@@ -46,7 +45,6 @@ const AppointmentScheduling = () => {
   const [appointments, setAppointments] = useState([]);
   const [professionals, setProfessionals] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const [formData, setFormData] = useState({
     professional_id: '',
     appointment_type: 'checkup',
@@ -357,15 +355,12 @@ const AppointmentScheduling = () => {
         </div>
       ) : (
         <Tabs defaultValue="upcoming" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="upcoming">
               {t('upcoming') || 'Upcoming'} ({upcomingAppointments.length})
             </TabsTrigger>
             <TabsTrigger value="past">
               {t('past') || 'Past'} ({pastAppointments.length})
-            </TabsTrigger>
-            <TabsTrigger value="calendar">
-              {t('calendar') || 'Calendar'}
             </TabsTrigger>
           </TabsList>
 
@@ -484,18 +479,6 @@ const AppointmentScheduling = () => {
             )}
           </TabsContent>
 
-          <TabsContent value="calendar">
-            <Card className="glass-effect">
-              <CardContent className="p-6 flex justify-center">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  className="rounded-md border"
-                />
-              </CardContent>
-            </Card>
-          </TabsContent>
         </Tabs>
       )}
     </div>

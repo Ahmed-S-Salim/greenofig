@@ -26,6 +26,8 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
     weight_kg: userProfile?.weight_kg || '',
     activity_level: userProfile?.activity_level || '',
     health_goals: userProfile?.health_goals || [],
+    dietary_preferences: userProfile?.dietary_preferences || [],
+    health_conditions: userProfile?.health_conditions || [],
   });
 
   // Update form data when userProfile changes
@@ -38,11 +40,13 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
         weight_kg: userProfile.weight_kg || '',
         activity_level: userProfile.activity_level || '',
         health_goals: userProfile.health_goals || [],
+        dietary_preferences: userProfile.dietary_preferences || [],
+        health_conditions: userProfile.health_conditions || [],
       });
     }
   }, [userProfile]);
 
-  const totalSteps = 4;
+  const totalSteps = 6;
 
   const activityLevels = [
     { id: 'sedentary', label: t('onboarding.activitySedentary'), description: t('onboarding.activitySedentaryDesc') },
@@ -58,6 +62,29 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
     { id: 'improve_endurance', label: t('onboarding.goalImproveEndurance'), icon: HeartPulse },
     { id: 'eat_healthier', label: t('onboarding.goalEatHealthier'), icon: HeartPulse },
     { id: 'increase_energy', label: t('onboarding.goalIncreaseEnergy'), icon: Zap },
+  ];
+
+  const dietaryPreferences = [
+    { id: 'none', label: t('onboarding.dietNone') },
+    { id: 'vegetarian', label: t('onboarding.dietVegetarian') },
+    { id: 'vegan', label: t('onboarding.dietVegan') },
+    { id: 'gluten_free', label: t('onboarding.dietGlutenFree') },
+    { id: 'dairy_free', label: t('onboarding.dietDairyFree') },
+    { id: 'keto', label: t('onboarding.dietKeto') },
+    { id: 'paleo', label: t('onboarding.dietPaleo') },
+    { id: 'halal', label: t('onboarding.dietHalal') },
+    { id: 'kosher', label: t('onboarding.dietKosher') },
+  ];
+
+  const healthConditions = [
+    { id: 'none', label: t('onboarding.conditionNone') },
+    { id: 'diabetes', label: t('onboarding.conditionDiabetes') },
+    { id: 'high_blood_pressure', label: t('onboarding.conditionHighBloodPressure') },
+    { id: 'heart_disease', label: t('onboarding.conditionHeartDisease') },
+    { id: 'asthma', label: t('onboarding.conditionAsthma') },
+    { id: 'arthritis', label: t('onboarding.conditionArthritis') },
+    { id: 'thyroid_issues', label: t('onboarding.conditionThyroid') },
+    { id: 'food_allergies', label: t('onboarding.conditionFoodAllergies') },
   ];
 
   // Unit conversion helpers
@@ -118,6 +145,40 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
     });
   };
 
+  const handleDietaryPreferenceToggle = (prefId) => {
+    setFormData(prev => {
+      let newPrefs;
+      if (prefId === 'none') {
+        newPrefs = prev.dietary_preferences.includes('none') ? [] : ['none'];
+      } else {
+        newPrefs = prev.dietary_preferences.filter(p => p !== 'none');
+        if (newPrefs.includes(prefId)) {
+          newPrefs = newPrefs.filter(p => p !== prefId);
+        } else {
+          newPrefs = [...newPrefs, prefId];
+        }
+      }
+      return { ...prev, dietary_preferences: newPrefs };
+    });
+  };
+
+  const handleHealthConditionToggle = (condId) => {
+    setFormData(prev => {
+      let newConds;
+      if (condId === 'none') {
+        newConds = prev.health_conditions.includes('none') ? [] : ['none'];
+      } else {
+        newConds = prev.health_conditions.filter(c => c !== 'none');
+        if (newConds.includes(condId)) {
+          newConds = newConds.filter(c => c !== condId);
+        } else {
+          newConds = [...newConds, condId];
+        }
+      }
+      return { ...prev, health_conditions: newConds };
+    });
+  };
+
   const nextStep = () => {
     if (step < totalSteps) {
       setStep(s => s + 1);
@@ -143,14 +204,28 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
     setLoading(true);
 
     try {
-      const { error } = await supabase
+      // Update user profile
+      const { error: profileError } = await supabase
         .from('user_profiles')
         .update(formData)
         .eq('id', user.id);
 
-      if (error) {
-        console.error('Error updating profile:', error);
-        throw error;
+      if (profileError) {
+        console.error('Error updating profile:', profileError);
+        throw profileError;
+      }
+
+      // Save survey response for analytics
+      const { error: surveyError } = await supabase
+        .from('survey_responses')
+        .insert({
+          user_id: user.id,
+          ...formData,
+        });
+
+      if (surveyError) {
+        console.error('Error saving survey response:', surveyError);
+        // Don't throw - survey response is optional for analytics
       }
 
       await refreshUserProfile();
@@ -307,7 +382,57 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
         );
       case 5:
         return (
-          <motion.div key="step5" className="text-center flex flex-col items-center py-3">
+          <motion.div key="step5" className="space-y-3">
+            <h2 className="text-lg font-bold">{t('onboarding.dietaryPreferences')}</h2>
+            <p className="text-xs text-text-secondary">{t('onboarding.dietaryPreferencesSubtitle')}</p>
+            <div className="space-y-2">
+              {dietaryPreferences.map(pref => (
+                <button
+                  key={pref.id}
+                  onClick={() => handleDietaryPreferenceToggle(pref.id)}
+                  className={`w-full text-left p-2.5 rounded-md border-2 transition-all flex items-center ${formData.dietary_preferences.includes(pref.id) ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'}`}
+                >
+                  <div className={`w-4 h-4 rounded border-2 mr-2 flex items-center justify-center ${formData.dietary_preferences.includes(pref.id) ? 'bg-primary border-primary' : 'border-border'}`}>
+                    {formData.dietary_preferences.includes(pref.id) && (
+                      <svg className="w-3 h-3 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
+                  <span className="text-sm font-medium">{pref.label}</span>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        );
+      case 6:
+        return (
+          <motion.div key="step6" className="space-y-3">
+            <h2 className="text-lg font-bold">{t('onboarding.healthConditions')}</h2>
+            <p className="text-xs text-text-secondary">{t('onboarding.healthConditionsSubtitle')}</p>
+            <div className="space-y-2">
+              {healthConditions.map(condition => (
+                <button
+                  key={condition.id}
+                  onClick={() => handleHealthConditionToggle(condition.id)}
+                  className={`w-full text-left p-2.5 rounded-md border-2 transition-all flex items-center ${formData.health_conditions.includes(condition.id) ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'}`}
+                >
+                  <div className={`w-4 h-4 rounded border-2 mr-2 flex items-center justify-center ${formData.health_conditions.includes(condition.id) ? 'bg-primary border-primary' : 'border-border'}`}>
+                    {formData.health_conditions.includes(condition.id) && (
+                      <svg className="w-3 h-3 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
+                  <span className="text-sm font-medium">{condition.label}</span>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        );
+      case 7:
+        return (
+          <motion.div key="step7" className="text-center flex flex-col items-center py-3">
              <CheckCircle className="w-12 h-12 text-green-500 mb-3" />
              <h2 className="text-lg font-bold">{t('onboarding.setupComplete')}</h2>
              <p className="text-xs text-text-secondary mt-1.5 mb-4">{t('onboarding.setupCompleteDesc')}</p>
@@ -483,8 +608,8 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
             <Link to="/home" className="inline-block mb-1.5">
               <img src={logoUrl} alt="GreenoFig Logo" className="w-10 h-10" />
             </Link>
-            <h1 className="text-xl font-bold gradient-text">Welcome to GreenoFig</h1>
-            <p className="text-xs text-text-secondary">Let's personalize your experience.</p>
+            <h1 className="text-xl font-bold gradient-text">{t('onboarding.welcomeTitle')}</h1>
+            <p className="text-xs text-text-secondary">{t('onboarding.welcomeSubtitle')}</p>
           </div>
 
           <div className="glass-effect rounded-lg p-3 sm:p-4 shadow-xl">
@@ -515,17 +640,17 @@ const OnboardingSurvey = ({ logoUrl, isOpen, setIsOpen, inline = false }) => {
             {step <= totalSteps && (
               <div className="flex justify-between items-center mt-4">
                 <Button variant="outline" size="sm" onClick={prevStep} disabled={step === 1 || loading} className="text-xs">
-                  <ArrowLeft className="w-3 h-3 mr-1" /> Back
+                  <ArrowLeft className="w-3 h-3 mr-1" /> {t('onboarding.back')}
                 </Button>
 
                 {step < totalSteps ? (
                   <Button size="sm" onClick={nextStep} className="text-xs">
-                    Next <ArrowRight className="w-3 h-3 ml-1" />
+                    {t('onboarding.next')} <ArrowRight className="w-3 h-3 ml-1" />
                   </Button>
                 ) : (
                   <Button size="sm" onClick={handleSubmit} disabled={loading} className="text-xs">
                     {loading && <Loader2 className="w-3 h-3 mr-1 animate-spin" />}
-                    Finish
+                    {t('onboarding.finish')}
                   </Button>
                 )}
               </div>

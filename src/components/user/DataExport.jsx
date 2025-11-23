@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Calendar } from '@/components/ui/calendar';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -28,11 +27,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const DataExport = () => {
@@ -371,40 +365,31 @@ const DataExport = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex gap-4 items-center">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-[240px]">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {dateRange.from?.toLocaleDateString()}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={dateRange.from}
-                      onSelect={(date) => setDateRange(prev => ({ ...prev, from: date }))}
-                    />
-                  </PopoverContent>
-                </Popover>
-
-                <span className="text-text-secondary">to</span>
-
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-[240px]">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {dateRange.to?.toLocaleDateString()}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={dateRange.to}
-                      onSelect={(date) => setDateRange(prev => ({ ...prev, to: date }))}
-                    />
-                  </PopoverContent>
-                </Popover>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="date-from">{t('from') || 'From'}</Label>
+                  <Input
+                    id="date-from"
+                    type="date"
+                    value={dateRange.from.toISOString().split('T')[0]}
+                    onChange={(e) => {
+                      const date = new Date(e.target.value);
+                      setDateRange(prev => ({ ...prev, from: date }));
+                    }}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="date-to">{t('to') || 'To'}</Label>
+                  <Input
+                    id="date-to"
+                    type="date"
+                    value={dateRange.to.toISOString().split('T')[0]}
+                    onChange={(e) => {
+                      const date = new Date(e.target.value);
+                      setDateRange(prev => ({ ...prev, to: date }));
+                    }}
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>

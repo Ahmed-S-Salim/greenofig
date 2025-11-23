@@ -676,7 +676,7 @@ const UserDashboard = memo(({ logoUrl, previewMode = false }) => {
         {/* Recipe Database - Premium+ */}
         {planKey !== 'free' && (
           <motion.div variants={itemVariants}>
-            <RecipeDatabase />
+            <RecipeDatabase previewMode={previewMode} />
           </motion.div>
         )}
 
@@ -734,7 +734,7 @@ const UserDashboard = memo(({ logoUrl, previewMode = false }) => {
         {/* Progress Reports - Ultimate+ */}
         {(planKey === 'ultimate' || planKey === 'elite') && (
           <motion.div variants={itemVariants}>
-            <ProgressReports />
+            <ProgressReports previewMode={previewMode} />
           </motion.div>
         )}
 

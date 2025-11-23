@@ -58,10 +58,16 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
                 return data;
             } catch (error) {
                 console.error('Error fetching profile:', error);
+                console.error('Error details:', {
+                    message: error.message,
+                    code: error.code,
+                    details: error.details,
+                    hint: error.hint
+                });
                 toast({
                     variant: "destructive",
-                    title: "Error",
-                    description: "Could not load profile. Please refresh the page.",
+                    title: "Error Loading Profile",
+                    description: error.message || "Could not load profile. Please refresh the page.",
                 });
                 return null;
             }
@@ -172,6 +178,8 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
         const signUp = useCallback(async (credentials) => {
                 const { email, password, full_name } = credentials;
 
+                console.log('🔵 SIGNUP STARTED:', email);
+
                 // SECURITY FIX: Always assign 'user' role - admin roles must be set by existing admins only
                 const role = 'user';
 
@@ -187,6 +195,7 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
                 });
 
                 if (signUpError) {
+                    console.error('❌ SIGNUP ERROR:', signUpError);
                     toast({
                         variant: "destructive",
                         title: "Sign Up Failed",
@@ -195,10 +204,14 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
                     return { user: null, error: signUpError };
                 }
 
+                console.log('✅ SIGNUP SUCCESS - User created in auth.users');
+                console.log('⏳ Signing in automatically...');
+
                 // Manually sign in the user after successful sign-up to create a session
                 const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
 
                 if (signInError) {
+                    console.error('❌ AUTO SIGN-IN ERROR:', signInError);
                      toast({
                         variant: "destructive",
                         title: "Sign-in after sign-up failed.",
@@ -207,10 +220,21 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
                     return { user: null, error: signInError };
                 }
 
+                console.log('✅ AUTO SIGN-IN SUCCESS');
+                console.log('⏳ Waiting 1.5s for database trigger to create profile...');
+
                 // Wait for the user profile to be created by database trigger
                 await new Promise(resolve => setTimeout(resolve, 1500));
 
+                console.log('⏳ Fetching user profile from database...');
                 const profile = await fetchUserProfile(signInData.user);
+
+                if (profile) {
+                    console.log('✅ PROFILE FOUND:', profile);
+                } else {
+                    console.error('❌ PROFILE NOT FOUND - Trigger may have failed!');
+                    console.error('Check Supabase Postgres Logs for trigger errors');
+                }
 
                 // Set both user and profile immediately for instant navigation
                 setUser(signInData.user);
