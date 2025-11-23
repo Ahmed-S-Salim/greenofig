@@ -402,7 +402,7 @@ const DashboardOverview = () => {
                 Today's Schedule
               </CardTitle>
               <Button variant="ghost" size="sm" asChild>
-                <Link to="/app/nutritionist?tab=schedule">
+                <Link to="/app/nutritionist/schedule">
                   View All <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>
               </Button>
@@ -476,19 +476,19 @@ const DashboardOverview = () => {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Button asChild className="h-20 text-lg" variant="outline">
-          <Link to="/app/nutritionist?tab=clients">
+          <Link to="/app/nutritionist/clients">
             <Users className="w-5 h-5 mr-2" />
             Manage Clients
           </Link>
         </Button>
         <Button asChild className="h-20 text-lg" variant="outline">
-          <Link to="/app/nutritionist?tab=meals">
+          <Link to="/app/nutritionist/meals">
             <UtensilsCrossed className="w-5 h-5 mr-2" />
             Create Meal Plan
           </Link>
         </Button>
         <Button asChild className="h-20 text-lg" variant="outline">
-          <Link to="/app/nutritionist?tab=schedule">
+          <Link to="/app/nutritionist/schedule">
             <Calendar className="w-5 h-5 mr-2" />
             Schedule Appointment
           </Link>

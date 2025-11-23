@@ -75,9 +75,9 @@ const EnhancedBlogPostEditor = () => {
   const getBackUrl = useCallback(() => {
     const role = userProfile?.role;
     if (role === 'nutritionist') {
-      return '/app/nutritionist?tab=blog';
+      return '/app/nutritionist/blog';
     }
-    return '/app/admin?tab=blog';
+    return '/app/admin/blog';
   }, [userProfile]);
 
   // Fetch categories and tags

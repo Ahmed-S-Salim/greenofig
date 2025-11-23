@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Database, TrendingUp, Users, CreditCard, ShieldQuestion, FileText, Globe, Ticket, Gift, DollarSign, LayoutDashboard, BarChart3, ArrowLeft, Wallet, Bot, UserCog, Bug, MessageSquare, Sparkles, Calendar, Megaphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ErrorBoundary from '@/components/ErrorBoundary';
@@ -24,17 +24,21 @@ import AdManagementDashboard from '@/components/ads/AdManagementDashboard';
 import TierPreviewDashboard from '@/components/admin/TierPreviewDashboard';
 
 const AdminPanel = ({ user }) => {
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('dashboard');
 
   useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (tab) {
-      setActiveTab(tab);
-    } else {
+    // Extract the tab from the URL path (e.g., /app/admin/analytics -> analytics)
+    const pathParts = location.pathname.split('/');
+    const lastPart = pathParts[pathParts.length - 1];
+
+    // If the last part is 'admin' or empty, default to 'dashboard'
+    if (lastPart === 'admin' || lastPart === '') {
       setActiveTab('dashboard');
+    } else {
+      setActiveTab(lastPart);
     }
-  }, [searchParams]);
+  }, [location.pathname]);
 
   const allTabs = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },

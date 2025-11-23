@@ -26,8 +26,13 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
     });
   };
 
-  // Get role-specific dashboard path
+  // Get username-based dashboard path
   const getDashboardPath = () => {
+    const username = userProfile?.username;
+    if (username) {
+      return `/app/${username}`;
+    }
+    // Fallback to role-based if no username
     const role = userProfile?.role;
     if (role === 'admin' || role === 'super_admin') {
       return '/app/admin';

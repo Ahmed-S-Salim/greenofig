@@ -137,19 +137,20 @@
         return <Navigate to="/login" replace />;
       }
 
-      const role = userProfile.role;
+      // Redirect to username-based URL
+      const username = userProfile.username;
+      if (username) {
+        return <Navigate to={`/app/${username}`} replace />;
+      }
 
-      // Admins and super admins go to /app/admin
+      // Fallback to role-based routing if no username
+      const role = userProfile.role;
       if (role === 'admin' || role === 'super_admin') {
         return <Navigate to="/app/admin" replace />;
       }
-
-      // Nutritionists go to /app/nutritionist
       if (role === 'nutritionist') {
         return <Navigate to="/app/nutritionist" replace />;
       }
-
-      // Regular users go to /app/user
       return <Navigate to="/app/user" replace />;
     };
 
@@ -189,8 +190,41 @@
                 <Route path="/app" element={<ProtectedRoute><AppLayout logoUrl={logoUrl} /></ProtectedRoute>}>
                     <Route index element={<RoleBasedRedirect />} />
                     <Route path="user" element={<UserDashboard logoUrl={logoUrl} />} />
+
+                    {/* Nutritionist routes with sub-paths */}
                     <Route path="nutritionist" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/dashboard" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/clients" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/onboarding" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/goals" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/meals" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/schedule" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/messages" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/analytics" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/payments" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/resources" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/blog" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/settings" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+
+                    {/* Admin routes with sub-paths */}
                     <Route path="admin" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/tier-preview" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/analytics" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/revenue" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/errors" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/customers" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/subscriptions" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/payments" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/coupons" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/referrals" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/issues" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/messaging" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/blog" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/website" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/ads" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/ai-coach" element={<AdminDashboard logoUrl={logoUrl} />} />
+                    <Route path="admin/studio" element={<AdminDashboard logoUrl={logoUrl} />} />
+
                     <Route path="profile" element={<ProfilePage logoUrl={logoUrl} />} />
                     <Route path="billing" element={<BillingPage />} />
                     <Route path="support" element={<SupportPage />} />

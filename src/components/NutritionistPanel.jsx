@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
 // Import dashboard sections
@@ -18,17 +18,21 @@ import EnhancedBlogManager from '@/components/admin/EnhancedBlogManager';
 import SubscriptionManagement from '@/components/payments/SubscriptionManagement';
 
 const NutritionistPanel = ({ user }) => {
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('dashboard');
 
   useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (tab) {
-      setActiveTab(tab);
-    } else {
+    // Extract the tab from the URL path (e.g., /app/nutritionist/schedule -> schedule)
+    const pathParts = location.pathname.split('/');
+    const lastPart = pathParts[pathParts.length - 1];
+
+    // If the last part is 'nutritionist' or empty, default to 'dashboard'
+    if (lastPart === 'nutritionist' || lastPart === '') {
       setActiveTab('dashboard');
+    } else {
+      setActiveTab(lastPart);
     }
-  }, [searchParams]);
+  }, [location.pathname]);
 
   const renderContent = () => {
     switch (activeTab) {

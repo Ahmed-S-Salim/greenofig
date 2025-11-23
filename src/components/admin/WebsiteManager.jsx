@@ -79,7 +79,7 @@ const WebsiteManager = () => {
                                     <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">Website Content Management</h2>
                                     <p className="text-xs sm:text-sm text-text-secondary mt-1">Update content across your public-facing website pages.</p>
                                 </div>
-                                <Button size="sm" className="h-9 px-3 text-sm" variant="ghost" onClick={() => navigate('/app/admin?tab=dashboard')}>
+                                <Button size="sm" className="h-9 px-3 text-sm" variant="ghost" onClick={() => navigate('/app/admin')}>
                                     <ArrowLeft className="w-4 h-4 mr-2" />
                                     Back to Dashboard
                                 </Button>
