@@ -387,11 +387,11 @@ const AnalyticsDashboard = () => {
           </p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value)}
-            className="px-4 py-2 rounded-lg border border-border bg-card text-foreground"
+            className="px-4 py-2 rounded-lg border border-border bg-card text-foreground whitespace-nowrap"
           >
             <option value="7">Last 7 days</option>
             <option value="30">Last 30 days</option>
@@ -402,14 +402,15 @@ const AnalyticsDashboard = () => {
             variant="outline"
             onClick={handleRefresh}
             disabled={refreshing}
+            className="whitespace-nowrap"
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-            Refresh
+            <RefreshCw className={`h-4 w-4 mr-2 flex-shrink-0 ${refreshing ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">Refresh</span>
           </Button>
 
-          <Button onClick={handleExportReport}>
-            <Download className="h-4 w-4 mr-2" />
-            Export Report
+          <Button onClick={handleExportReport} className="whitespace-nowrap">
+            <Download className="h-4 w-4 mr-2 flex-shrink-0" />
+            <span className="hidden sm:inline">Export</span> Report
           </Button>
         </div>
       </motion.div>

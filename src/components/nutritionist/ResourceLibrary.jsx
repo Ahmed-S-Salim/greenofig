@@ -326,7 +326,7 @@ const ResourceLibrary = () => {
       </motion.div>
 
       {/* Search and Filter */}
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <input
@@ -338,7 +338,7 @@ const ResourceLibrary = () => {
           />
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {categories.map((category) => {
             const Icon = category.icon;
             return (
@@ -347,9 +347,11 @@ const ResourceLibrary = () => {
                 variant={selectedCategory === category.value ? 'default' : 'outline'}
                 onClick={() => setSelectedCategory(category.value)}
                 className="whitespace-nowrap"
+                size="sm"
               >
-                <Icon className="h-4 w-4 mr-2" />
-                {category.label}
+                <Icon className="h-4 w-4 mr-2 flex-shrink-0" />
+                <span className="hidden sm:inline">{category.label}</span>
+                <span className="sm:hidden">{category.label.split(' ')[0]}</span>
               </Button>
             );
           })}

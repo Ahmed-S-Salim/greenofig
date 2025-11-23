@@ -77,7 +77,16 @@ const MessagingCenter = () => {
         .or(`sender_id.eq.${user.id},recipient_id.eq.${user.id}`)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching conversations:', error);
+        toast({
+          title: 'Failed to load conversations',
+          description: error.message || 'Unable to fetch your messages. Please try again later.',
+          variant: 'destructive'
+        });
+        setLoading(false);
+        return;
+      }
 
       // Group by conversation partner
       const conversationsMap = new Map();
@@ -104,9 +113,9 @@ const MessagingCenter = () => {
     } catch (error) {
       console.error('Error fetching conversations:', error);
       toast({
-        variant: 'destructive',
         title: 'Error',
-        description: 'Failed to fetch conversations'
+        description: 'An unexpected error occurred while loading conversations.',
+        variant: 'destructive'
       });
     } finally {
       setLoading(false);

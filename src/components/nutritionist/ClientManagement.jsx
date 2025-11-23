@@ -160,7 +160,7 @@ const ClientManagement = () => {
         onClick={() => handleClientClick(client)}
       >
         <CardContent className="p-6 flex flex-col h-full">
-          <div className="flex items-start justify-between mb-4">
+          <div className="flex items-start justify-between mb-4 gap-2">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <span className="text-lg font-bold text-primary">
@@ -172,7 +172,7 @@ const ClientManagement = () => {
                 <p className="text-sm text-muted-foreground truncate">{client.email}</p>
               </div>
             </div>
-            <div className="flex flex-col gap-2 items-end">
+            <div className="flex flex-col gap-2 items-end flex-shrink-0">
               <TierBadge tier={client.tier} size="sm" />
               <div className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
                 client.isActive
@@ -360,13 +360,14 @@ const ClientManagement = () => {
             </div>
 
             {/* Filters */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-col sm:flex-row gap-3">
               {/* Tier Filters */}
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <Button
                   variant={tierFilter === 'all' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setTierFilter('all')}
+                  className="whitespace-nowrap"
                 >
                   All Tiers
                 </Button>
@@ -374,37 +375,38 @@ const ClientManagement = () => {
                   variant={tierFilter === 'Base' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setTierFilter('Base')}
-                  className={tierFilter === 'Base' ? '' : 'border-gray-500/20'}
+                  className={`whitespace-nowrap ${tierFilter === 'Base' ? '' : 'border-gray-500/20'}`}
                 >
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  Base ({stats.base})
+                  <Sparkles className="w-3 h-3 mr-1 flex-shrink-0" />
+                  <span className="hidden sm:inline">Base</span> ({stats.base})
                 </Button>
                 <Button
                   variant={tierFilter === 'Premium' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setTierFilter('Premium')}
-                  className={tierFilter === 'Premium' ? '' : 'border-blue-500/20'}
+                  className={`whitespace-nowrap ${tierFilter === 'Premium' ? '' : 'border-blue-500/20'}`}
                 >
-                  <Star className="w-3 h-3 mr-1" />
-                  Premium ({stats.premium})
+                  <Star className="w-3 h-3 mr-1 flex-shrink-0" />
+                  <span className="hidden sm:inline">Premium</span> ({stats.premium})
                 </Button>
                 <Button
                   variant={tierFilter === 'Elite' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setTierFilter('Elite')}
-                  className={tierFilter === 'Elite' ? '' : 'border-yellow-500/20'}
+                  className={`whitespace-nowrap ${tierFilter === 'Elite' ? '' : 'border-yellow-500/20'}`}
                 >
-                  <Crown className="w-3 h-3 mr-1" />
-                  Elite ({stats.elite})
+                  <Crown className="w-3 h-3 mr-1 flex-shrink-0" />
+                  <span className="hidden sm:inline">Elite</span> ({stats.elite})
                 </Button>
               </div>
 
               {/* Status Filters */}
-              <div className="flex gap-2 ml-auto">
+              <div className="flex flex-wrap gap-2 sm:ml-auto">
                 <Button
                   variant={statusFilter === 'all' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setStatusFilter('all')}
+                  className="whitespace-nowrap"
                 >
                   All
                 </Button>
@@ -412,6 +414,7 @@ const ClientManagement = () => {
                   variant={statusFilter === 'active' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setStatusFilter('active')}
+                  className="whitespace-nowrap"
                 >
                   Active ({stats.active})
                 </Button>
@@ -419,6 +422,7 @@ const ClientManagement = () => {
                   variant={statusFilter === 'inactive' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setStatusFilter('inactive')}
+                  className="whitespace-nowrap"
                 >
                   Inactive ({stats.inactive})
                 </Button>

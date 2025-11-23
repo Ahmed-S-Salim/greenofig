@@ -1,198 +1,323 @@
-# GreenoFig Production Deployment Guide
+# 🚀 GreenoFig Platform Deployment Guide
 
-## 🎯 What This Fixes
-
-This deployment fixes ALL remaining issues in your Supabase database:
-
-✅ **Signup Functionality** - Users can now sign up automatically without manual intervention
-✅ **5 RLS Errors** - Security enabled on meal_plans_v2, client_milestones, consultation_templates, client_checkins, shopping_lists
-✅ **65 Function Warnings** - All functions now have proper search_path security settings
-✅ **Survey Responses** - New table to collect survey data for analytics
-✅ **FAQ Pricing** - Arabic FAQ now shows correct pricing (9.99, 19.99, 29.99)
+**Version:** 2.0
+**Date:** November 23, 2025
+**Platform:** React + Vite + Supabase
 
 ---
 
-## 📝 Step-by-Step Deployment
+## 📋 Table of Contents
 
-### Step 1: Run the Master SQL Migration
-
-1. **Open the master SQL file:**
-   - File location: `supabase/migrations/20251120_FIX_ALL_ISSUES_MASTER.sql`
-
-2. **Copy the entire contents** (Ctrl+A, then Ctrl+C)
-
-3. **Go to Supabase Dashboard:**
-   - Open your browser
-   - Go to: https://supabase.com/dashboard/project/YOUR_PROJECT_ID
-   - Click on **SQL Editor** in the left sidebar
-
-4. **Create a new query:**
-   - Click **New Query** button
-   - Paste the entire SQL script (Ctrl+V)
-
-5. **Run the script:**
-   - Click the **Run** button (or press Ctrl+Enter)
-   - Wait for it to complete (should take 10-30 seconds)
-
-6. **Verify success:**
-   - You should see multiple green success messages:
-     - ✅ PART 1 COMPLETE: Signup fixed + user_profiles RLS enabled
-     - ✅ PART 2 COMPLETE: 5 RLS errors fixed
-     - ✅ PART 3 COMPLETE: Survey responses table created
-     - ✅ PART 4 COMPLETE: FAQ Arabic pricing fixed
-     - ✅ PART 5 COMPLETE: Function security warnings fixed
-     - 🎉 ALL FIXES COMPLETED SUCCESSFULLY!
+1. [Pre-Deployment Checklist](#pre-deployment-checklist)
+2. [Environment Setup](#environment-setup)
+3. [Database Migration](#database-migration)
+4. [Build Process](#build-process)
+5. [Deployment Steps](#deployment-steps)
+6. [Post-Deployment Verification](#post-deployment-verification)
+7. [Rollback Procedure](#rollback-procedure)
+8. [Troubleshooting](#troubleshooting)
 
 ---
 
-### Step 2: Enable Leaked Password Protection (Manual Setting)
+## ✅ Pre-Deployment Checklist
 
-1. **Go to Supabase Dashboard:**
-   - Navigate to: **Authentication** → **Settings**
+### 1. Code Quality Checks
 
-2. **Find Password Strength section:**
-   - Scroll down to "Password Strength and Leaked Password Protection"
+- [ ] All components built without errors
+- [ ] ESLint passes with no errors
+- [ ] All console.logs removed from production code
+- [ ] No TODO comments in critical paths
+- [ ] All API keys are in environment variables (not hardcoded)
 
-3. **Enable the setting:**
-   - Toggle ON: **"Check for leaked passwords using HaveIBeenPwned.org"**
-   - Click **Save**
+### 2. Testing Verification
 
-This prevents users from using passwords that have been leaked in data breaches.
+- [ ] Mobile responsiveness tested (320px, 375px, 768px, 1024px+)
+- [ ] Tier-based access control verified for all features
+- [ ] All database queries tested and working
+- [ ] Service Worker registration tested
+- [ ] Push notifications tested (if applicable)
+- [ ] All forms validated and error handling tested
+- [ ] Cross-browser testing completed (Chrome, Firefox, Safari, Edge)
 
----
+### 3. Database Preparation
 
-### Step 3: Verify Everything Works
+- [ ] SQL migration file reviewed: `supabase/migrations/20251123_comprehensive_improvements.sql`
+- [ ] Backup of production database created
+- [ ] RLS policies verified
+- [ ] Database indexes created
+- [ ] Helper functions tested
 
-#### Check Security Advisor (Should show 0 errors now)
-1. Go to: **Dashboard** → **Security Advisor**
-2. Verify: **0 errors, 0-1 warnings**
-3. If you see 1 warning, it should only be the leaked password protection (which you just enabled)
+### 4. Environment Variables
 
-#### Test Signup Functionality
-1. Open your website: https://greenofig.com
-2. Click **Sign Up**
-3. Create a test account with a new email
-4. Verify:
-   - ✅ Signup completes successfully
-   - ✅ You're redirected to the survey page
-   - ✅ No "database error saving new user" error
+- [ ] `.env.production` file created with production values
+- [ ] Supabase production URL configured
+- [ ] Supabase anon key configured
+- [ ] VAPID keys generated for push notifications
+- [ ] All API keys secured and added to server environment
 
-#### Test Survey (Arabic Translation)
-1. After signing up, you should be on the survey page
-2. Click the language switcher to change to Arabic
-3. Verify:
-   - ✅ All survey questions are in Arabic
-   - ✅ "Back", "Next", "Finish" buttons are in Arabic
-   - ✅ Survey submits successfully
+### 5. Assets & Dependencies
 
-#### Verify Survey Data Collection
-1. Go to: **Supabase Dashboard** → **Table Editor**
-2. Open the **survey_responses** table
-3. Verify:
-   - ✅ Your test survey response appears in the table
-   - ✅ All data fields are populated correctly
-
-#### Check FAQ Pricing (Arabic)
-1. Go to: https://greenofig.com/faq
-2. Switch language to Arabic
-3. Find the question: "كم تكلفة GreenoFig؟"
-4. Verify pricing shows:
-   - ✅ بريميوم: 9.99 دولار شهرياً
-   - ✅ ألتيميت: 19.99 دولار شهرياً
-   - ✅ النخبة: 29.99 دولار شهرياً
+- [ ] All images optimized (compressed, appropriate formats)
+- [ ] All dependencies up to date (`npm outdated`)
+- [ ] No unused dependencies in package.json
+- [ ] Favicon and app icons present
+- [ ] Offline fallback page created (`public/offline.html`)
 
 ---
 
-## 🔒 Security Checklist
+## 🔧 Environment Setup
 
-Before going live with 100+ users, ensure:
+### 1. Production Environment Variables
 
-- [x] RLS enabled on all user data tables
-- [x] Signup trigger installed (automatic profile creation)
-- [x] Function search_path security settings applied
-- [x] Leaked password protection enabled
-- [x] All Supabase credentials have been reset (after accidental exposure)
-- [x] Service role key is stored securely in .env file (never committed to git)
+Create `.env.production` in project root:
 
----
+```env
+# Supabase Configuration
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your_production_anon_key
 
-## 🚀 Production Ready!
+# Push Notifications (VAPID Keys)
+VITE_VAPID_PUBLIC_KEY=your_vapid_public_key
+VAPID_PRIVATE_KEY=your_vapid_private_key
 
-After completing all steps above, your GreenoFig app is now:
+# App Configuration
+VITE_APP_NAME=GreenoFig
+VITE_APP_URL=https://greenofig.com
+VITE_API_URL=https://greenofig.com/api
 
-✅ **Secure** - All RLS policies and function security settings in place
-✅ **Scalable** - Automatic signup works for unlimited users
-✅ **Multilingual** - Full Arabic translation support
-✅ **Data-driven** - Survey responses collected for analytics
-✅ **Production-ready** - Ready to handle 100+ users
+# Feature Flags
+VITE_ENABLE_PUSH_NOTIFICATIONS=true
+VITE_ENABLE_GAMIFICATION=true
+VITE_ENABLE_ANALYTICS=true
 
----
+# Stripe (if using)
+VITE_STRIPE_PUBLIC_KEY=pk_live_your_stripe_key
+STRIPE_SECRET_KEY=sk_live_your_stripe_secret
+```
 
-## 📊 What Happens Automatically Now
+### 2. Generate VAPID Keys for Push Notifications
 
-### When a new user signs up:
-1. Supabase creates auth user in `auth.users` table
-2. **Trigger automatically fires** (`on_auth_user_created`)
-3. **Function automatically runs** (`handle_new_user()`)
-4. User profile automatically created in `user_profiles` table
-5. User gets Base tier by default
-6. User redirected to survey page
+```bash
+# Install web-push globally
+npm install -g web-push
 
-### When a user completes the survey:
-1. Survey data saved to `user_profiles` table (for personalization)
-2. Survey data saved to `survey_responses` table (for analytics)
-3. Admins can view all survey responses in Supabase Dashboard
+# Generate VAPID keys
+web-push generate-vapid-keys
 
-### Security (RLS) automatically enforces:
-- Users can only see their own data (meal plans, workouts, messages, etc.)
-- Nutritionists can see their clients' data
-- Admins can see all data
-- Public can see published blog posts and testimonials
-- Service role (for triggers) can bypass RLS
+# Output:
+# =======================================
+# Public Key:
+# your_public_key_here
+#
+# Private Key:
+# your_private_key_here
+# =======================================
 
----
-
-## ❓ Troubleshooting
-
-### If signup still shows "database error":
-1. Check Supabase logs: **Dashboard** → **Logs** → **Postgres Logs**
-2. Look for error messages related to `handle_new_user` function
-3. Verify RLS is enabled: Run this query in SQL Editor:
-   ```sql
-   SELECT relname, relrowsecurity
-   FROM pg_class
-   WHERE relname = 'user_profiles';
-   ```
-   Should show: `relrowsecurity = true`
-
-### If survey doesn't translate to Arabic:
-1. Clear browser cache (Ctrl+Shift+R)
-2. Verify translation keys exist in `src/i18n/locales/ar.json`
-3. Check browser console for any i18n errors
-
-### If FAQ pricing is still wrong:
-1. Go to: **Table Editor** → **site_content** table
-2. Find row where `page_key = 'faq_page'`
-3. Check the `content_ar` JSON field
-4. Verify pricing values are: 9.99, 19.99, 29.99
+# Add these to .env.production
+```
 
 ---
 
-## 📞 Need Help?
+## 🗄️ Database Migration
 
-If you encounter any issues:
+### Step 1: Backup Production Database
 
-1. Check Supabase logs first (Dashboard → Logs)
-2. Run this verification query in SQL Editor:
-   ```sql
-   -- Check if trigger exists
-   SELECT tgname FROM pg_trigger WHERE tgname = 'on_auth_user_created';
+```bash
+# Using Supabase Dashboard
+# 1. Go to https://app.supabase.com
+# 2. Select your project
+# 3. Database > Backups
+# 4. Create new backup
+```
 
-   -- Check if RLS is enabled
-   SELECT tablename, rowsecurity
-   FROM pg_tables
-   WHERE schemaname = 'public'
-   AND rowsecurity = false;
-   ```
+### Step 2: Run Migration
 
-Good luck with your production launch! 🚀
+```bash
+# Using Supabase Dashboard (Recommended)
+# 1. Go to SQL Editor
+# 2. Copy contents of supabase/migrations/20251123_comprehensive_improvements.sql
+# 3. Paste and execute
+# 4. Verify "Success" message
+```
+
+### Step 3: Verify Migration
+
+```sql
+-- Check all new tables exist (should return 19 rows)
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
+  AND table_name IN (
+    'user_levels', 'achievements', 'user_achievements', 'streaks',
+    'leaderboard', 'quick_actions', 'saved_recipes', 'progress_photos',
+    'body_measurements', 'weekly_reports', 'client_tags', 'message_templates',
+    'scheduled_reminders', 'notifications', 'notification_settings',
+    'push_subscriptions', 'onboarding_progress', 'user_activity_log',
+    'nutritionist_analytics'
+  );
+```
+
+---
+
+## 🏗️ Build Process
+
+### Step 1: Clean Previous Build
+
+```bash
+rm -rf dist/
+rm -rf node_modules/.vite/
+```
+
+### Step 2: Install Dependencies
+
+```bash
+npm ci
+```
+
+### Step 3: Run Production Build
+
+```bash
+npm run build
+```
+
+### Step 4: Test Build Locally
+
+```bash
+npm run preview
+# Test at http://localhost:4173
+```
+
+---
+
+## 📦 Deployment Steps
+
+### Step 1: Create Deployment Tarball
+
+```bash
+cd dist
+tar -czf ../greenofig-deploy-$(date +%Y%m%d-%H%M%S).tar.gz .
+cd ..
+```
+
+### Step 2: Upload to Server
+
+```bash
+scp -P 65002 greenofig-deploy-*.tar.gz u492735793@157.173.209.161:domains/greenofig.com/
+```
+
+### Step 3: Deploy on Server
+
+```bash
+ssh -p 65002 u492735793@157.173.209.161
+
+cd domains/greenofig.com
+mv public_html public_html.backup.$(date +%Y%m%d-%H%M%S)
+mkdir public_html
+tar -xzf greenofig-deploy-*.tar.gz -C public_html/
+chmod -R 755 public_html/
+find public_html -type f -exec chmod 644 {} \;
+rm greenofig-deploy-*.tar.gz
+```
+
+### Step 4: Update .htaccess
+
+```bash
+cat > public_html/.htaccess << 'HTACCESS_END'
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header set X-Deployment-Time "2025-11-23-12:00:00"
+
+  <FilesMatch "\.(jpg|jpeg|png|gif|svg|webp|ico|woff|woff2|ttf|eot)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+HTACCESS_END
+```
+
+---
+
+## ✅ Post-Deployment Verification
+
+### 1. Immediate Checks
+
+```bash
+curl -I https://greenofig.com
+# Expected: HTTP/2 200
+
+curl -I https://greenofig.com/sw.js
+# Expected: HTTP/2 200
+```
+
+### 2. Browser Testing
+
+- [ ] Homepage loads without errors
+- [ ] Login/Signup works
+- [ ] Dashboard loads and displays data
+- [ ] Mobile menu works
+- [ ] Service Worker registers
+- [ ] Gamification features load
+
+### 3. Mobile Testing
+
+- [ ] Responsive design (320px, 375px, 768px)
+- [ ] Touch interactions work
+- [ ] Forms work on mobile
+- [ ] Images display correctly
+
+---
+
+## 🔄 Rollback Procedure
+
+```bash
+ssh -p 65002 u492735793@157.173.209.161
+cd domains/greenofig.com
+rm -rf public_html
+mv public_html.backup.YYYYMMDD-HHMMSS public_html
+```
+
+---
+
+## 🔧 Troubleshooting
+
+### White Screen on Load
+- Check browser console for errors
+- Clear Service Worker cache
+- Verify .htaccess rewrite rules
+- Hard refresh (Ctrl+Shift+R)
+
+### 404 Errors on Refresh
+- Verify .htaccess has correct rewrite rules
+
+### Service Worker Not Registering
+- Check HTTPS is enabled
+- Verify sw.js is accessible
+- Check browser console
+
+### Database Connection Errors
+- Verify Supabase URL/key in .env.production
+- Check RLS policies
+- Test connection with curl
+
+---
+
+**Last Updated:** November 23, 2025
+**Version:** 2.0
+**Status:** ✅ Ready for Production

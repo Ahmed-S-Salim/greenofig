@@ -8,7 +8,10 @@
     "build": "node tools/generate-llms.js || true && vite build",
     "preview": "vite preview --host :: --port 3000",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "build:prod": "bash build-production.sh",
+    "deploy:prod": "bash deploy.sh",
+    "deploy:full": "bash build-production.sh && bash deploy.sh"
   },
   "homepage": "https://ahmed-s-salim.github.io/greenofig",
   "dependencies": {
@@ -44,6 +47,7 @@
     "@tiptap/extension-text-style": "3.10.1",
     "@tiptap/react": "^3.7.2",
     "@tiptap/starter-kit": "^3.7.2",
+    "canvas-confetti": "1.9.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "date-fns": "^4.1.0",
