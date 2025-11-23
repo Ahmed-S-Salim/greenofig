@@ -141,17 +141,20 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                 <div className="mt-4 pt-4 border-t border-white/10 space-y-2 flex-shrink-0">
                   {user && userProfile ? (
                     <>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-start gap-2 h-10 text-sm backdrop-blur-sm border-white/10 hover:bg-white/5"
-                        onClick={() => {
-                          navigate(getDashboardPath());
-                          setIsMobileMenuOpen(false);
-                        }}
-                      >
-                        <LayoutDashboard className="w-4 h-4" />
-                        <span className="truncate">Dashboard</span>
-                      </Button>
+                      {/* Only show Dashboard button when on /app pages */}
+                      {location.pathname.startsWith('/app') && (
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start gap-2 h-10 text-sm backdrop-blur-sm border-white/10 hover:bg-white/5"
+                          onClick={() => {
+                            navigate(getDashboardPath());
+                            setIsMobileMenuOpen(false);
+                          }}
+                        >
+                          <LayoutDashboard className="w-4 h-4" />
+                          <span className="truncate">Dashboard</span>
+                        </Button>
+                      )}
                       <Button
                         variant="outline"
                         className="w-full justify-start gap-2 h-10 text-sm backdrop-blur-sm border-white/10 hover:bg-white/5"
@@ -251,10 +254,13 @@ const SiteLayout = ({ logoUrl, children, pageTitle, pageDescription, openSurvey:
                 <div className="hidden lg:flex items-center gap-1 sm:gap-2">
                   {user && userProfile ? (
                     <>
-                      <Button variant="ghost" onClick={() => navigate(getDashboardPath())} className="flex items-center gap-2 h-10 px-2 sm:px-3">
-                        <LayoutDashboard className="w-4 h-4" />
-                        <span className="hidden md:inline text-sm">Dashboard</span>
-                      </Button>
+                      {/* Only show Dashboard button when on /app pages */}
+                      {location.pathname.startsWith('/app') && (
+                        <Button variant="ghost" onClick={() => navigate(getDashboardPath())} className="flex items-center gap-2 h-10 px-2 sm:px-3">
+                          <LayoutDashboard className="w-4 h-4" />
+                          <span className="hidden md:inline text-sm">Dashboard</span>
+                        </Button>
+                      )}
                       <Button variant="ghost" onClick={() => navigate('/app/profile')} className="flex items-center gap-2 h-10 px-2 sm:px-3">
                         <User className="w-4 h-4" />
                         <span className="hidden md:inline text-sm">{userProfile.full_name || 'Profile'}</span>
