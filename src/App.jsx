@@ -57,7 +57,7 @@
     const TermsOfServicePage = lazy(() => import('@/pages/TermsOfServicePage'));
     const AdminFAQPage = lazy(() => import('@/pages/AdminFAQPage'));
     const DownloadPage = lazy(() => import('@/pages/DownloadPage'));
-    const UsernameProfile = lazy(() => import('@/components/UsernameProfile'));
+    // const UsernameProfile = lazy(() => import('@/components/UsernameProfile'));
 
     // Loading component
     const PageLoader = () => (
@@ -202,7 +202,7 @@
                     <Route path="admin/faq" element={<AdminRoute><AdminFAQPage /></AdminRoute>} />
                     <Route path="admin/revenue" element={<AdminRoute><RevenueAnalyticsPage /></AdminRoute>} />
                     {/* Username route MUST be last to avoid catching other routes */}
-                    <Route path=":username" element={<UsernameProfile logoUrl={logoUrl} />} />
+                    {/* <Route path=":username" element={<UsernameProfile logoUrl={logoUrl} />} /> */}
                 </Route>
 
                 <Route path="/onboarding" element={<ProtectedRoute><OnboardingSurvey logoUrl={logoUrl} /></ProtectedRoute>} />
