@@ -137,13 +137,7 @@
         return <Navigate to="/login" replace />;
       }
 
-      // Redirect to username-based URL
-      const username = userProfile.username;
-      if (username) {
-        return <Navigate to={`/app/${username}`} replace />;
-      }
-
-      // Fallback to role-based routing if no username
+      // Role-based routing - redirect to appropriate dashboard
       const role = userProfile.role;
       if (role === 'admin' || role === 'super_admin') {
         return <Navigate to="/app/admin" replace />;
@@ -260,8 +254,8 @@
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage logoUrl={logoUrl} />} />
                 <Route path="/terms-of-service" element={<TermsOfServicePage logoUrl={logoUrl} />} />
 
-                <Route path="/" element={<RootRedirect />} />
-                <Route path="/*" element={<Navigate to="/home" replace />} />
+                <Route path="/" element={<HomePage logoUrl={logoUrl} />} />
+                <Route path="/*" element={<Navigate to="/" replace />} />
               </Routes>
             </AnimatePresence>
           </Suspense>
