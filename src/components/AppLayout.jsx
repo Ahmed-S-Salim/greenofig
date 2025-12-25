@@ -182,7 +182,7 @@ import React, { useState, useEffect } from 'react';
 
       const sidebarVariants = {
         open: { x: 0, transition: { type: 'spring', stiffness: 300, damping: 30 } },
-        closed: { x: '-100%', transition: { type: 'spring', stiffness: 300, damping: 30 } },
+        closed: { x: '100%', transition: { type: 'spring', stiffness: 300, damping: 30 } },
       };
 
       const NavButton = ({ link, isActive }) => {
@@ -299,7 +299,7 @@ import React, { useState, useEffect } from 'react';
                   initial="closed"
                   animate="open"
                   exit="closed"
-                  className="fixed top-0 left-0 h-full w-72 sm:w-64 bg-card z-50 lg:hidden shadow-2xl"
+                  className="fixed top-0 right-0 h-full w-72 sm:w-64 bg-card z-50 lg:hidden shadow-2xl"
                 >
                   <SidebarContent />
                 </motion.aside>
@@ -308,15 +308,7 @@ import React, { useState, useEffect } from 'react';
           </AnimatePresence>
 
           <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-            <header className="sticky top-0 z-30 flex items-center justify-between lg:justify-end h-14 sm:h-16 px-4 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 flex-shrink-0">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden min-h-[44px] min-w-[44px]"
-                onClick={() => setIsSidebarOpen(true)}
-              >
-                <Menu className="w-6 h-6" />
-              </Button>
+            <header className="sticky top-0 z-30 flex items-center justify-end h-14 sm:h-16 px-4 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 flex-shrink-0">
               <div className="flex items-center gap-2 sm:gap-4">
                 <NotificationBell user={userProfile} />
                 {userProfile?.role === 'admin' || userProfile?.role === 'super_admin' ? (
@@ -326,6 +318,14 @@ import React, { useState, useEffect } from 'react';
                     <span className="sm:hidden">Admin</span>
                   </div>
                 ) : null}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="lg:hidden min-h-[44px] min-w-[44px]"
+                  onClick={() => setIsSidebarOpen(true)}
+                >
+                  <Menu className="w-6 h-6" />
+                </Button>
               </div>
             </header>
             <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8" id="main-content">
