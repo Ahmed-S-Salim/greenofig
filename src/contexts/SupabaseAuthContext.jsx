@@ -123,34 +123,55 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
         }, [fetchUserProfile]);
 
         const signIn = useCallback(async (credentials) => {
-                const { data, error } = await supabase.auth.signInWithPassword(credentials);
+                try {
+                    const { data, error } = await supabase.auth.signInWithPassword(credentials);
 
-                if (error) {
+                    if (error) {
+                        toast({
+                            variant: "destructive",
+                            title: "Login Failed",
+                            description: error.message,
+                        });
+                        return { error };
+                    }
+
+                    console.log('Login successful, user:', data.user);
+
+                    // Set user immediately so navigation can proceed
+                    setUser(data.user);
+
+                    // Fetch profile with timeout to prevent hanging
+                    let profile = null;
+                    try {
+                        const profilePromise = fetchUserProfile(data.user);
+                        const timeoutPromise = new Promise((_, reject) =>
+                            setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
+                        );
+                        profile = await Promise.race([profilePromise, timeoutPromise]);
+                    } catch (profileError) {
+                        console.warn('Profile fetch failed or timed out:', profileError);
+                        // Continue without profile - it will be fetched later
+                    }
+
+                    if (profile) {
+                        setUserProfile(profile);
+                    }
+
+                    toast({
+                        title: "Login Successful",
+                        description: `Welcome back${profile?.full_name ? ', ' + profile.full_name : ''}!`,
+                    });
+
+                    return { error: null, profile };
+                } catch (err) {
+                    console.error('SignIn error:', err);
                     toast({
                         variant: "destructive",
                         title: "Login Failed",
-                        description: error.message,
+                        description: "An unexpected error occurred. Please try again.",
                     });
-                    return { error };
+                    return { error: err };
                 }
-
-                console.log('Login successful, user:', data.user);
-
-                // Fetch profile immediately for navigation
-                const profile = await fetchUserProfile(data.user);
-                console.log('Fetched profile:', profile);
-
-                // Set both user and profile immediately for instant navigation
-                // onAuthStateChange will fire but we already have the data
-                setUser(data.user);
-                setUserProfile(profile);
-
-                toast({
-                    title: "Login Successful",
-                    description: `Welcome back${profile?.full_name ? ', ' + profile.full_name : ''}!`,
-                });
-
-                return { error: null, profile };
         }, [fetchUserProfile, toast]);
 
         const signInWithGoogle = useCallback(async () => {

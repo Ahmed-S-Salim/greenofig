@@ -61,21 +61,23 @@
 
         if (isLogin) {
           const { error, profile } = await signIn({email, password});
-          if (!error && profile) {
-            // Determine destination based on role
-            const role = profile.role;
-            let destination = '/app/user';
-            if (role === 'admin' || role === 'super_admin') {
-              destination = '/app/admin';
-            } else if (role === 'nutritionist') {
-              destination = '/app/nutritionist';
-            }
-
-            // Use navigate with state to avoid reload
-            navigate(destination, { replace: true, state: { skipLoading: true } });
+          if (error) {
+            setLoading(false);
             return;
           }
-          setLoading(false);
+
+          // Navigate even if profile is null - use role from profile or default to user
+          const role = profile?.role;
+          let destination = '/app/user';
+          if (role === 'admin' || role === 'super_admin') {
+            destination = '/app/admin';
+          } else if (role === 'nutritionist') {
+            destination = '/app/nutritionist';
+          }
+
+          // Use navigate with state to avoid reload
+          navigate(destination, { replace: true, state: { skipLoading: true } });
+          return;
         } else {
           const { user, error, profile } = await signUp({ email, password, full_name: name });
 
