@@ -60,23 +60,39 @@
         setLoading(true);
 
         if (isLogin) {
-          const { error, profile } = await signIn({email, password});
-          if (error) {
+          try {
+            const result = await signIn({email, password});
+            console.log('SignIn result:', result);
+
+            if (result?.error) {
+              console.log('SignIn error:', result.error);
+              setLoading(false);
+              return;
+            }
+
+            // Navigate even if profile is null - use role from profile or default to user
+            const role = result?.profile?.role;
+            console.log('User role:', role);
+
+            let destination = '/app/user';
+            if (role === 'admin' || role === 'super_admin') {
+              destination = '/app/admin';
+            } else if (role === 'nutritionist') {
+              destination = '/app/nutritionist';
+            }
+
+            console.log('Navigating to:', destination);
+            // Use navigate with state to avoid reload
+            navigate(destination, { replace: true, state: { skipLoading: true } });
+          } catch (err) {
+            console.error('Login exception:', err);
             setLoading(false);
-            return;
+            toast({
+              title: 'Login Error',
+              description: 'An unexpected error occurred. Please try again.',
+              variant: 'destructive',
+            });
           }
-
-          // Navigate even if profile is null - use role from profile or default to user
-          const role = profile?.role;
-          let destination = '/app/user';
-          if (role === 'admin' || role === 'super_admin') {
-            destination = '/app/admin';
-          } else if (role === 'nutritionist') {
-            destination = '/app/nutritionist';
-          }
-
-          // Use navigate with state to avoid reload
-          navigate(destination, { replace: true, state: { skipLoading: true } });
           return;
         } else {
           const { user, error, profile } = await signUp({ email, password, full_name: name });
