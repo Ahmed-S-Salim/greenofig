@@ -57,7 +57,12 @@
     const TermsOfServicePage = lazy(() => import('@/pages/TermsOfServicePage'));
     const AdminFAQPage = lazy(() => import('@/pages/AdminFAQPage'));
     const DownloadPage = lazy(() => import('@/pages/DownloadPage'));
-    // const UsernameProfile = lazy(() => import('@/components/UsernameProfile'));
+    const AppointmentsPage = lazy(() => import('@/pages/AppointmentsPage'));
+    const VideoCallPage = lazy(() => import('@/pages/VideoCallPage'));
+    const PatientIntakePage = lazy(() => import('@/pages/PatientIntakePage'));
+    const PublicFormPage = lazy(() => import('@/pages/PublicFormPage'));
+    const MyFormsPage = lazy(() => import('@/components/forms/MyFormsPage'));
+    const UserAppointments = lazy(() => import('@/components/user/UserAppointments'));
 
     // Loading component
     const PageLoader = () => (
@@ -199,6 +204,9 @@
                     <Route path="nutritionist/resources" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
                     <Route path="nutritionist/blog" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
                     <Route path="nutritionist/settings" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/success" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/reports" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
+                    <Route path="nutritionist/forms" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
 
                     {/* Admin routes with sub-paths */}
                     <Route path="admin" element={<AdminDashboard logoUrl={logoUrl} />} />
@@ -227,6 +235,8 @@
                     <Route path="fitness" element={<FitnessPage />} />
                     <Route path="progress" element={<ProgressPage />} />
                     <Route path="messages" element={<MessagingCenter />} />
+                    <Route path="appointments" element={<UserAppointments />} />
+                    <Route path="forms" element={<MyFormsPage />} />
                     <Route path="admin/blog/new" element={<BlogEditorRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></BlogEditorRoute>} />
                     <Route path="admin/blog/edit/:postId" element={<BlogEditorRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></BlogEditorRoute>} />
                     <Route path="admin/blog/tags" element={<AdminRoute><BlogTagsManager logoUrl={logoUrl} /></AdminRoute>} />
@@ -253,6 +263,11 @@
                 <Route path="/about" element={<AboutPage logoUrl={logoUrl} />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage logoUrl={logoUrl} />} />
                 <Route path="/terms-of-service" element={<TermsOfServicePage logoUrl={logoUrl} />} />
+
+                {/* Public form and call routes */}
+                <Route path="/form/:linkCode" element={<PublicFormPage />} />
+                <Route path="/patientinfo/:linkCode" element={<PatientIntakePage />} />
+                <Route path="/call/:roomId" element={<ProtectedRoute><VideoCallPage /></ProtectedRoute>} />
 
                 <Route path="/" element={<HomePage logoUrl={logoUrl} />} />
                 <Route path="/*" element={<Navigate to="/home" replace />} />
