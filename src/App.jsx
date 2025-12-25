@@ -255,7 +255,7 @@
                 <Route path="/terms-of-service" element={<TermsOfServicePage logoUrl={logoUrl} />} />
 
                 <Route path="/" element={<HomePage logoUrl={logoUrl} />} />
-                <Route path="/*" element={<Navigate to="/" replace />} />
+                <Route path="/*" element={<Navigate to="/home" replace />} />
               </Routes>
             </AnimatePresence>
           </Suspense>

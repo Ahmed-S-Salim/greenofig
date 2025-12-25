@@ -60,14 +60,22 @@
         setLoading(true);
 
         if (isLogin) {
-          const { error } = await signIn({email, password});
-          setLoading(false);
+          const { error, profile } = await signIn({email, password});
+          if (!error && profile) {
+            // Determine destination based on role
+            const role = profile.role;
+            let destination = '/app/user';
+            if (role === 'admin' || role === 'super_admin') {
+              destination = '/app/admin';
+            } else if (role === 'nutritionist') {
+              destination = '/app/nutritionist';
+            }
 
-          if (!error) {
-            // Just go to /app - let RoleBasedRedirect handle the routing
-            window.location.href = '/app';
+            // Use navigate with state to avoid reload
+            navigate(destination, { replace: true, state: { skipLoading: true } });
+            return;
           }
-          return;
+          setLoading(false);
         } else {
           const { user, error, profile } = await signUp({ email, password, full_name: name });
 

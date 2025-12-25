@@ -134,15 +134,24 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
                     return { error };
                 }
 
+                console.log('Login successful, user:', data.user);
+
+                // Fetch profile immediately for navigation
+                const profile = await fetchUserProfile(data.user);
+                console.log('Fetched profile:', profile);
+
+                // Set both user and profile immediately for instant navigation
+                // onAuthStateChange will fire but we already have the data
                 setUser(data.user);
+                setUserProfile(profile);
 
                 toast({
                     title: "Login Successful",
-                    description: "Welcome back!",
+                    description: `Welcome back${profile?.full_name ? ', ' + profile.full_name : ''}!`,
                 });
 
-                return { error: null };
-        }, [toast]);
+                return { error: null, profile };
+        }, [fetchUserProfile, toast]);
 
         const signInWithGoogle = useCallback(async () => {
                 setLoading(true);
