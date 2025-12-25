@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/png" href="/favicon.png" />
+		<meta name="generator" content="Hostinger Horizons" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="theme-color" content="#10b981" />
+
+		<!-- Content Security Policy - Restricts resource loading to approved sources -->
+		<meta http-equiv="Content-Security-Policy" content="
+			default-src 'self';
+			script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com;
+			style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+			font-src 'self' https://fonts.gstatic.com;
+			img-src 'self' data: blob: https: http:;
+			connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co https://api.stripe.com https://www.google-analytics.com https://fonts.googleapis.com https://fonts.gstatic.com;
+			frame-src 'self' https://js.stripe.com;
+			object-src 'none';
+			base-uri 'self';
+			form-action 'self';
+		" />
+
+		<!-- Cache Control - Force fresh content -->
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+
+		<!-- Performance Optimizations: Preload Critical Assets -->
+		<link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+		<link rel="dns-prefetch" href="https://images.unsplash.com" />
+
+		<!-- Preload critical fonts if using custom fonts -->
+		<!-- <link rel="preload" href="/fonts/main-font.woff2" as="font" type="font/woff2" crossorigin /> -->
+
+		<!-- Google Search Console Verification -->
+		<!-- IMPORTANT: Replace YOUR_VERIFICATION_CODE with the actual code from Google Search Console -->
+		<meta name="google-site-verification" content="YOUR_VERIFICATION_CODE_HERE" />
+
+		<!-- Google Analytics 4 -->
+		<!-- IMPORTANT: Replace G-XXXXXXXXXX with your actual GA4 Measurement ID -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'G-XXXXXXXXXX', {
+				page_title: document.title,
+				page_location: window.location.href,
+				send_page_view: true
+			});
+		</script>
+
+		<meta name="description" content="Get personalized meal plans and expert fitness coaching from certified nutritionists online. Professional diet planning, workout routines, and 24/7 health guidance. Start your transformation today!" />
+		<meta name="keywords" content="online nutritionist, personalized meal plans, certified dietitian online, nutrition coaching app, weight loss nutritionist, custom diet plan, fitness coaching online, registered dietitian consultation, healthy meal planning, workout plans personalized, nutrition app, dietitian meal plan, online health coach, weight management program, fitness nutrition plan, diet and exercise app, professional nutritionist online, meal prep planning, nutrition counseling online, health and wellness coach" />
+		<meta name="author" content="GreenoFig" />
+		<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://greenofig.com/" />
+		<meta property="og:title" content="Online Nutritionist & Personalized Meal Plans | Certified Dietitian App" />
+		<meta property="og:description" content="Get personalized meal plans and expert fitness coaching from certified nutritionists online. Start your health transformation today with professional guidance." />
+		<meta property="og:image" content="https://greenofig.com/logo.png" />
+
+		<!-- Twitter -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:url" content="https://greenofig.com/" />
+		<meta name="twitter:title" content="Online Nutritionist & Personalized Meal Plans | Certified Dietitian App" />
+		<meta name="twitter:description" content="Get personalized meal plans and expert fitness coaching from certified nutritionists online. Start your health transformation today!" />
+		<meta name="twitter:image" content="https://greenofig.com/logo.png" />
+
+		<!-- Canonical URL -->
+		<link rel="canonical" href="https://greenofig.com/" />
+
+		<!-- Structured Data for Organization -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Organization",
+			"name": "GreenoFig",
+			"url": "https://greenofig.com",
+			"logo": "https://greenofig.com/logo.png",
+			"description": "Online platform connecting you with certified nutritionists and registered dietitians for personalized meal plans, fitness coaching, and professional health guidance",
+			"sameAs": [
+				"https://www.facebook.com/greenofig",
+				"https://twitter.com/greenofig",
+				"https://www.instagram.com/greenofig"
+			],
+			"contactPoint": {
+				"@type": "ContactPoint",
+				"contactType": "Customer Support",
+				"email": "support@greenofig.com"
+			}
+		}
+		</script>
+
+		<!-- Structured Data for Website -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "WebSite",
+			"name": "GreenoFig - Online Nutritionist & Meal Planning App",
+			"url": "https://greenofig.com",
+			"potentialAction": {
+				"@type": "SearchAction",
+				"target": "https://greenofig.com/search?q={search_term_string}",
+				"query-input": "required name=search_term_string"
+			}
+		}
+		</script>
+
+		<!-- Structured Data for Health and Wellness Service -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "HealthAndBeautyBusiness",
+			"name": "GreenoFig",
+			"description": "Connect with certified nutritionists and registered dietitians online for personalized meal plans, custom workout routines, and professional health coaching",
+			"url": "https://greenofig.com",
+			"priceRange": "$9.99 - $29.99",
+			"offers": {
+				"@type": "AggregateOffer",
+				"offerCount": "3",
+				"lowPrice": "9.99",
+				"highPrice": "29.99",
+				"priceCurrency": "USD"
+			}
+		}
+		</script>
+
+		<title>Online Nutritionist & Personalized Meal Plans | Certified Dietitian App</title>
+
+	<!-- Single Page Apps for GitHub Pages -->
+	<!-- Start Single Page Apps for GitHub Pages -->
+	<script type="text/javascript">
+		// Single Page Apps for GitHub Pages
+		// MIT License
+		// https://github.com/rafgraph/spa-github-pages
+		// This script checks to see if a redirect is present in the query string,
+		// converts it back into the correct url and adds it to the
+		// browser's history using window.history.replaceState(...),
+		// which won't cause the browser to attempt to load the new url.
+		// When the single page app is loaded further down in this file,
+		// the correct url will be waiting in the browser's history for
+		// the single page app to route accordingly.
+		(function(l) {
+			if (l.search[1] === '/' ) {
+				var decoded = l.search.slice(1).split('&').map(function(s) {
+					return s.replace(/~and~/g, '&')
+				}).join('?');
+				window.history.replaceState(null, null,
+					l.pathname.slice(0, -1) + decoded + l.hash
+				);
+			}
+		}(window.location))
+	</script>
+	<!-- End Single Page Apps for GitHub Pages -->
+		<script type="module" crossorigin src="/assets/index-05934966.js"></script>
+		<link rel="modulepreload" crossorigin href="/assets/vendor-react-c35372bd.js">
+		<link rel="modulepreload" crossorigin href="/assets/vendor-ui-8934955f.js">
+		<link rel="modulepreload" crossorigin href="/assets/vendor-editor-7586347a.js">
+		<link rel="modulepreload" crossorigin href="/assets/vendor-utils-1c9b7ece.js">
+		<link rel="stylesheet" href="/assets/index-4c36fa54.css">
+		<script type="module">
+window.onerror = (message, source, lineno, colno, errorObj) => {
+	const errorDetails = errorObj ? JSON.stringify({
+		name: errorObj.name,
+		message: errorObj.message,
+		stack: errorObj.stack,
+		source,
+		lineno,
+		colno,
+	}) : null;
+
+	window.parent.postMessage({
+		type: 'horizons-runtime-error',
+		message,
+		error: errorDetails
+	}, '*');
+};
+</script>
+		<script type="module">
+const observer = new MutationObserver((mutations) => {
+	for (const mutation of mutations) {
+		for (const addedNode of mutation.addedNodes) {
+			if (
+				addedNode.nodeType === Node.ELEMENT_NODE &&
+				(
+					addedNode.tagName?.toLowerCase() === 'vite-error-overlay' ||
+					addedNode.classList?.contains('backdrop')
+				)
+			) {
+				handleViteOverlay(addedNode);
+			}
+		}
+	}
+});
+
+observer.observe(document.documentElement, {
+	childList: true,
+	subtree: true
+});
+
+function handleViteOverlay(node) {
+	if (!node.shadowRoot) {
+		return;
+	}
+
+	const backdrop = node.shadowRoot.querySelector('.backdrop');
+
+	if (backdrop) {
+		const overlayHtml = backdrop.outerHTML;
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(overlayHtml, 'text/html');
+		const messageBodyElement = doc.querySelector('.message-body');
+		const fileElement = doc.querySelector('.file');
+		const messageText = messageBodyElement ? messageBodyElement.textContent.trim() : '';
+		const fileText = fileElement ? fileElement.textContent.trim() : '';
+		const error = messageText + (fileText ? ' File:' + fileText : '');
+
+		window.parent.postMessage({
+			type: 'horizons-vite-error',
+			error,
+		}, '*');
+	}
+}
+</script>
+		<script type="module">
+const originalConsoleError = console.error;
+console.error = function(...args) {
+	originalConsoleError.apply(console, args);
+
+	let errorString = '';
+
+	for (let i = 0; i < args.length; i++) {
+		const arg = args[i];
+		if (arg instanceof Error) {
+			errorString = arg.stack || `${arg.name}: ${arg.message}`;
+			break;
+		}
+	}
+
+	if (!errorString) {
+		errorString = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
+	}
+
+	window.parent.postMessage({
+		type: 'horizons-console-error',
+		error: errorString
+	}, '*');
+};
+</script>
+		<script type="module">
+const originalFetch = window.fetch;
+
+window.fetch = function(...args) {
+	const url = args[0] instanceof Request ? args[0].url : args[0];
+
+	// Skip WebSocket URLs
+	if (url.startsWith('ws:') || url.startsWith('wss:')) {
+		return originalFetch.apply(this, args);
+	}
+
+	return originalFetch.apply(this, args)
+		.then(async response => {
+			const contentType = response.headers.get('Content-Type') || '';
+
+			// Exclude HTML document responses
+			const isDocumentResponse =
+				contentType.includes('text/html') ||
+				contentType.includes('application/xhtml+xml');
+
+			if (!response.ok && !isDocumentResponse) {
+					const responseClone = response.clone();
+					const errorFromRes = await responseClone.text();
+					const requestUrl = response.url;
+					console.error(`Fetch error from ${requestUrl}: ${errorFromRes}`);
+			}
+
+			return response;
+		})
+		.catch(error => {
+			if (!url.match(/.html?$/i)) {
+				console.error(error);
+			}
+
+			throw error;
+		});
+};
+</script>
+		<script type="module">
+if (window.navigation && window.self !== window.top) {
+	window.navigation.addEventListener('navigate', (event) => {
+		const url = event.destination.url;
+
+		try {
+			const destinationUrl = new URL(url);
+			const destinationOrigin = destinationUrl.origin;
+			const currentOrigin = window.location.origin;
+
+			if (destinationOrigin === currentOrigin) {
+				return;
+			}
+		} catch (error) {
+			return;
+		}
+
+		window.parent.postMessage({
+			type: 'horizons-navigation-error',
+			url,
+		}, '*');
+	});
+}
+</script>
+	</head>
+	<body class="antialiased">
+		<div id="root" role="main"></div>
+		<noscript>
+			<div style="padding: 2rem; text-align: center; background: #1a1a1a; color: #fff;">
+				<h1>JavaScript Required</h1>
+				<p>Please enable JavaScript to use GreenoFig.</p>
+			</div>
+		</noscript>
+		
+	</body>
+</html>

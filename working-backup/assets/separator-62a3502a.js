@@ -1,0 +1,1 @@
+import{j as r}from"./vendor-ui-8934955f.js";import{r as o}from"./vendor-react-c35372bd.js";const a=o.forwardRef(({className:o,orientation:a="horizontal",...s},e)=>r.jsx("div",{ref:e,className:`shrink-0 bg-border ${"horizontal"===a?"h-[1px] w-full":"h-full w-[1px]"} ${o||""}`,...s}));a.displayName="Separator";export{a as S};

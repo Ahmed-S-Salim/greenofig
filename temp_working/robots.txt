@@ -1,0 +1,28 @@
+# robots.txt for GreenoFig
+# https://www.robotstxt.org/
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://greenofig.com/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /app/
+Disallow: /admin/
+Disallow: /api/
+
+# Allow important pages
+Allow: /home
+Allow: /features
+Allow: /pricing
+Allow: /blog
+Allow: /about
+Allow: /contact
+Allow: /faq
+Allow: /reviews
+Allow: /privacy-policy
+Allow: /terms-of-service
+
+# Crawl-delay (optional, helps prevent server overload)
+Crawl-delay: 1

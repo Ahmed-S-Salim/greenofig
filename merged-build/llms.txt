@@ -1,0 +1,13 @@
+## Pages
+- [- GreenoFig Blog](/blogpost): No description available
+- [About Us - GreenoFig](/about): Learn about the mission, philosophy, and story behind GreenoFig.
+- [Admin Dashboard - GreenoFig](/admindashboard): Platform management and analytics.
+- [AI Coach - GreenoFig](/aicoach): Chat with your personal AI health and wellness coach.
+- [Articles - GreenoFig](/articles): Health and wellness articles from the GreenoFig team.
+- [Blog - GreenoFig](/blog): Latest articles, tips, and insights on health, wellness, and nutrition from the GreenoFig team.
+- [Dashboard - GreenoFig](/userdashboard): Your personal health and wellness dashboard.
+- [FAQ - GreenoFig](/faq): Find answers to frequently asked questions about GreenoFig
+- [Find Your Plan - GreenoFig](/survey): Take a quick survey to find the perfect GreenoFig plan for you.
+- [My Profile - GreenoFig](/profile): Manage your profile and settings.
+- [Nutritionist Dashboard - GreenoFig](/nutritionistdashboard): Manage your clients, meal plans, and communications.
+- [Pricing - GreenoFig](/pricing): Explore GreenoFig
