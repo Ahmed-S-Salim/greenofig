@@ -148,7 +148,7 @@
         return <Navigate to="/app/admin" replace />;
       }
       if (role === 'nutritionist') {
-        return <Navigate to="/app/nutritionist" replace />;
+        return <Navigate to="/app/nutritionist/dashboard" replace />;
       }
       return <Navigate to="/app/user" replace />;
     };
@@ -243,7 +243,6 @@
                     <Route path="nutritionist/blog/new" element={<BlogEditorRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></BlogEditorRoute>} />
                     <Route path="nutritionist/blog/edit/:postId" element={<BlogEditorRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></BlogEditorRoute>} />
                     <Route path="admin/faq" element={<AdminRoute><AdminFAQPage /></AdminRoute>} />
-                    <Route path="admin/revenue" element={<AdminRoute><RevenueAnalyticsPage /></AdminRoute>} />
                     {/* Username route MUST be last to avoid catching other routes */}
                     {/* <Route path=":username" element={<UsernameProfile logoUrl={logoUrl} />} /> */}
                 </Route>
