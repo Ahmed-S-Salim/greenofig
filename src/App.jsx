@@ -57,6 +57,8 @@
     const TermsOfServicePage = lazy(() => import('@/pages/TermsOfServicePage'));
     const AdminFAQPage = lazy(() => import('@/pages/AdminFAQPage'));
     const DownloadPage = lazy(() => import('@/pages/DownloadPage'));
+
+    // Missing routes from Dec 10 build - NOW ADDED
     const AppointmentsPage = lazy(() => import('@/pages/AppointmentsPage'));
     const VideoCallPage = lazy(() => import('@/pages/VideoCallPage'));
     const PatientIntakePage = lazy(() => import('@/pages/PatientIntakePage'));
@@ -142,13 +144,13 @@
         return <Navigate to="/login" replace />;
       }
 
-      // Role-based routing - redirect to appropriate dashboard
+      // FIXED: Always use role-based routing (removed broken username redirect)
       const role = userProfile.role;
       if (role === 'admin' || role === 'super_admin') {
         return <Navigate to="/app/admin" replace />;
       }
       if (role === 'nutritionist') {
-        return <Navigate to="/app/nutritionist/dashboard" replace />;
+        return <Navigate to="/app/nutritionist" replace />;
       }
       return <Navigate to="/app/user" replace />;
     };
@@ -204,9 +206,6 @@
                     <Route path="nutritionist/resources" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
                     <Route path="nutritionist/blog" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
                     <Route path="nutritionist/settings" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
-                    <Route path="nutritionist/success" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
-                    <Route path="nutritionist/reports" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
-                    <Route path="nutritionist/forms" element={<NutritionistDashboardV2 logoUrl={logoUrl} />} />
 
                     {/* Admin routes with sub-paths */}
                     <Route path="admin" element={<AdminDashboard logoUrl={logoUrl} />} />
@@ -235,20 +234,27 @@
                     <Route path="fitness" element={<FitnessPage />} />
                     <Route path="progress" element={<ProgressPage />} />
                     <Route path="messages" element={<MessagingCenter />} />
-                    <Route path="appointments" element={<UserAppointments />} />
-                    <Route path="forms" element={<MyFormsPage />} />
+
+                    {/* RESTORED: Missing routes from Dec 10 build */}
+                    <Route path="appointments" element={<AppointmentsPage logoUrl={logoUrl} />} />
+                    <Route path="call/:roomId" element={<VideoCallPage logoUrl={logoUrl} />} />
+                    <Route path="forms" element={<MyFormsPage logoUrl={logoUrl} />} />
+
                     <Route path="admin/blog/new" element={<BlogEditorRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></BlogEditorRoute>} />
                     <Route path="admin/blog/edit/:postId" element={<BlogEditorRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></BlogEditorRoute>} />
                     <Route path="admin/blog/tags" element={<AdminRoute><BlogTagsManager logoUrl={logoUrl} /></AdminRoute>} />
                     <Route path="nutritionist/blog/new" element={<BlogEditorRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></BlogEditorRoute>} />
                     <Route path="nutritionist/blog/edit/:postId" element={<BlogEditorRoute><EnhancedBlogPostEditor logoUrl={logoUrl} /></BlogEditorRoute>} />
                     <Route path="admin/faq" element={<AdminRoute><AdminFAQPage /></AdminRoute>} />
-                    {/* Username route MUST be last to avoid catching other routes */}
-                    {/* <Route path=":username" element={<UsernameProfile logoUrl={logoUrl} />} /> */}
+                    <Route path="admin/revenue" element={<AdminRoute><RevenueAnalyticsPage /></AdminRoute>} />
                 </Route>
 
                 <Route path="/onboarding" element={<ProtectedRoute><OnboardingSurvey logoUrl={logoUrl} /></ProtectedRoute>} />
                 <Route path="/survey" element={<SurveyPage logoUrl={logoUrl} />} />
+
+                {/* RESTORED: Public form routes from Dec 10 build */}
+                <Route path="/form/:linkCode" element={<PublicFormPage logoUrl={logoUrl} />} />
+                <Route path="/patientinfo/:linkCode" element={<PatientIntakePage logoUrl={logoUrl} />} />
 
                 <Route path="/home" element={<HomePage logoUrl={logoUrl} />} />
                 <Route path="/features" element={<FeaturesPage logoUrl={logoUrl} />} />
@@ -263,12 +269,7 @@
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage logoUrl={logoUrl} />} />
                 <Route path="/terms-of-service" element={<TermsOfServicePage logoUrl={logoUrl} />} />
 
-                {/* Public form and call routes */}
-                <Route path="/form/:linkCode" element={<PublicFormPage />} />
-                <Route path="/patientinfo/:linkCode" element={<PatientIntakePage />} />
-                <Route path="/call/:roomId" element={<ProtectedRoute><VideoCallPage /></ProtectedRoute>} />
-
-                <Route path="/" element={<HomePage logoUrl={logoUrl} />} />
+                <Route path="/" element={<RootRedirect />} />
                 <Route path="/*" element={<Navigate to="/home" replace />} />
               </Routes>
             </AnimatePresence>

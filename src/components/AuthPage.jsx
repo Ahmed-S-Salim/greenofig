@@ -68,7 +68,7 @@
             if (role === 'admin' || role === 'super_admin') {
               destination = '/app/admin';
             } else if (role === 'nutritionist') {
-              destination = '/app/nutritionist/dashboard';
+              destination = '/app/nutritionist';
             }
 
             // Use navigate with state to avoid reload
@@ -85,8 +85,17 @@
               description: t('auth.welcomeSetup'),
             });
 
-            // New users always go to /app/user
-            navigate('/app/user', { replace: true, state: { skipLoading: true } });
+            // Determine destination based on role
+            const role = profile.role;
+            let destination = '/app/user';
+            if (role === 'admin' || role === 'super_admin') {
+              destination = '/app/admin';
+            } else if (role === 'nutritionist') {
+              destination = '/app/nutritionist';
+            }
+
+            // Use navigate with state to avoid reload
+            navigate(destination, { replace: true, state: { skipLoading: true } });
             return;
           }
           setLoading(false);
